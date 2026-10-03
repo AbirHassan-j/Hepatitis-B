@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore a Cell | Inside Your Cells</title>
+  <link rel="icon" href="img/level-cell.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-section="explore-cell">
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <img src="img/level-cell.svg" alt="" width="40" height="32">
+      <span>Inside Your Cells</span>
+    </a>
+    <!-- The menu is built from SITE_SECTIONS in js/site.js -->
+    <nav id="site-nav" class="site-nav" aria-label="Lesson sections"></nav>
+  </header>
+
+  <main>
+    <div class="page-intro">
+      <p class="eyebrow">Stop 2</p>
+      <h1>Can You Find the Cell Parts?</h1>
+      <p class="subtitle">Inside every cell are smaller parts called <strong>organelles</strong> (say it: <em>or-guh-NELLS</em>). Think of them as the cell's tiny "organs."</p>
+    </div>
+
+    <!-- ORGANELLE MATCHING ACTIVITY (labels, spots and explanations live in js/matching-activity.js) -->
+    <section class="matching card" data-matching>
+      <p class="instructions">Drag each label onto the right part of the cell.</p>
+
+      <div class="match-layout">
+        <div class="label-bank" aria-label="Labels to place"></div>
+
+        <!-- CELL DIAGRAM: swap this image for your own.
+             Then update the spot x / y numbers in js/matching-activity.js -->
+        <div class="diagram-board">
+          <img src="img/cell-diagram.svg" alt="A diagram of an animal cell with four unlabeled parts" width="600" height="450">
+        </div>
+      </div>
+
+      <p class="match-status feedback" aria-live="polite"></p>
+
+      <div class="match-finish" hidden>
+        <h3></h3>
+        <p></p>
+      </div>
+
+      <h3 class="found-title">What you've found</h3>
+      <ul class="found-list"></ul>
+
+      <div class="activity-buttons">
+        <button type="button" class="btn btn-quiet" data-reset>Start over</button>
+      </div>
+    </section>
+
+    <nav class="next-stop" aria-label="Other sections">
+      <a class="btn btn-quiet" href="cells-tissues-organs.html">← Back to Cells → Tissues → Organs</a>
+      <span class="coming-up">Next stop: <strong>Meet the Liver</strong> (coming soon)</span>
+    </nav>
+  </main>
+
+  <footer class="site-footer">Made for Grade 7–8 science students · No logins, no tracking.</footer>
+
+  <script src="js/site.js"></script>
+  <script src="js/matching-activity.js"></script>
+</body>
+</html>
