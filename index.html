@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hepatitis B: Inside Your Body</title>
+
+```
+<!-- Our stylesheet -->
+<link rel="stylesheet" href="style.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- =========================
+     NAVIGATION
+========================== -->
+<nav class="navbar">
+    <div class="logo">🧬 Inside Your Body</div>
+
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#building-blocks">Cells</a>
+        <a href="#activity">Activity</a>
+    </div>
+</nav>
+
+
+<!-- =========================
+     HOME
+========================== -->
+<section id="home" class="hero">
+
+    <div class="hero-text">
+
+        <p class="small-title">🔬 GRADE 7–8 SCIENCE</p>
+
+        <h1>
+            Cells: The Building Blocks
+            <span>of Your Body</span>
+        </h1>
+
+        <p class="hero-description">
+            Your body is made of trillions of tiny cells.
+            But how do these tiny cells work together to
+            build your entire body?
+        </p>
+
+        <a href="#building-blocks" class="main-button">
+            Start Exploring →
+        </a>
+
+    </div>
+
+    <div class="hero-visual">
+        <div class="big-cell">
+            <div class="nucleus">🧬</div>
+
+            <div class="cell-dot dot-1">⚡</div>
+            <div class="cell-dot dot-2">⚡</div>
+            <div class="cell-dot dot-3">⚡</div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BUILDING BLOCKS
+========================== -->
+<section id="building-blocks" class="section">
+
+    <div class="section-heading">
+
+        <p class="section-label">YOUR BODY IS BUILT IN LEVELS</p>
+
+        <h2>
+            From One Tiny Cell
+            <span>to Your Whole Body</span>
+        </h2>
+
+        <p>
+            Cells don't work alone. They team up to create
+            bigger and more complex parts of your body.
+        </p>
+
+    </div>
+
+
+    <!-- Four levels -->
+
+    <div class="levels">
+
+        <div class="level-card">
+            <div class="level-icon">🧫</div>
+            <div class="level-number">01</div>
+            <h3>Cell</h3>
+            <p>
+                The smallest basic unit of life.
+            </p>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="level-card">
+            <div class="level-icon">🧩</div>
+            <div class="level-number">02</div>
+            <h3>Tissue</h3>
+            <p>
+                Groups of similar cells working together.
+            </p>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="level-card">
+            <div class="level-icon">🫀</div>
+            <div class="level-number">03</div>
+            <h3>Organ</h3>
+            <p>
+                Different tissues working together.
+            </p>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="level-card">
+            <div class="level-icon">🧍</div>
+            <div class="level-number">04</div>
+            <h3>Organ System</h3>
+            <p>
+                Organs working together to perform important jobs.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Simple explanation -->
+
+    <div class="info-box">
+
+        <div class="info-icon">💡</div>
+
+        <div>
+            <h3>Think of it like building with LEGO!</h3>
+
+            <p>
+                A single LEGO piece isn't much on its own.
+                Put lots of pieces together and you can build
+                something much bigger. Your body works in a
+                similar way!
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     INTERACTIVE ACTIVITY
+========================== -->
+<section id="activity" class="activity-section">
+
+    <div class="section-heading">
+
+        <p class="section-label">🎮 TRY IT YOURSELF</p>
+
+        <h2>
+            Build the Body
+        </h2>
+
+        <p>
+            Can you put the four levels of organization
+            in the correct order?
+        </p>
+
+    </div>
+
+
+    <div class="game-container">
+
+        <div class="game-instructions">
+
+            <div class="instruction-icon">🧠</div>
+
+            <div>
+                <h3>Your Mission</h3>
+
+                <p>
+                    Click the cards in the order they appear
+                    in your body, starting with the smallest level.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- Cards -->
+
+        <div id="game-cards" class="game-cards">
+
+            <button class="game-card" data-answer="organ">
+                🫀 Organ
+            </button>
+
+            <button class="game-card" data-answer="cell">
+                🧫 Cell
+            </button>
+
+            <button class="game-card" data-answer="system">
+                🧍 Organ System
+            </button>
+
+            <button class="game-card" data-answer="tissue">
+                🧩 Tissue
+            </button>
+
+        </div>
+
+
+        <!-- Progress -->
+
+        <div class="progress-area">
+
+            <p>
+                Your progress:
+                <span id="progress-text">0 / 4</span>
+            </p>
+
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+
+        </div>
+
+
+        <!-- Feedback -->
+
+        <div id="game-feedback" class="game-feedback">
+            Choose your first card!
+        </div>
+
+
+        <!-- Reset -->
+
+        <button id="reset-game" class="secondary-button">
+            ↻ Start Over
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     NEXT SECTION PREVIEW
+========================== -->
+<section class="coming-section">
+
+    <div class="coming-card">
+
+        <div class="coming-icon">🔬</div>
+
+        <p class="section-label">COMING NEXT</p>
+
+        <h2>Let's Explore a Cell</h2>
+
+        <p>
+            Cells have tiny parts called organelles.
+            Each one has a special job.
+        </p>
+
+        <div class="coming-badge">
+            Next: Cell Parts →
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================== -->
+<footer>
+
+    <p>
+        🔬 Inside Your Body
+    </p>
+
+    <p>
+        An interactive Grade 7–8 science experience
+    </p>
+
+</footer>
+
+
+<!-- Our JavaScript -->
+<script src="script.js"></script>
+```
+
+</body>
+</html>
