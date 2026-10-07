@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,69 +12,148 @@
 
 <body>
 
-    <!-- Floating biology background -->
-    <div class="bio-background">
-        <span class="bio bio-cell">🧫</span>
-        <span class="bio bio-dna">🧬</span>
-        <span class="bio bio-virus">🦠</span>
-        <span class="bio bio-cell">🔬</span>
-        <span class="bio bio-virus">🦠</span>
-        <span class="bio bio-dna">🧬</span>
-        <span class="bio bio-cell">🧫</span>
-        <span class="bio bio-virus">🦠</span>
+    <!-- Floating biology particles -->
+    <div class="biology-background">
+
+        <div class="floating-cell cell-one"></div>
+        <div class="floating-cell cell-two"></div>
+        <div class="floating-cell cell-three"></div>
+
+        <div class="floating-virus virus-one">
+            <span></span>
+        </div>
+
+        <div class="floating-virus virus-two">
+            <span></span>
+        </div>
+
+        <div class="floating-dna dna-one">DNA</div>
+        <div class="floating-dna dna-two">DNA</div>
+
     </div>
 
 
     <!-- Navigation -->
-    <nav>
-        <div class="nav-logo">🧬 Operation: Save the Liver</div>
+    <nav class="navbar">
+
+        <a href="#home" class="logo">
+            <span class="logo-icon">✦</span>
+            Operation: Save the Liver
+        </a>
 
         <div class="nav-links">
+
             <a href="#home">Home</a>
-            <a href="#building-blocks">Cells</a>
-            <a href="#activity">Mission</a>
+
+            <a href="#levels">Body Basics</a>
+
+            <a href="#activity">Activity</a>
+
+            <a href="#next">What's Next?</a>
+
         </div>
+
     </nav>
 
 
-    <!-- Hero -->
+    <!-- HERO -->
     <header class="hero" id="home">
 
-        <div class="mission-tag">
-            🔬 BIOLOGY MISSION • GRADE 7–8
+        <div class="hero-content">
+
+            <div class="mission-label">
+                BIOLOGY MISSION • GRADE 7–8
+            </div>
+
+            <h1>
+                Operation:
+                <span>Save the Liver</span>
+            </h1>
+
+            <p class="hero-lead">
+                Your mission starts with something incredibly small.
+            </p>
+
+            <p class="hero-description">
+                Explore the tiny cells that make up your body,
+                discover how they work together, and learn what happens
+                when Hepatitis B enters the liver.
+            </p>
+
+            <a href="#levels" class="mission-button">
+                Start the Mission
+                <span>→</span>
+            </a>
+
         </div>
 
-        <h1>Operation: Save the Liver</h1>
 
-        <p class="hero-subtitle">
-            Your mission starts with something tiny...
-        </p>
+        <!-- Main cell illustration -->
+        <div class="hero-cell-area">
 
-        <p class="hero-text">
-            Cells are the building blocks of your body. But what happens
-            when a virus enters one of them?
-        </p>
+            <div class="cell-label label-nucleus">
+                <span></span>
+                Nucleus
+            </div>
 
-        <a href="#building-blocks" class="start-button">
-            🚀 Start the Mission
-        </a>
+            <div class="cell-label label-mito">
+                <span></span>
+                Mitochondria
+            </div>
+
+            <div class="cell-label label-membrane">
+                <span></span>
+                Cell membrane
+            </div>
 
 
-        <!-- Cell illustration -->
-        <div class="cell-container">
+            <div class="main-cell">
 
-            <div class="cell-glow"></div>
+                <div class="cell-cytoplasm">
 
-            <div class="big-cell">
+                    <div class="organelle mitochondria-one">
+                        <i></i>
+                        <i></i>
+                    </div>
 
-                <div class="nucleus">
-                    🧬
+                    <div class="organelle mitochondria-two">
+                        <i></i>
+                        <i></i>
+                    </div>
+
+                    <div class="organelle mitochondria-three">
+                        <i></i>
+                        <i></i>
+                    </div>
+
+
+                    <div class="nucleus">
+
+                        <div class="nucleus-dna">
+                            ✦
+                        </div>
+
+                    </div>
+
+
+                    <div class="tiny-particle particle-one"></div>
+                    <div class="tiny-particle particle-two"></div>
+                    <div class="tiny-particle particle-three"></div>
+                    <div class="tiny-particle particle-four"></div>
+                    <div class="tiny-particle particle-five"></div>
+
                 </div>
 
-                <div class="mitochondria m1">⚡</div>
-                <div class="mitochondria m2">⚡</div>
-                <div class="mitochondria m3">⚡</div>
+            </div>
 
+
+            <!-- Virus particles -->
+            <div class="hero-virus virus-a">
+                <span></span>
+            </div>
+
+            <div class="hero-virus virus-b">
+                <span></span>
             </div>
 
         </div>
@@ -82,198 +162,365 @@
 
 
     <!-- Mission briefing -->
-    <section class="mission-section">
+    <section class="briefing">
 
-        <div class="section-heading">
-            <span>MISSION BRIEFING</span>
-            <h2>What Are We Trying to Save?</h2>
-        </div>
+        <div class="section-title">
 
-        <div class="mission-grid">
-
-            <div class="mission-card">
-                <div class="mission-icon">🧫</div>
-                <h3>Learn About Cells</h3>
-                <p>
-                    Discover the tiny building blocks that make up your body
-                    and learn what their different parts do.
-                </p>
+            <div class="section-number">
+                MISSION BRIEFING
             </div>
 
-            <div class="mission-card">
-                <div class="mission-icon">🦠</div>
-                <h3>Meet the Virus</h3>
-                <p>
-                    Find out how Hepatitis B can enter liver cells and
-                    interfere with their normal jobs.
-                </p>
-            </div>
-
-            <div class="mission-card">
-                <div class="mission-icon">🫀</div>
-                <h3>Protect the Liver</h3>
-                <p>
-                    Follow the effects of the disease from a single cell
-                    to liver tissue.
-                </p>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- Building blocks -->
-    <section class="section" id="building-blocks">
-
-        <div class="section-heading">
-            <span>MISSION 01</span>
-            <h2>From One Tiny Cell to Your Whole Body</h2>
+            <h2>
+                What are we trying to save?
+            </h2>
 
             <p>
-                Your body is organized into different levels.
-                Let's see how they fit together.
+                Before we investigate Hepatitis B, we need to understand
+                the tiny building blocks that keep your body alive.
             </p>
-        </div>
-
-
-        <div class="levels-container">
-
-            <div class="level-card">
-                <div class="level-number">01</div>
-                <div class="level-icon">🧫</div>
-
-                <h3>Cell</h3>
-
-                <p>
-                    The smallest basic unit of life.
-                </p>
-            </div>
-
-
-            <div class="level-arrow">→</div>
-
-
-            <div class="level-card">
-                <div class="level-number">02</div>
-                <div class="level-icon">🧩</div>
-
-                <h3>Tissue</h3>
-
-                <p>
-                    Groups of similar cells working together.
-                </p>
-            </div>
-
-
-            <div class="level-arrow">→</div>
-
-
-            <div class="level-card">
-                <div class="level-number">03</div>
-                <div class="level-icon">🫀</div>
-
-                <h3>Organ</h3>
-
-                <p>
-                    Different tissues working together.
-                </p>
-            </div>
-
-
-            <div class="level-arrow">→</div>
-
-
-            <div class="level-card">
-                <div class="level-number">04</div>
-                <div class="level-icon">🧍</div>
-
-                <h3>Organ System</h3>
-
-                <p>
-                    Organs working together to perform important jobs.
-                </p>
-            </div>
 
         </div>
 
 
-        <div class="lego-box">
+        <div class="briefing-cards">
 
-            <div class="lego-icon">🧱</div>
+            <div class="briefing-card">
 
-            <div>
-                <h3>Think of it like building with LEGO!</h3>
+                <div class="card-icon cell-icon">
+                    <div class="mini-cell">
+                        <div></div>
+                    </div>
+                </div>
 
-                <p>
-                    Small pieces can be put together to make something much
-                    bigger. Your body works in a similar way.
-                </p>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- Activity -->
-    <section class="activity-section" id="activity">
-
-        <div class="section-heading">
-            <span>MISSION 02</span>
-            <h2>🧠 Build the Body</h2>
-
-            <p>
-                Can you put the levels of organization in the correct order?
-            </p>
-        </div>
-
-
-        <div class="game-container">
-
-            <div class="game-instructions">
-
-                <h3>🎯 Your Mission</h3>
+                <h3>Cells</h3>
 
                 <p>
-                    Click the cards in the correct order, starting with
-                    the smallest level.
+                    Tiny living units that make up every part of your body.
                 </p>
 
-            </div>
-
-
-            <div class="game-progress">
-
-                <span id="progress-text">0 / 4</span>
-
-                <div class="progress-bar">
-                    <div id="progress-fill"></div>
+                <div class="card-number">
+                    01
                 </div>
 
             </div>
 
 
+            <div class="briefing-card">
+
+                <div class="card-icon tissue-icon">
+                    <div class="mini-cells">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <h3>Tissues</h3>
+
+                <p>
+                    Groups of similar cells working together.
+                </p>
+
+                <div class="card-number">
+                    02
+                </div>
+
+            </div>
+
+
+            <div class="briefing-card">
+
+                <div class="card-icon organ-icon">
+                    ◒
+                </div>
+
+                <h3>Organs</h3>
+
+                <p>
+                    Different tissues working together to do a job.
+                </p>
+
+                <div class="card-number">
+                    03
+                </div>
+
+            </div>
+
+
+            <div class="briefing-card">
+
+                <div class="card-icon system-icon">
+                    ◎
+                </div>
+
+                <h3>Organ Systems</h3>
+
+                <p>
+                    Groups of organs working together.
+                </p>
+
+                <div class="card-number">
+                    04
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Body organization -->
+    <section class="levels" id="levels">
+
+        <div class="section-title">
+
+            <div class="section-number">
+                MISSION 01
+            </div>
+
+            <h2>
+                From a tiny cell to your whole body
+            </h2>
+
+            <p>
+                Your body is organized like a giant team.
+                Each level has an important job.
+            </p>
+
+        </div>
+
+
+        <div class="body-path">
+
+            <div class="path-line"></div>
+
+
+            <div class="path-step">
+
+                <div class="step-circle">
+                    01
+                </div>
+
+                <div class="step-card">
+
+                    <div class="step-icon">
+                        CELL
+                    </div>
+
+                    <h3>Cell</h3>
+
+                    <p>
+                        The smallest basic unit of life.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="path-step">
+
+                <div class="step-circle">
+                    02
+                </div>
+
+                <div class="step-card">
+
+                    <div class="step-icon">
+                        TISSUE
+                    </div>
+
+                    <h3>Tissue</h3>
+
+                    <p>
+                        Similar cells working together.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="path-step">
+
+                <div class="step-circle">
+                    03
+                </div>
+
+                <div class="step-card">
+
+                    <div class="step-icon">
+                        ORGAN
+                    </div>
+
+                    <h3>Organ</h3>
+
+                    <p>
+                        Different tissues working together.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="path-step">
+
+                <div class="step-circle">
+                    04
+                </div>
+
+                <div class="step-card">
+
+                    <div class="step-icon">
+                        SYSTEM
+                    </div>
+
+                    <h3>Organ System</h3>
+
+                    <p>
+                        Organs working together.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="simple-idea">
+
+            <div class="idea-icon">
+                !
+            </div>
+
+            <div>
+
+                <strong>
+                    Think of it like building with LEGO.
+                </strong>
+
+                <p>
+                    Small pieces come together to build something much bigger.
+                    Your body works in a similar way.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Interactive activity -->
+    <section class="activity" id="activity">
+
+        <div class="section-title">
+
+            <div class="section-number">
+                MISSION 02
+            </div>
+
+            <h2>
+                Build the Body
+            </h2>
+
+            <p>
+                Can you put the levels of organization in the correct order?
+            </p>
+
+        </div>
+
+
+        <div class="game-box">
+
+            <div class="game-top">
+
+                <div>
+
+                    <span class="game-label">
+                        YOUR CHALLENGE
+                    </span>
+
+                    <h3>
+                        Start with the smallest level.
+                    </h3>
+
+                </div>
+
+                <div class="game-score">
+                    <span id="progress-text">0 / 4</span>
+                </div>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div id="progress-fill"></div>
+
+            </div>
+
+
+            <p class="game-instruction">
+                Click the cards in the order they appear in your body.
+            </p>
+
+
             <div class="game-cards">
 
                 <button class="game-card" data-answer="organ">
-                    <span>🫀</span>
-                    <strong>Organ</strong>
+
+                    <div class="game-card-icon">
+                        ◒
+                    </div>
+
+                    <strong>
+                        Organ
+                    </strong>
+
                 </button>
+
 
                 <button class="game-card" data-answer="cell">
-                    <span>🧫</span>
-                    <strong>Cell</strong>
+
+                    <div class="game-card-icon">
+                        ○
+                    </div>
+
+                    <strong>
+                        Cell
+                    </strong>
+
                 </button>
+
 
                 <button class="game-card" data-answer="system">
-                    <span>🧍</span>
-                    <strong>Organ System</strong>
+
+                    <div class="game-card-icon">
+                        ◎
+                    </div>
+
+                    <strong>
+                        Organ System
+                    </strong>
+
                 </button>
 
+
                 <button class="game-card" data-answer="tissue">
-                    <span>🧩</span>
-                    <strong>Tissue</strong>
+
+                    <div class="game-card-icon">
+                        ◌
+                    </div>
+
+                    <strong>
+                        Tissue
+                    </strong>
+
                 </button>
 
             </div>
@@ -285,7 +532,7 @@
 
 
             <button id="reset-game" class="reset-button">
-                🔄 Try Again
+                Try Again
             </button>
 
         </div>
@@ -293,41 +540,65 @@
     </section>
 
 
-    <!-- Coming next -->
-    <section class="next-section">
+    <!-- Next mission -->
+    <section class="next" id="next">
 
-        <div class="next-card">
+        <div class="next-content">
 
-            <div class="next-icon">
-                🔬
+            <div class="next-label">
+                NEXT MISSION
             </div>
 
-            <div>
+            <h2>
+                What's hiding inside a cell?
+            </h2>
 
-                <span>NEXT MISSION</span>
+            <p>
+                Every cell has tiny parts that help it stay alive.
+                Next, you'll meet the nucleus, mitochondria,
+                cytoplasm and cell membrane.
+            </p>
 
-                <h2>Let's Explore a Cell</h2>
+            <div class="next-parts">
 
-                <p>
-                    What's hiding inside a cell? Meet the nucleus,
-                    mitochondria, cytoplasm and cell membrane.
-                </p>
+                <span>Nucleus</span>
+                <span>Mitochondria</span>
+                <span>Cytoplasm</span>
+                <span>Cell membrane</span>
 
             </div>
+
+        </div>
+
+
+        <div class="next-cell">
+
+            <div class="next-cell-nucleus"></div>
+
+            <div class="next-cell-mito mito-a"></div>
+            <div class="next-cell-mito mito-b"></div>
+            <div class="next-cell-mito mito-c"></div>
 
         </div>
 
     </section>
 
 
+    <!-- Footer -->
     <footer>
 
-        <p>
-            🧬 Operation: Save the Liver
-        </p>
+        <div>
+            <strong>
+                Operation: Save the Liver
+            </strong>
+
+            <p>
+                An interactive Grade 7–8 biology experience.
+            </p>
+        </div>
 
         <span>
-            Grade 7–8 Biology
+            Cells • Tissues • Organs • Disease
         </span>
 
     </footer>
@@ -336,4 +607,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
