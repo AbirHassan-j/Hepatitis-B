@@ -418,3 +418,31 @@ const entry=(location.pathname.split('/').pop()||'index.html');({ 'index.html':i
   }
 
 })();
+
+if (location.pathname.endsWith("microscope.html")) {
+  const explored = new Set();
+
+  document.querySelectorAll("[data-easy]").forEach(button => {
+    button.addEventListener("click", () => {
+      explored.add(button.dataset.easy);
+
+      if (explored.size === 2) {
+        const next = document.getElementById("tissue-next");
+
+        if (next) {
+          next.disabled = false;
+        }
+
+        const feedback =
+          document.getElementById("easy-tissue-feedback");
+
+        if (feedback) {
+          feedback.insertAdjacentHTML(
+            "beforeend",
+            "<p>🏆 Great detective work! Both examples explored. You can now continue to the Rescue Lab!</p>"
+          );
+        }
+      }
+    });
+  });
+}
