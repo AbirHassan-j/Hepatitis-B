@@ -412,3 +412,416 @@ footer, footer a {
     height: 180px;
   }
 }
+
+/* =========================================
+   LIVERQUEST: BRIGHT COLOURFUL THEME
+   Paste at the END of style.css
+   ========================================= */
+
+:root {
+  --bg: #fff9ef;
+  --panel: #ffffff;
+  --panel2: #fff3fc;
+  --line: #ecdff4;
+  --text: #29304e;
+  --muted: #5e6580;
+  --lime: #7858e8;
+  --cyan: #00a3aa;
+  --orange: #ffad42;
+  --pink: #ff70b1;
+}
+
+body {
+  background:
+    radial-gradient(circle at 12% 8%, #ffe1f4, transparent 28%),
+    radial-gradient(circle at 90% 22%, #dcf7ff, transparent 28%),
+    radial-gradient(circle at 50% 65%, #fff2cc, transparent 35%),
+    #fff9ef;
+  color: var(--text);
+}
+
+h1, h2, h3, strong, b {
+  color: #29304e;
+}
+
+p {
+  color: #5e6580;
+}
+
+.topbar {
+  background: rgba(255,255,255,.95);
+  border-bottom: 3px solid #f0e0ff;
+  box-shadow: 0 5px 20px rgba(96,60,150,.08);
+}
+
+.logo, .logo .accent {
+  color: #7652df;
+}
+
+.logo-icon {
+  color: #ff70b1;
+}
+
+.topbar nav a {
+  color: #525a78;
+  font-weight: 700;
+}
+
+.topbar nav a:hover,
+.topbar nav a.active {
+  color: #6b41d9;
+  background: #f0e8ff;
+}
+
+.progress-track {
+  background: #e8ddfa;
+  height: 10px;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg,#ff79b8,#7b5cf1);
+}
+
+.eyebrow {
+  color: #8557de;
+}
+
+.pill, .chip {
+  color: #6841cf;
+  background: #f2eaff;
+  border: 2px solid #e0ceff;
+  letter-spacing: .04em;
+}
+
+.btn {
+  border-radius: 18px;
+  box-shadow: 0 5px 0 rgba(65,38,126,.13);
+}
+
+.btn.primary {
+  background: linear-gradient(120deg,#8c62f4,#bc75f9);
+  color: white;
+}
+
+.btn.secondary {
+  background: white;
+  color: #6841cf;
+  border: 2px solid #d7c5f9;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+}
+
+.panel {
+  background: #ffffff;
+  border: 2px solid #eee0f8;
+  border-radius: 25px;
+  box-shadow: 0 10px 24px rgba(107,77,155,.08);
+}
+
+.mission-card {
+  background: white;
+  border: 3px solid #eee2f8;
+  border-radius: 24px;
+  box-shadow: 0 8px 0 #f2e8fa;
+}
+
+.mission-card:nth-child(1) {
+  background: #fff0f8;
+  border-color: #ffb9dc;
+}
+.mission-card:nth-child(2) {
+  background: #f2edff;
+  border-color: #c9b4ff;
+}
+.mission-card:nth-child(3) {
+  background: #e9fbff;
+  border-color: #aaeaf6;
+}
+.mission-card:nth-child(4) {
+  background: #fff5da;
+  border-color: #ffda8c;
+}
+.mission-card:nth-child(5) {
+  background: #eaffef;
+  border-color: #ade8bb;
+}
+
+.mission-card:hover {
+  background: #fff;
+  transform: translateY(-7px) rotate(-1deg);
+  border-color: #8a64ed;
+}
+
+.mission-no, .card-arrow,
+.mission-card.done:after {
+  color: #7450d8;
+}
+
+.mission-icon {
+  font-size: 3rem;
+}
+
+.hero-copy h2 em {
+  color: #fa5b9d;
+}
+
+.hero-photo {
+  background: #fff;
+  border: 5px solid white;
+  border-radius: 28px;
+  box-shadow: 0 10px 35px #dfb9eb70;
+}
+
+.floating-label {
+  background: #ffffffef;
+  color: #482f75;
+  border-left: 6px solid #ff70b1;
+  border-radius: 12px;
+}
+
+.floating-label small {
+  color: #59617d;
+}
+
+.fact-banner {
+  background: linear-gradient(120deg,#fce4f3,#e4f7ff);
+  border: 2px solid #eed1f5;
+  border-radius: 25px;
+}
+
+.fact-figure, .fact-figure span {
+  color: #ed69a1;
+}
+
+.cell-stage {
+  background: linear-gradient(145deg,#e6faff,#fff0fa);
+  border: 3px dashed #d7b3f5;
+  border-radius: 22px;
+}
+
+.info-panel h2 {
+  color: #6545be;
+}
+
+.match-choice,
+.match-target,
+.answer,
+.quiz-option,
+.defence {
+  background: #f6f0ff;
+  color: #37304f;
+  border: 2px solid #dbc8fa;
+  border-radius: 16px;
+  font-weight: 700;
+}
+
+.match-choice:hover,
+.match-target:hover,
+.answer:hover,
+.quiz-option:hover,
+.defence:hover {
+  background: #ebe0ff;
+  border-color: #8660ea;
+}
+
+.match-choice.selected {
+  background: #ffe3f0;
+  outline: 3px solid #ff82ba;
+}
+
+.match-choice.correct,
+.match-target.correct,
+.quiz-option.correct,
+.myth.solved {
+  background: #dcfae7;
+  border-color: #45bc85;
+}
+
+.quiz-option.wrong {
+  background: #ffe2eb;
+  border-color: #ff718c;
+}
+
+.feedback, .discovery-count {
+  color: #6841cf;
+  font-weight: 700;
+}
+
+.callout {
+  background: #f0eaff;
+  border-left: 5px solid #9868eb;
+  border-radius: 13px;
+}
+
+.report {
+  background: #effaff;
+  border: 2px solid #caedf5;
+  color: #37435f;
+  border-radius: 17px;
+}
+
+.tissue-photo {
+  background: #fff9fd;
+  border: 3px solid #e8c7f4;
+  border-radius: 19px;
+  color: #303853;
+}
+
+.tissue-photo span {
+  color: #7652df;
+}
+
+.story-art {
+  background: linear-gradient(130deg,#ffe6f5,#e1f6ff);
+  color: #392c62;
+  border: 3px solid #f1d6f6;
+}
+
+.tissue-sim {
+  background: #f8dbf2;
+}
+
+.sim-cell {
+  color: #773b6c;
+}
+
+.micro-caption, .caption, .tiny {
+  color: #646b80;
+}
+
+footer {
+  background: white;
+  border-top: 3px solid #f1e2fa;
+}
+
+footer, footer a {
+  color: #6544a5;
+}
+
+/* New Cell City image */
+.cell-city-visual {
+  background: linear-gradient(130deg,#e5f8ff,#ffecf6);
+  border-radius: 22px;
+  padding: 18px;
+  border: 3px solid #dbc5ff;
+  text-align: center;
+}
+
+.cell-city-visual img {
+  display: block;
+  width: 100%;
+  max-height: 390px;
+  object-fit: contain;
+  margin: auto;
+  background: white;
+  border-radius: 18px;
+}
+
+.cell-part-buttons {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cell-part-buttons button {
+  padding: 15px 10px;
+  background: white;
+  color: #4e377e;
+  border: 2px solid #d8bdf6;
+  border-radius: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cell-part-buttons button:hover,
+.cell-part-buttons button:focus-visible {
+  background: #ffe5f2;
+  border-color: #ed78b0;
+}
+
+.cell-part-buttons button.visited {
+  background: #dcfae7;
+  border-color: #62c993;
+}
+
+.cell-city-caption {
+  margin-top: 12px;
+  font-size: .82rem;
+  color: #626783;
+}
+
+/* Beginner tissue activity */
+.tissue-kid-card {
+  background: #fff;
+  border: 3px solid #e5cdf8;
+  border-radius: 22px;
+  padding: 22px;
+  text-align: center;
+}
+
+.tissue-kid-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #faf4ff;
+  border-radius: 16px;
+}
+
+.tissue-kid-card h3 {
+  margin: 16px 0 8px;
+}
+
+.tissue-kid-card p {
+  font-size: .94rem;
+}
+
+.tissue-kid-card button {
+  background: #865fe7;
+  border: 0;
+  color: white;
+  border-radius: 14px;
+  padding: 13px 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tissue-kid-card button:hover {
+  background: #aa67ed;
+}
+
+.tissue-explainer {
+  background: #fff3d8;
+  border: 2px solid #ffd68b;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 25px 0;
+}
+
+.tissue-explainer p {
+  margin-bottom: 0;
+}
+
+.tissue-discovery {
+  background: #e9fbf0;
+  padding: 18px;
+  border: 2px solid #8cdbac;
+  border-radius: 15px;
+  margin: 15px 0;
+}
+
+@media(max-width:700px) {
+  .cell-part-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cell-city-visual img {
+    max-height: 280px;
+  }
+
+  .tissue-kid-card img {
+    height: 180px;
+  }
+}
