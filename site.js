@@ -18,3 +18,403 @@ function initLab(){shell('Mission 04: The Rescue Lab','Run safe virtual experime
 function initFinale(){shell('Mission 05: Final Showdown','One last challenge! Answer five questions, see your score, and claim your Science Defender badge.',`<section class="final-layout"><div class="panel challenge"><div class="sectionline"><div><div class="eyebrow">🏁 THE FINAL BOSS</div><h2>Can you save Cell City?</h2></div><span class="chip" id="quiz-progress">QUESTION 1 / 5</span></div><div id="quiz-area"></div><div id="quiz-result" aria-live="polite"></div></div><div class="panel badge-panel"><div class="badge-emblem">✚<span>SCIENCE<br>DEFENDER</span>★</div><h3>YOUR DEFENDER BADGE</h3><p id="badge-text">Finish the challenge to unlock your badge.</p><div class="badges-earned"><b>Adventure progress</b><div class="progress-track"><div class="progress-fill"></div></div><span class="progress-num"></span></div></div></section>`,'05 / FINAL CHALLENGE');const Q=[['Which organ does hepatitis B mainly infect?',['Heart','Liver','Brain'],1,'HBV targets the liver.'],['Which cell part stores the cell’s DNA?',['Nucleus','Membrane','Mitochondria'],0,'The nucleus holds the cell’s genetic instructions.'],['What can cause much of the liver cell injury in hepatitis B?',['Your immune response attacking infected cells','Hugging a classmate','Eating bread'],0,'The immune response can damage infected liver cells and cause inflammation.'],['What can long-term liver injury sometimes lead to?',['Scar tissue','Extra bones','Green blood'],0,'Repeated injury can lead to fibrosis and, in some cases, cirrhosis.'],['What helps prevent hepatitis B?',['Sharing used needles','Vaccination','Waiting until you feel sick'],1,'Vaccination helps prevent hepatitis B.']];let i=0,score=0;function display(){if(i>=Q.length){save('finale');document.getElementById('quiz-area').innerHTML=`<div class="result-emoji">${score===5?'🏆':'🎉'}</div><h2>MISSION COMPLETE!</h2><p>You earned <strong>${score}/5</strong> correct answers. ${score===5?'A perfect score — incredible investigation!':'Every scientific mystery teaches us something. Try again to improve your score!'}</p><button class="btn primary" id="again">PLAY AGAIN ↺</button> <a class="btn secondary" href="index.html">MISSION MAP →</a>`;document.getElementById('quiz-progress').textContent='MISSION FINISHED';document.getElementById('badge-text').textContent=`UNLOCKED! Science Defender — ${score}/5 answers correct!`;document.getElementById('again').onclick=()=>{i=0;score=0;display()};return}let q=Q[i];document.getElementById('quiz-progress').textContent=`QUESTION ${i+1} / 5`;document.getElementById('quiz-area').innerHTML=`<h3 class="question">${q[0]}</h3><div class="quiz-options">${q[1].map((a,j)=>`<button class="quiz-option" data-qanswer="${j}"><span>${'ABC'[j]}</span>${a}</button>`).join('')}</div><p class="feedback" id="q-feedback" role="status">Choose the best answer.</p><button class="btn primary" id="q-next" disabled>${i===4?'SEE MY RESULTS →':'NEXT QUESTION →'}</button>`;document.querySelectorAll('[data-qanswer]').forEach(b=>b.onclick=()=>{if(document.getElementById('q-next').disabled===false)return;const good=+b.dataset.qanswer===q[2];if(good)score++;b.classList.add(good?'correct':'wrong');document.querySelectorAll('[data-qanswer]').forEach(x=>{x.disabled=true;if(+x.dataset.qanswer===q[2])x.classList.add('correct')});document.getElementById('q-feedback').textContent=(good?'✅ Nice work! ':'💡 Not quite. ')+q[3];document.getElementById('q-next').disabled=false});document.getElementById('q-next').onclick=()=>{i++;display()}}display()}
 function initCredits(){shell('Behind the Science','Every real microscopic image has a source. Follow these links for credits, reuse rules, and further reading.',`<section class="panel challenge"><h2>Real scientific images used in this adventure</h2><p>All image URLs are from Wikimedia Commons. Please keep these credits visible on your published site and check each license before redistribution.</p><div class="credit-list"><p><b>Virus electron micrograph:</b> CDC / Dr. Erskine Palmer (public domain). <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Hepatitis_B_virus_01.jpg">Original and license ↗</a></p><p><b>Colorized virus micrograph:</b> NIAID/CDC, Wikimedia Commons. <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Hepatitis_b.jpg">Original and license ↗</a></p><p><b>Healthy liver cells:</b> Paulo Abrahamsohn. <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Liver-H%26E.jpg">Original and license ↗</a></p><p><b>Hepatitis B ground-glass histology:</b> Mark ong (CC BY-SA 4.0). <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Hepatits_B_ground_glass_H%26E.jpg">Original and license ↗</a></p><p><b>High magnification ground-glass cells:</b> Nephron (CC BY-SA 3.0). <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Ground_glass_hepatocytes_high_mag_cropped.jpg">Original and license ↗</a></p><p><b>Hepatocyte illustration:</b> NIAID BioArt (public domain). <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Hepatocyte.svg">Original and license ↗</a></p></div><h2>Science fact-check sources</h2><div class="credit-list"><p><a target="_blank" href="https://www.cdc.gov/hepatitis-b/hcp/clinical-overview/">CDC — Clinical Overview of Hepatitis B ↗</a></p><p><a target="_blank" href="https://www.niddk.nih.gov/health-information/liver-disease/viral-hepatitis/hepatitis-b">NIDDK — Hepatitis B ↗</a></p><p><a target="_blank" href="https://www.niddk.nih.gov/health-information/liver-disease/cirrhosis">NIDDK — Cirrhosis ↗</a></p></div><div class="callout"><strong>A note about the simulation</strong><p>Our simulated tissue is a teaching model, not a medical prediction or diagnostic tool. Real changes depend on many factors, and actual diagnosis requires a clinician.</p></div></section>`,'IMAGE & RESEARCH CREDITS')}
 const entry=(location.pathname.split('/').pop()||'index.html');({ 'index.html':initHome,'cells.html':initCells,'invasion.html':initInvasion,'microscope.html':initMicroscope,'lab.html':initLab,'finale.html':initFinale,'credits.html':initCredits}[entry]||initHome)();
+
+/* =========================================
+   LIVERQUEST: CELL CITY + TISSUE UPGRADE
+   Paste at the END of site.js
+   ========================================= */
+
+(function upgradeLiverQuest() {
+
+  // These are real illustrations hosted by Wikimedia Commons.
+  // You can download them locally later for school compatibility.
+
+  const scientificImages = {
+    detailedCell:
+      "https://commons.wikimedia.org/wiki/Special:Redirect/file/Animal_cell_structure_en.svg",
+
+    simpleCell:
+      "https://commons.wikimedia.org/wiki/Special:Redirect/file/Simple_diagram_of_animal_cell_(en).svg",
+
+    liver:
+      "https://commons.wikimedia.org/wiki/Special:Redirect/file/Human_Liver_(NIH_BioArt_230).svg"
+  };
+
+  const currentPage =
+    window.location.pathname.split("/").pop() || "index.html";
+
+  // =====================================
+  // MISSION 01: IMPROVED CELL CITY
+  // =====================================
+
+  if (currentPage === "cells.html") {
+
+    const oldCellStage = document.querySelector(".cell-stage");
+
+    if (oldCellStage) {
+
+      oldCellStage.outerHTML = `
+        <div class="cell-city-visual">
+
+          <img
+            src="${scientificImages.detailedCell}"
+            alt="Detailed scientific animal cell illustration
+            showing the nucleus, mitochondria,
+            cytoplasm, membrane, and other parts."
+            loading="eager"
+          >
+
+          <p class="cell-city-caption">
+            🔬 This is a detailed model of an animal cell.
+            Liver cells have many of these same parts.
+          </p>
+
+          <h3>🏙️ Explore Cell City!</h3>
+
+          <p>
+            Imagine that each cell is a tiny city.
+            Tap each location to find out what it does!
+          </p>
+
+          <div class="cell-part-buttons">
+
+            <button data-city="nucleus">
+              🧠 City Hall
+              <br>
+              <small>Nucleus</small>
+            </button>
+
+            <button data-city="membrane">
+              🚪 City Gates
+              <br>
+              <small>Cell membrane</small>
+            </button>
+
+            <button data-city="mitochondria">
+              ⚡ Power Stations
+              <br>
+              <small>Mitochondria</small>
+            </button>
+
+            <button data-city="cyto">
+              🌊 City Space
+              <br>
+              <small>Cytoplasm</small>
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      const cellInformation = {
+
+        nucleus: {
+          name: "🧠 City Hall: The Nucleus",
+          description:
+            "The nucleus holds DNA, which contains the cell's instructions. " +
+            "When hepatitis B infects a liver cell, viral DNA enters " +
+            "the nucleus and forms a template that helps the virus reproduce."
+        },
+
+        membrane: {
+          name: "🚪 City Gates: Cell Membrane",
+          description:
+            "The membrane surrounds the cell and controls what enters " +
+            "and leaves. Hepatitis B attaches to a special doorway " +
+            "on a liver cell before entering."
+        },
+
+        mitochondria: {
+          name: "⚡ Power Stations: Mitochondria",
+          description:
+            "Mitochondria help provide energy for the cell. " +
+            "Liver cells need energy to perform important jobs, " +
+            "such as processing nutrients."
+        },
+
+        cyto: {
+          name: "🌊 City Space: Cytoplasm",
+          description:
+            "Cytoplasm is the jelly-like material inside the cell. " +
+            "It surrounds the cell parts. Hepatitis B uses machinery " +
+            "inside infected cells to help produce viral components."
+        }
+
+      };
+
+      const explored = new Set();
+
+      document.querySelectorAll("[data-city]").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          const key = button.dataset.city;
+          const part = cellInformation[key];
+
+          explored.add(key);
+
+          button.classList.add("visited");
+
+          document.getElementById("part-title").textContent =
+            part.name;
+
+          document.getElementById("part-desc").textContent =
+            part.description;
+
+          document.getElementById("discovery").textContent =
+            explored.size + " of 4 discovered";
+
+          if (explored.size === 4) {
+            toast("🎉 Amazing! You explored all four parts!");
+          }
+
+        });
+
+      });
+
+      // Replace the small side illustration with an easier diagram.
+
+      const smallIllustration =
+        document.querySelector(".mini-science img");
+
+      if (smallIllustration) {
+        smallIllustration.src = scientificImages.simpleCell;
+        smallIllustration.alt =
+          "Simple labelled animal cell diagram showing four main cell parts.";
+      }
+    }
+  }
+
+
+  // =====================================
+  // MISSION 03: KID-FRIENDLY TISSUE LAB
+  // =====================================
+
+  if (currentPage === "microscope.html") {
+
+    const originalGrid = document.querySelector(".tissue-grid");
+
+    if (originalGrid) {
+
+      const introduction = document.createElement("section");
+
+      introduction.innerHTML = `
+        <div class="tissue-explainer">
+
+          <h2>🍪 Think of liver tissue like a cookie!</h2>
+
+          <p>
+            Imagine one chocolate chip is a cell.
+            Lots of chocolate chips together are like
+            a group of cells making tissue.
+            Different tissues work together to form
+            an organ, such as your liver!
+          </p>
+
+        </div>
+
+        <div class="tissue-grid">
+
+          <div class="tissue-kid-card">
+
+            <img
+              src="${scientificImages.simpleCell}"
+              alt="Simple animal cell diagram"
+            >
+
+            <h3>😊 Healthy Liver Cells</h3>
+
+            <p>
+              Healthy liver cells work together to
+              process nutrients, make bile, and
+              support the body.
+            </p>
+
+            <button data-easy="healthy">
+              Explore Healthy Cells
+            </button>
+
+          </div>
+
+          <div class="tissue-kid-card">
+
+            <img
+              src="${scientificImages.liver}"
+              alt="Scientific illustration of a human liver"
+            >
+
+            <h3>🦠 Liver With Hepatitis B</h3>
+
+            <p>
+              Hepatitis B infects liver cells.
+              The immune system responds, and
+              inflammation can injure these cells.
+            </p>
+
+            <button data-easy="infected">
+              Explore Hepatitis B
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="tissue-discovery"
+             id="easy-tissue-feedback"
+             aria-live="polite">
+
+          🔎 Select one of the cards to begin investigating!
+
+        </div>
+
+        <div class="tissue-explainer">
+
+          <h3>🧩 From Tiny Cells to Your Whole Body</h3>
+
+          <p>
+            🧫 Liver cells
+            ➜ 🧩 Liver tissue
+            ➜ 🫀 Liver organ
+            ➜ 🧍 Body systems
+          </p>
+
+          <p>
+            Hepatitis B starts by infecting liver cells.
+            When many cells are affected, the liver tissue
+            may become inflamed or damaged.
+          </p>
+
+        </div>
+      `;
+
+      originalGrid.before(introduction);
+
+      // Make the more advanced REAL microscope images optional.
+      // They remain available for curious students.
+
+      const details = document.createElement("details");
+
+      details.style.margin = "25px 0";
+      details.style.padding = "20px";
+      details.style.background = "#f5edff";
+      details.style.borderRadius = "18px";
+      details.style.border = "2px solid #dbc8fa";
+
+      details.innerHTML = `
+        <summary style="
+          cursor:pointer;
+          font-weight:800;
+          color:#6841cf;
+          font-size:1.1rem;
+        ">
+          🔬 BONUS: Open the REAL microscope pictures!
+        </summary>
+
+        <p style="margin-top:15px">
+          Scientists colour thin slices of liver tissue
+          pink and purple so they can see the cells.
+          Look for the darker dots: many are cell nuclei!
+        </p>
+      `;
+
+      originalGrid.before(details);
+      details.appendChild(originalGrid);
+
+      // Move the original specimen report into the bonus section.
+
+      const report =
+        document.getElementById("specimen-report");
+
+      if (report) {
+        details.appendChild(report);
+      }
+
+      // Keep original detective quiz available,
+      // because it teaches about real histology.
+
+      const oldQuestion =
+        document.querySelector(".quiz-mini");
+
+      if (oldQuestion) {
+        details.appendChild(oldQuestion);
+      }
+
+      // Move the advanced magnification section into bonus too.
+
+      const zoomTitle = [...document.querySelectorAll("h3")]
+        .find(h => h.textContent.includes("Ground-glass cells"));
+
+      if (zoomTitle) {
+        const zoomSection = zoomTitle.nextElementSibling;
+        details.appendChild(zoomTitle);
+
+        if (zoomSection) {
+          details.appendChild(zoomSection);
+        }
+      }
+
+      // Beginner activity responses.
+
+      document.querySelectorAll("[data-easy]")
+        .forEach(button => {
+
+          button.addEventListener("click", () => {
+
+            const output =
+              document.getElementById("easy-tissue-feedback");
+
+            if (button.dataset.easy === "healthy") {
+
+              output.innerHTML = `
+                ✅ <strong>Healthy Tissue!</strong>
+                <p>
+                  Imagine a team where everybody is doing
+                  their job. Healthy liver cells work together
+                  to keep the liver working properly.
+                </p>
+              `;
+
+            } else {
+
+              output.innerHTML = `
+                🦠 <strong>Hepatitis B Investigation!</strong>
+                <p>
+                  The virus enters liver cells and uses their
+                  machinery. Immune defenders can then attack
+                  infected cells. This may cause inflammation,
+                  meaning the liver tissue becomes irritated
+                  and some cells are injured.
+                </p>
+                <p>
+                  Over a long time, repeated damage can sometimes
+                  create scar tissue, making it harder for the
+                  liver to work.
+                </p>
+              `;
+
+            }
+
+          });
+
+        });
+
+      // Explain how to unlock the next mission.
+
+      const next = document.getElementById("tissue-next");
+
+      if (next) {
+
+        const help = document.createElement("p");
+
+        help.textContent =
+          "⭐ Extra challenge: Open the real microscope pictures " +
+          "and solve the detective question to unlock the next mission.";
+
+        next.before(help);
+
+      }
+    }
+  }
+
+})();
