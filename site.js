@@ -1312,3 +1312,376 @@ if (location.pathname.endsWith("microscope.html")) {
     `);
   }
 }
+
+/* ==========================================
+   MISSION 1 — COMPLETE CELL CITY IMPROVEMENT
+   Paste at the END of site.js
+   ========================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "cells.html") return;
+
+  const diagram = document.querySelector(".clean-cell-visual");
+  const partTitle = document.getElementById("part-title");
+  const partDesc = document.getElementById("part-desc");
+  const partFact = document.getElementById("part-fact");
+  const buttonArea = document.getElementById("cell-parts");
+
+  if (!diagram || !partTitle || !partDesc || !buttonArea) return;
+
+  // Bigger text and improved appearance.
+  const style = document.createElement("style");
+  style.textContent = `
+    .clean-cell-visual {
+      background: linear-gradient(135deg,#fff0fa,#e7faff);
+      border: 3px solid #dab7f6;
+      border-radius: 26px;
+      padding: 16px;
+    }
+
+    .clean-cell-visual svg {
+      width: 100%;
+      display: block;
+      height: auto;
+    }
+
+    .info-panel #part-title {
+      font-size: 2rem;
+      color: #7045bd;
+      line-height: 1.3;
+    }
+
+    .info-panel #part-desc {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #454b65;
+    }
+
+    .info-panel #part-fact {
+      font-size: 1.12rem;
+      line-height: 1.7;
+      background: #fff2d9;
+      border-left: 6px solid #ffac4c;
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .cell-choices button {
+      font-size: 1.05rem;
+      padding: 16px 12px;
+      font-weight: 800;
+    }
+
+    .cell-choices button.selected {
+      background: #d8fae8;
+      border-color: #36b884;
+      box-shadow: 0 0 0 3px #a3efca;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Perfect circular cell with all organelles inside.
+  diagram.innerHTML = `
+    <svg viewBox="0 0 600 480"
+         role="img"
+         aria-label="Interactive circular liver cell with eight cell parts">
+
+      <defs>
+        <radialGradient id="newCellPink">
+          <stop offset="0%" stop-color="#ffe8f3"/>
+          <stop offset="100%" stop-color="#f8a8cd"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Circular cell membrane -->
+      <circle cx="300" cy="240" r="205"
+              fill="url(#newCellPink)"
+              stroke="#e86eab"
+              stroke-width="10"/>
+
+      <circle cx="300" cy="240" r="193"
+              fill="none"
+              stroke="#fff3b8"
+              stroke-width="5"/>
+
+      <!-- Endoplasmic reticulum -->
+      <g fill="none" stroke="#8d7bd9"
+         stroke-width="10" stroke-linecap="round">
+        <path d="M225 163 Q155 141 159 184 Q168 208 224 201"/>
+        <path d="M218 219 Q145 210 160 249 Q178 273 228 257"/>
+        <path d="M225 278 Q173 272 185 309 Q202 327 241 305"/>
+      </g>
+
+      <!-- Ribosomes -->
+      <g fill="#713da8">
+        <circle cx="173" cy="168" r="5"/>
+        <circle cx="189" cy="183" r="5"/>
+        <circle cx="162" cy="232" r="5"/>
+        <circle cx="184" cy="267" r="5"/>
+        <circle cx="213" cy="300" r="5"/>
+        <circle cx="366" cy="110" r="5"/>
+        <circle cx="452" cy="254" r="5"/>
+      </g>
+
+      <!-- Nucleus -->
+      <circle cx="300" cy="228" r="78"
+              fill="#b98de9"
+              stroke="#783ab5"
+              stroke-width="7"/>
+
+      <circle cx="300" cy="228" r="19"
+              fill="#69359b"/>
+
+      <!-- Simple DNA shapes -->
+      <g stroke="#eddcff" fill="none" stroke-width="4">
+        <path d="M275 181 Q330 226 278 273"/>
+        <path d="M325 181 Q271 226 326 273"/>
+        <path d="M282 193 L318 193"/>
+        <path d="M281 258 L320 258"/>
+      </g>
+
+      <!-- Mitochondria -->
+      <g fill="#ffbf70" stroke="#d27b38"
+         stroke-width="5">
+        <ellipse cx="414" cy="320" rx="42" ry="24"
+                 transform="rotate(-25 414 320)"/>
+        <ellipse cx="208" cy="341" rx="39" ry="22"
+                 transform="rotate(20 208 341)"/>
+        <ellipse cx="410" cy="145" rx="37" ry="22"/>
+      </g>
+
+      <!-- Inner folds -->
+      <g stroke="#b66b31" stroke-width="3" fill="none">
+        <path d="M386 319 l11 -12 10 18 12 -15 12 13"/>
+        <path d="M182 341 l9 -11 11 15 9 -11 12 12"/>
+        <path d="M386 144 l9 -11 11 15 10 -12 12 12"/>
+      </g>
+
+      <!-- Golgi apparatus -->
+      <g fill="none" stroke="#3bbfab"
+         stroke-width="9" stroke-linecap="round">
+        <path d="M331 359 Q370 381 408 355"/>
+        <path d="M340 375 Q372 392 400 373"/>
+        <path d="M349 389 Q375 400 392 389"/>
+      </g>
+
+      <!-- Small transport vesicles -->
+      <g fill="#4cd8c4" stroke="#289c90"
+         stroke-width="2">
+        <circle cx="424" cy="381" r="7"/>
+        <circle cx="319" cy="382" r="6"/>
+      </g>
+
+      <!-- Lysosomes -->
+      <g fill="#f9dc6c" stroke="#d5a33d" stroke-width="4">
+        <circle cx="449" cy="220" r="18"/>
+        <circle cx="265" cy="385" r="15"/>
+      </g>
+
+      <!-- Interactive pointer -->
+      <circle id="organ-ring"
+              cx="300" cy="228" r="84"
+              fill="none"
+              stroke="#12bc85"
+              stroke-width="7"
+              visibility="hidden"/>
+
+      <path id="organ-pointer"
+            fill="none"
+            stroke="#6743bd"
+            stroke-width="5"
+            stroke-linecap="round"
+            visibility="hidden"/>
+
+      <rect id="organ-tag-bg"
+            x="315" y="5"
+            width="265" height="44"
+            rx="14"
+            fill="white"
+            stroke="#8b61e8"
+            stroke-width="3"
+            visibility="hidden"/>
+
+      <text id="organ-tag"
+            x="448" y="34"
+            text-anchor="middle"
+            font-size="21"
+            font-weight="bold"
+            fill="#6540bb">
+      </text>
+    </svg>
+  `;
+
+  // Longer, Grade 7/8-friendly explanations.
+  const parts = [
+    {
+      id: "nucleus",
+      name: "🧠 Nucleus",
+      desc:
+        "The nucleus is like the control centre of the cell. " +
+        "It stores important instructions that help the cell " +
+        "grow, work, and make the materials it needs. " +
+        "Imagine a school office that keeps important " +
+        "instructions and helps everything run smoothly.",
+      fact:
+        "Hepatitis B brings its own instructions into " +
+        "the nucleus. This helps the virus make more " +
+        "copies of itself using the liver cell.",
+      x: 300, y: 228, r: 85
+    },
+    {
+      id: "membrane",
+      name: "🛡️ Cell Membrane",
+      desc:
+        "The cell membrane is the thin outer layer " +
+        "that surrounds the cell. It works like a " +
+        "security gate, helping control which materials " +
+        "enter and leave. It also helps keep everything " +
+        "inside the cell together and protected.",
+      fact:
+        "Hepatitis B attaches to a special doorway " +
+        "on the liver cell's surface before entering.",
+      x: 300, y: 240, r: 205
+    },
+    {
+      id: "mitochondria",
+      name: "⚡ Mitochondria",
+      desc:
+        "Mitochondria are the power stations of the cell. " +
+        "They help turn energy from food into energy " +
+        "the cell can use. Think of them like a battery " +
+        "that helps power important activities. " +
+        "Your liver cells need energy throughout the day.",
+      fact:
+        "Liver cells use energy to process nutrients " +
+        "and perform their many important jobs.",
+      x: 414, y: 320, r: 42
+    },
+    {
+      id: "cytoplasm",
+      name: "🫧 Cytoplasm",
+      desc:
+        "Cytoplasm is the jelly-like material that " +
+        "fills much of the cell. It surrounds the " +
+        "organelles and helps keep them in place. " +
+        "Imagine pieces of fruit floating in jelly. " +
+        "Many important activities happen here.",
+      fact:
+        "Some steps involved in making new hepatitis B " +
+        "virus particles happen inside the cell.",
+      x: 357, y: 320, r: 27
+    },
+    {
+      id: "ribosomes",
+      name: "🏭 Ribosomes",
+      desc:
+        "Ribosomes are tiny protein factories. " +
+        "They build proteins, which help cells " +
+        "grow, repair themselves, and do their jobs. " +
+        "Imagine factory workers following instructions " +
+        "to make useful products.",
+      fact:
+        "Hepatitis B uses the cell's ribosomes " +
+        "to help make parts for new viruses.",
+      x: 181, y: 220, r: 36
+    },
+    {
+      id: "er",
+      name: "🛤️ Endoplasmic Reticulum",
+      desc:
+        "The endoplasmic reticulum, or ER, is a " +
+        "network of tiny passages inside the cell. " +
+        "It helps make and prepare important materials. " +
+        "Think of it like a factory with different " +
+        "work areas connected by passageways.",
+      fact:
+        "Some proteins used by hepatitis B " +
+        "are prepared in this part of the cell.",
+      x: 199, y: 243, r: 52
+    },
+    {
+      id: "golgi",
+      name: "📦 Golgi Apparatus",
+      desc:
+        "The Golgi apparatus is the cell's " +
+        "packaging and delivery centre. " +
+        "It receives materials, prepares them, " +
+        "and sends them to where they are needed. " +
+        "Imagine a post office sorting packages " +
+        "for delivery.",
+      fact:
+        "The Golgi helps liver cells organize " +
+        "and deliver important materials.",
+      x: 373, y: 376, r: 36
+    },
+    {
+      id: "lysosomes",
+      name: "♻️ Lysosomes",
+      desc:
+        "Lysosomes are the cell's cleaning and " +
+        "recycling centres. They break down " +
+        "old or unwanted materials so the cell " +
+        "can stay organized and healthy. " +
+        "Imagine a recycling team working inside " +
+        "a busy city.",
+      fact:
+        "Recycling damaged materials helps " +
+        "liver cells maintain a healthy environment.",
+      x: 449, y: 220, r: 25
+    }
+  ];
+
+  // Rebuild the same eight buttons.
+  buttonArea.innerHTML = parts.map((part, index) => `
+    <button data-new-cell="${part.id}">
+      ${index + 1}. ${part.name}
+    </button>
+  `).join("");
+
+  const discovered = new Set();
+
+  document.querySelectorAll("[data-new-cell]").forEach(button => {
+    button.addEventListener("click", () => {
+      const part = parts.find(p => p.id === button.dataset.newCell);
+      if (!part) return;
+
+      discovered.add(part.id);
+
+      document.querySelectorAll("[data-new-cell]").forEach(b => {
+        b.classList.toggle("selected", b === button);
+      });
+
+      partTitle.textContent = part.name;
+      partDesc.textContent = part.desc;
+
+      if (partFact) {
+        partFact.textContent = "🦠 " + part.fact;
+      }
+
+      const count = document.getElementById("discovery");
+      if (count) {
+        count.textContent =
+          `${discovered.size} of 8 parts discovered`;
+      }
+
+      const ring = document.getElementById("organ-ring");
+      ring.setAttribute("cx", part.x);
+      ring.setAttribute("cy", part.y);
+      ring.setAttribute("r", part.r);
+      ring.setAttribute("visibility", "visible");
+
+      const pointer = document.getElementById("organ-pointer");
+      pointer.setAttribute(
+        "d", `M${part.x} ${part.y - part.r} L448 49`
+      );
+      pointer.setAttribute("visibility", "visible");
+
+      document.getElementById("organ-tag-bg")
+        .setAttribute("visibility", "visible");
+
+      document.getElementById("organ-tag").textContent =
+        part.name.replace(/^\S+\s/, "");
+    });
+  });
+})();
