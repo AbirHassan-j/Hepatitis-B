@@ -1383,3 +1383,106 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* TISSUE DETECTIVE COLOUR LEGEND */
+
+.tissue-legend {
+  background: linear-gradient(135deg,#fff6fc,#eef9ff);
+  border: 3px solid #e4cbf7;
+  border-radius: 24px;
+  padding: 26px;
+  margin: 25px 0;
+}
+
+.tissue-legend h3 {
+  color: #6744b7;
+  font-size: 1.6rem;
+}
+
+.tissue-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  border: 2px solid #e9daf3;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.legend-item strong {
+  display: block;
+  color: #40345c;
+  font-size: 1rem;
+}
+
+.legend-item p {
+  color: #596077;
+  margin: 5px 0 0;
+  font-size: .9rem;
+  line-height: 1.5;
+}
+
+.legend-symbol {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.healthy-symbol {
+  background: #f4a8c2;
+  border: 3px solid #d9709d;
+  border-radius: 40%;
+}
+
+.nucleus-symbol {
+  background: #9254bf;
+  border-radius: 50%;
+}
+
+.injured-symbol {
+  background: #ffc382;
+  border: 3px solid #ea855b;
+  color: #ae2648;
+  border-radius: 40%;
+}
+
+.immune-symbol {
+  background: #80d3ff;
+  border: 3px solid #258bc4;
+  color: #126399;
+  border-radius: 50%;
+}
+
+.scar-symbol {
+  background: repeating-linear-gradient(
+    0deg,
+    #d5a95e 0 9px,
+    #fff0ba 9px 18px
+  );
+  border-radius: 7px;
+}
+
+.legend-note {
+  background: #fff2d8;
+  border-radius: 14px;
+  padding: 15px;
+  margin-top: 20px;
+  font-size: .95rem;
+}
+
+@media(max-width:700px) {
+  .tissue-legend-grid {
+    grid-template-columns: 1fr;
+  }
+}
