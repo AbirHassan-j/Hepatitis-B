@@ -1117,3 +1117,154 @@ h3 {
 
   .science-expansion { padding: 20px; }
 }
+
+/* CLEAN CELL CITY AND TISSUE DETECTIVE STYLES */
+
+.clean-cell-visual {
+  background: linear-gradient(140deg,#e9faff,#fff0f8);
+  border: 3px solid #d9bbfa;
+  border-radius: 22px;
+  padding: 12px;
+}
+
+.clean-cell-visual svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cell-choices {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cell-choices button {
+  padding: 16px 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 2px solid #aa93ed;
+  background: #f3eaff;
+  color: #52329a;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.cell-choices button:hover,
+.cell-choices button.selected {
+  background: #dff7ed;
+  border-color: #45ba85;
+}
+
+.kid-tissue-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+
+.kid-tissue-card {
+  background: #fff5fa;
+  border: 2px solid #ecd1f2;
+  border-radius: 22px;
+  padding: 18px;
+  text-align: center;
+}
+
+.kid-tissue-card:nth-child(2) {
+  background: #fff0e2;
+  border-color: #ffcaab;
+}
+
+.kid-tissue-picture {
+  display: grid;
+  grid-template-columns: repeat(5,minmax(0,1fr));
+  gap: 6px;
+  background: #f9deed;
+  position: relative;
+  border-radius: 16px;
+  padding: 18px 10px;
+  margin: 16px 0;
+  min-height: 220px;
+}
+
+.kid-cell {
+  aspect-ratio: 1;
+  background: #f4a8c2;
+  border: 3px solid #d9709d;
+  border-radius: 40%;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.kid-cell i {
+  display: block;
+  width: 38%;
+  aspect-ratio: 1;
+  background: #9254bf;
+  border-radius: 50%;
+}
+
+.kid-cell.hurt {
+  background: #ffc382;
+  border-color: #ea855b;
+  transform: rotate(-12deg);
+}
+
+.kid-cell.hurt::after {
+  content: "✕";
+  position: absolute;
+  color: #af2347;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.immune-marker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  background: #7bcaff;
+  color: #165e91;
+  border: 3px solid #2383c0;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.scar-marker {
+  display: none;
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 48%;
+  width: 13px;
+  border-radius: 10px;
+  background: repeating-linear-gradient(
+    0deg,
+    #d5a95e 0 8px,
+    #fff0ba 8px 16px
+  );
+  transform: rotate(14deg);
+}
+
+.scar-marker.visible {
+  display: block;
+}
+
+.info-panel {
+  font-size: 1.08rem;
+}
+
+.info-panel #part-title {
+  font-size: 1.8rem;
+}
+
+@media (max-width:700px) {
+  .kid-tissue-grid {
+    grid-template-columns: 1fr;
+  }
+}
