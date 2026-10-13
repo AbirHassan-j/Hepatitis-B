@@ -2488,3 +2488,23 @@ if (location.pathname.endsWith("microscope.html")) {
 
   showQuestion();
 })();
+
+/* REPLACE YOUTUBE VIDEO WITH RECORDED VIDEO */
+
+if (location.pathname.endsWith("cells.html")) {
+  const videoBox = document.querySelector(".city-video-wrapper");
+
+  if (videoBox) {
+    videoBox.innerHTML = `
+      <video
+        controls
+        playsinline
+        preload="metadata"
+        style="width:100%;height:100%;background:black;border-radius:18px"
+      >
+        <source src="cell-city-video.mp4" type="video/mp4">
+        Your browser does not support this video.
+      </video>
+    `;
+  }
+}
