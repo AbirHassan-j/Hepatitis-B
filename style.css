@@ -825,3 +825,295 @@ footer, footer a {
     height: 180px;
   }
 }
+
+/* ==========================================
+   LIVERQUEST - VISUAL & FONT UPGRADE
+   Paste at the END of style.css
+   ========================================== */
+
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+p, li {
+  font-size: 1.07rem;
+  line-height: 1.8;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.12;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 3vw, 2.6rem);
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.4rem;
+  line-height: 1.35;
+}
+
+.pagehead > p {
+  font-size: 1.2rem;
+}
+
+.panel {
+  padding: clamp(22px, 3vw, 38px);
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(103, 65, 150, .10);
+}
+
+.btn, button {
+  font-size: 1rem;
+}
+
+.btn {
+  padding: 18px 27px;
+  border-radius: 17px;
+}
+
+.match-choice,
+.match-target,
+.quiz-option,
+.answer,
+.defence {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  padding: 20px;
+}
+
+.caption,
+.micro-caption,
+.tiny {
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+.eyebrow, .pill, .chip {
+  font-size: .85rem;
+  line-height: 1.4;
+}
+
+.mission-card {
+  min-height: 280px;
+  padding: 23px;
+  border-radius: 22px;
+}
+
+.mission-card h3 {
+  font-size: 1.16rem;
+}
+
+.mission-card p {
+  font-size: .94rem;
+  line-height: 1.65;
+}
+
+.mission-icon {
+  font-size: 3.2rem;
+}
+
+.topbar nav a {
+  font-size: .88rem;
+}
+
+.panel,
+.mission-card,
+.tissue-kid-card {
+  transition: transform .2s, box-shadow .2s;
+}
+
+.mission-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 13px 22px rgba(120, 70, 180, .16);
+}
+
+.photo img,
+.new-science-image img {
+  border-radius: 16px;
+}
+
+.large-photo {
+  height: 360px;
+}
+
+.mini-science {
+  height: 260px;
+}
+
+.cell-stage {
+  min-height: 420px;
+}
+
+.cell-city-visual img {
+  max-height: 480px;
+}
+
+.tissue-comparison {
+  gap: 24px;
+}
+
+.tissue-picture {
+  min-height: 300px;
+}
+
+.tissue-key {
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.tissue-activity-button,
+.cell-discover,
+.cell-part-buttons button {
+  font-size: 1rem;
+  padding: 17px;
+}
+
+.science-expansion {
+  margin: 28px 0;
+  padding: clamp(22px, 3vw, 34px);
+  border: 3px solid #e4c9fb;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #ffffff, #fff1fa);
+  box-shadow: 0 8px 24px rgba(100, 65, 150, .09);
+}
+
+.science-expansion h2 {
+  color: #7041bd;
+}
+
+.science-expansion h3 {
+  color: #6840b3;
+}
+
+.science-expansion p {
+  color: #4b526a;
+}
+
+.science-highlight {
+  border-left: 6px solid #ff91c1;
+  background: #fff0f7;
+  padding: 18px 22px;
+  border-radius: 12px;
+  margin: 18px 0;
+}
+
+.science-options {
+  display: grid;
+  gap: 13px;
+  margin: 18px 0;
+}
+
+.science-option {
+  width: 100%;
+  text-align: left;
+  padding: 20px;
+  background: #f5eeff;
+  border: 2px solid #ceb2f5;
+  color: #403164;
+  border-radius: 17px;
+  font-size: 1.07rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.science-option:hover {
+  background: #eadbff;
+  border-color: #8b63e9;
+}
+
+.science-option:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.science-option.correct {
+  background: #d7f9e4;
+  border-color: #32ad76;
+}
+
+.science-option.wrong {
+  background: #ffe3ec;
+  border-color: #eb6b91;
+}
+
+.science-response {
+  font-size: 1.08rem;
+  font-weight: 650;
+  background: #edfaff;
+  padding: 17px;
+  border-radius: 13px;
+  min-height: 66px;
+}
+
+.science-step {
+  display: inline-block;
+  background: #e8dcff;
+  color: #633bb0;
+  padding: 8px 15px;
+  border-radius: 50px;
+  font-size: .85rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.science-next {
+  background: #8258e3;
+  border: 0;
+  color: white;
+  padding: 16px 25px;
+  border-radius: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.science-next:hover {
+  background: #6539c0;
+}
+
+.science-next:disabled {
+  opacity: .5;
+}
+
+.science-visual {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 25px 12px;
+  margin: 18px 0;
+  border-radius: 20px;
+  background: linear-gradient(125deg, #fce5f3, #e7faff);
+}
+
+.science-visual span {
+  font-size: clamp(2.1rem, 5vw, 3.5rem);
+}
+
+.science-arrow {
+  color: #7c55db;
+  font-weight: 900;
+}
+
+@media (max-width: 800px) {
+  html { font-size: 16px; }
+
+  .panel { padding: 22px; }
+
+  .mission-card { min-height: 230px; }
+
+  .tissue-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .science-expansion { padding: 20px; }
+}
