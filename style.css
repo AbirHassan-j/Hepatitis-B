@@ -1268,3 +1268,118 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* MISSION 3 - VISIBLE TISSUE COMPARISON */
+
+.kid-tissue-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.kid-tissue-card {
+  background: #fff6fc;
+  border: 3px solid #ecc9ed;
+  border-radius: 24px;
+  padding: 20px;
+  text-align: center;
+}
+
+.kid-tissue-card:nth-child(2) {
+  background: #fff2e7;
+  border-color: #ffbc92;
+}
+
+.kid-tissue-picture {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+  padding: 20px 10px;
+  margin: 18px 0;
+  min-height: 270px;
+  background: #fae1ee;
+  border: 3px solid #e7b5d5;
+  border-radius: 20px;
+}
+
+.kid-tissue-card:nth-child(2) .kid-tissue-picture {
+  background: #ffe0c8;
+  border-color: #ffc08c;
+}
+
+.kid-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  background: #f4a8c2;
+  border: 3px solid #d9709d;
+  border-radius: 42%;
+}
+
+.kid-cell i {
+  display: block;
+  width: 40%;
+  aspect-ratio: 1;
+  background: #9254bf;
+  border-radius: 50%;
+}
+
+.kid-cell.hurt {
+  background: #ffc382;
+  border-color: #ea855b;
+  transform: rotate(-10deg);
+}
+
+.kid-cell.hurt::after {
+  content: "✕";
+  position: absolute;
+  color: #ae2648;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.immune-marker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #80d3ff;
+  border: 3px solid #258bc4;
+  color: #126399;
+  font-size: 21px;
+  font-weight: 900;
+  z-index: 2;
+}
+
+.scar-marker {
+  display: none;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 48%;
+  width: 14px;
+  transform: rotate(14deg);
+  border-radius: 10px;
+  background: repeating-linear-gradient(
+    0deg,
+    #d5a95e 0 9px,
+    #fff0ba 9px 18px
+  );
+  z-index: 3;
+}
+
+.scar-marker.visible {
+  display: block;
+}
+
+@media (max-width: 750px) {
+  .kid-tissue-grid {
+    grid-template-columns: 1fr;
+  }
+}
