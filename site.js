@@ -2054,3 +2054,465 @@ if (location.pathname.endsWith("microscope.html")) {
 
   showRound();
 })();
+
+/* ==========================================
+   LIVERQUEST: CELL EXPLORER FIX
+   Paste at the VERY END of site.js
+   ========================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop();
+
+  if (page !== "cells.html") return;
+
+  const stage = document.querySelector(
+    ".cell-stage, .cell-city-visual, .new-science-image"
+  );
+
+  const info = document.querySelector(".info-panel");
+
+  if (!stage || !info) return;
+
+  const css = document.createElement("style");
+
+  css.textContent = `
+    .cell-upgrade {
+      background: linear-gradient(140deg,#e5faff,#fff0fa);
+      padding: 18px;
+      border-radius: 25px;
+      border: 3px solid #dfb8f5;
+    }
+
+    .cell-upgrade svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 490px;
+    }
+
+    .cell-upgrade-buttons {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .cell-upgrade-buttons button {
+      background: white;
+      border: 2px solid #cbb3f6;
+      color: #53349a;
+      border-radius: 16px;
+      padding: 13px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .cell-upgrade-buttons button:hover,
+    .cell-upgrade-buttons button.chosen {
+      background: #efe3ff;
+      border-color: #8154e7;
+    }
+
+    .cell-upgrade-buttons button.found {
+      border-color: #45bc83;
+      background: #e2faeb;
+    }
+
+    .new-field-guide {
+      background: #ffffff;
+    }
+
+    .field-illustration {
+      min-height: 170px;
+      display: grid;
+      place-items: center;
+      margin: 20px 0;
+      background: linear-gradient(130deg,#ffecf7,#e5f9ff);
+      border: 3px solid #dfc6f8;
+      border-radius: 22px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .field-icon {
+      font-size: clamp(65px,8vw,110px);
+      line-height: 1.25;
+    }
+
+    .field-name {
+      font-size: 26px;
+      font-weight: 900;
+      color: #6744bd;
+      margin: 10px 0;
+    }
+
+    .field-copy {
+      font-size: 19px;
+      line-height: 1.7;
+      color: #47506b;
+    }
+
+    .field-fact {
+      background: #fff2d5;
+      border-left: 6px solid #ffae45;
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 18px;
+      color: #49415b;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .field-counter {
+      background: #eaf8ef;
+      padding: 13px;
+      border-radius: 12px;
+      font-weight: 800;
+      color: #257c50;
+      margin-top: 20px;
+    }
+
+    .cell-upgrade-note {
+      font-size: 15px;
+      color: #5e6280;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    @media(max-width:700px) {
+      .cell-upgrade-buttons button {
+        font-size: 15px;
+      }
+
+      .field-copy {
+        font-size: 18px;
+      }
+    }
+  `;
+
+  document.head.appendChild(css);
+
+  // Replace the old main cell picture with
+  // a more detailed, self-contained cell model.
+
+  stage.outerHTML = `
+    <div class="cell-upgrade">
+
+      <h3 style="text-align:center;color:#6844b9">
+        🧫 Inside a Liver Cell
+      </h3>
+
+      <svg viewBox="0 0 600 450"
+           role="img"
+           aria-label="Colourful educational liver cell model
+           showing nucleus, mitochondria, ribosomes,
+           endoplasmic reticulum, Golgi apparatus
+           and cell membrane">
+
+        <defs>
+          <radialGradient id="cellFill">
+            <stop offset="0%" stop-color="#ffe8f4"/>
+            <stop offset="100%" stop-color="#f7accd"/>
+          </radialGradient>
+
+          <linearGradient id="nucleusFill">
+            <stop offset="0%" stop-color="#c99cf8"/>
+            <stop offset="100%" stop-color="#9754d6"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Cell membrane -->
+        <path
+          d="M300 38 C420 10 550 95 563 214
+             C575 330 468 417 305 424
+             C145 433 40 351 38 230
+             C35 106 152 52 300 38Z"
+          fill="url(#cellFill)"
+          stroke="#eb6eae"
+          stroke-width="13"
+        />
+
+        <!-- Inner membrane highlight -->
+        <path
+          d="M300 53 C415 28 533 105 546 216
+             C558 322 458 401 304 407
+             C153 416 56 342 55 231
+             C52 118 159 69 300 53Z"
+          fill="none"
+          stroke="#fff1a9"
+          stroke-width="5"
+          stroke-dasharray="12 10"
+        />
+
+        <!-- Endoplasmic reticulum -->
+        <g fill="none" stroke="#8b78dd"
+           stroke-width="12" stroke-linecap="round">
+          <path d="M195 120 Q125 100 120 155
+                   Q116 190 185 181"/>
+          <path d="M184 195 Q95 185 112 234
+                   Q120 268 189 244"/>
+          <path d="M200 275 Q125 268 133 306
+                   Q152 335 217 307"/>
+          <path d="M366 128 Q454 102 476 155
+                   Q490 178 418 190"/>
+        </g>
+
+        <!-- Ribosomes -->
+        <g fill="#6d42ac">
+          <circle cx="116" cy="137" r="6"/>
+          <circle cx="149" cy="114" r="6"/>
+          <circle cx="116" cy="217" r="6"/>
+          <circle cx="150" cy="251" r="6"/>
+          <circle cx="152" cy="302" r="6"/>
+          <circle cx="420" cy="126" r="6"/>
+          <circle cx="461" cy="147" r="6"/>
+          <circle cx="450" cy="270" r="5"/>
+          <circle cx="393" cy="328" r="5"/>
+          <circle cx="266" cy="365" r="5"/>
+          <circle cx="98" cy="280" r="5"/>
+          <circle cx="485" cy="297" r="5"/>
+        </g>
+
+        <!-- Nucleus -->
+        <ellipse cx="298" cy="218" rx="101" ry="103"
+                 fill="url(#nucleusFill)"
+                 stroke="#6831ab"
+                 stroke-width="8"/>
+
+        <!-- DNA strands -->
+        <g fill="none" stroke="#ead9ff" stroke-width="5">
+          <path d="M250 170 Q340 215 262 276"/>
+          <path d="M328 170 Q243 215 332 275"/>
+          <path d="M255 181 L322 181"/>
+          <path d="M266 202 L312 202"/>
+          <path d="M266 245 L316 245"/>
+          <path d="M262 266 L329 266"/>
+        </g>
+
+        <!-- Nucleolus -->
+        <circle cx="299" cy="221" r="20"
+                fill="#65309c" opacity=".85"/>
+
+        <!-- Mitochondria -->
+        <g fill="#ffbc68" stroke="#d56f2d"
+           stroke-width="6">
+          <ellipse cx="432" cy="308" rx="66" ry="34"
+                   transform="rotate(-22 432 308)"/>
+          <ellipse cx="165" cy="350" rx="58" ry="31"
+                   transform="rotate(18 165 350)"/>
+          <ellipse cx="432" cy="95" rx="50" ry="27"
+                   transform="rotate(15 432 95)"/>
+        </g>
+
+        <!-- Inner folds -->
+        <g fill="none" stroke="#c36a36"
+           stroke-width="4">
+          <path d="M389 305 l17 -14 14 22 15 -25
+                   13 19 19 -15"/>
+          <path d="M129 346 l15 -14 14 23 14 -20
+                   19 20"/>
+          <path d="M399 96 l12 -12 12 21
+                   13 -17 13 18"/>
+        </g>
+
+        <!-- Golgi apparatus -->
+        <g fill="none" stroke="#44bfae"
+           stroke-width="12" stroke-linecap="round">
+          <path d="M370 360 Q430 382 492 353"/>
+          <path d="M382 379 Q432 396 480 374"/>
+          <path d="M395 397 Q434 411 464 393"/>
+        </g>
+
+        <!-- Vesicles -->
+        <g fill="#53d9c5" stroke="#229f98" stroke-width="3">
+          <circle cx="503" cy="381" r="11"/>
+          <circle cx="485" cy="409" r="7"/>
+          <circle cx="356" cy="376" r="9"/>
+        </g>
+
+        <!-- Lysosomes -->
+        <circle cx="105" cy="100" r="20"
+                fill="#f8dd6e" stroke="#e0a430"
+                stroke-width="5"/>
+        <circle cx="504" cy="238" r="19"
+                fill="#f8dd6e" stroke="#e0a430"
+                stroke-width="5"/>
+
+        <!-- Small proteins -->
+        <g fill="#79b9ec">
+          <circle cx="83" cy="232" r="7"/>
+          <circle cx="348" cy="91" r="8"/>
+          <circle cx="531" cy="293" r="6"/>
+        </g>
+
+      </svg>
+
+      <p class="cell-upgrade-note">
+        Simplified educational cell model ·
+        Tap a part below to learn its job.
+      </p>
+
+      <div class="cell-upgrade-buttons">
+        <button data-organ="nucleus">1 🧠 Nucleus</button>
+        <button data-organ="membrane">2 🛡️ Cell Membrane</button>
+        <button data-organ="mitochondria">3 ⚡ Mitochondria</button>
+        <button data-organ="cytoplasm">4 🫧 Cytoplasm</button>
+        <button data-organ="ribosomes">5 🏭 Ribosomes</button>
+        <button data-organ="er">6 🛤️ ER</button>
+        <button data-organ="golgi">7 📦 Golgi</button>
+        <button data-organ="lysosomes">8 ♻️ Lysosomes</button>
+      </div>
+    </div>
+  `;
+
+  // Replace the old field guide completely.
+  // This removes the blocked external image.
+
+  info.innerHTML = `
+    <div class="new-field-guide">
+
+      <div class="pill">🔬 CELL PARTS FIELD GUIDE</div>
+
+      <h2 id="part-title"
+          style="color:#6943bf;margin-top:18px">
+        👆 Pick a cell part!
+      </h2>
+
+      <p id="part-desc" class="field-copy">
+        Click any numbered button beside this
+        panel to discover what it does.
+      </p>
+
+      <div class="field-illustration">
+        <div>
+          <div class="field-icon" id="field-icon">🧫</div>
+          <div class="field-name" id="field-name">
+            Your Cell Adventure
+          </div>
+          <p style="margin-bottom:0">
+            Eight tiny structures to discover!
+          </p>
+        </div>
+      </div>
+
+      <div class="field-fact" id="field-fact">
+        💡 Did you know? Your liver contains
+        millions of hardworking cells that
+        perform many important jobs.
+      </div>
+
+      <div class="field-counter" id="discovery">
+        0 of 8 discovered
+      </div>
+
+      <div class="science-note">
+        🦠 <strong>Why are we learning this?</strong>
+        Hepatitis B infects liver cells and uses
+        their machinery. Learning how the cell
+        works helps us understand what the virus does.
+      </div>
+    </div>
+  `;
+
+  const parts = {
+    nucleus: {
+      icon: "🧠",
+      name: "Nucleus: Control Centre",
+      desc: "The nucleus stores DNA, which contains the cell's instructions. It helps control many cell activities.",
+      fact: "🦠 Hepatitis B sends its DNA into the nucleus, where a special viral DNA template forms."
+    },
+
+    membrane: {
+      icon: "🛡️",
+      name: "Cell Membrane: Security Gate",
+      desc: "The cell membrane forms the outer boundary of a cell. It controls which materials can enter and leave.",
+      fact: "🦠 Hepatitis B attaches to a special entry protein on the liver cell's surface."
+    },
+
+    mitochondria: {
+      icon: "⚡",
+      name: "Mitochondria: Power Stations",
+      desc: "Mitochondria help turn energy from nutrients into a form that cells can use.",
+      fact: "💡 Liver cells need lots of energy to process nutrients and perform their other important jobs."
+    },
+
+    cytoplasm: {
+      icon: "🫧",
+      name: "Cytoplasm: Cell Interior",
+      desc: "Cytoplasm is the jelly-like material that surrounds the structures inside a cell.",
+      fact: "🦠 Many steps involved in making new hepatitis B virus particles take place in the cell's interior."
+    },
+
+    ribosomes: {
+      icon: "🏭",
+      name: "Ribosomes: Protein Factories",
+      desc: "Ribosomes build proteins using instructions carried by messenger RNA.",
+      fact: "🦠 Hepatitis B uses the cell's ribosomes to make viral proteins."
+    },
+
+    er: {
+      icon: "🛤️",
+      name: "ER: Processing Network",
+      desc: "The endoplasmic reticulum, or ER, helps make and process proteins and fats.",
+      fact: "🦠 Some hepatitis B surface proteins are processed in the ER."
+    },
+
+    golgi: {
+      icon: "📦",
+      name: "Golgi: Packaging Centre",
+      desc: "The Golgi apparatus modifies, sorts, and sends materials to where they are needed.",
+      fact: "💡 The Golgi helps liver cells move important materials around and out of the cell."
+    },
+
+    lysosomes: {
+      icon: "♻️",
+      name: "Lysosomes: Recycling Team",
+      desc: "Lysosomes contain substances that help break down and recycle unwanted cellular materials.",
+      fact: "💡 Recycling helps cells maintain a healthy internal environment."
+    }
+  };
+
+  const discovered = new Set();
+
+  document.querySelectorAll("[data-organ]")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.organ;
+        const part = parts[key];
+
+        discovered.add(key);
+
+        document.querySelectorAll("[data-organ]")
+          .forEach(b => b.classList.remove("chosen"));
+
+        button.classList.add("chosen", "found");
+
+        document.getElementById("part-title")
+          .textContent = part.name;
+
+        document.getElementById("part-desc")
+          .textContent = part.desc;
+
+        document.getElementById("field-icon")
+          .textContent = part.icon;
+
+        document.getElementById("field-name")
+          .textContent = part.name;
+
+        document.getElementById("field-fact")
+          .textContent = part.fact;
+
+        document.getElementById("discovery")
+          .textContent =
+          discovered.size + " of 8 discovered";
+
+        if (discovered.size === 8) {
+          document.getElementById("discovery")
+            .textContent =
+            "🏆 Amazing! You discovered all 8 cell parts!";
+        }
+      });
+    });
+
+})();
