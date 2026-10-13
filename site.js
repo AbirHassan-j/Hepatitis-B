@@ -1584,3 +1584,473 @@ if (location.pathname.endsWith("microscope.html")) {
   }
 
 })();
+
+/* ==========================================
+   LIVERQUEST - EXTRA INTERACTIVE CONTENT
+   Paste at the END of site.js
+   ========================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  const main = document.querySelector("main");
+
+  if (!main) return;
+
+  // Avoid adding the same content twice.
+  if (document.getElementById("extended-science")) return;
+
+  const activities = {
+    "cells.html": {
+      title: "🏙️ Cell City: Behind the Scenes",
+      intro:
+        "You've discovered the cell's main parts. But how do " +
+        "these tiny structures work together? And how does " +
+        "hepatitis B take advantage of them?",
+      rounds: [
+        {
+          heading: "The Cell's Protein Factory",
+          visual: ["🧬", "➡️", "🏭", "➡️", "📦"],
+          text:
+            "A cell uses instructions from DNA to help make " +
+            "proteins. Ribosomes build proteins, while other " +
+            "cell structures help process and move them. " +
+            "Hepatitis B uses this machinery to make " +
+            "proteins needed for new virus particles.",
+          question:
+            "Which cell structure actually builds proteins?",
+          options: [
+            "Ribosomes",
+            "Cell membrane",
+            "Nucleus"
+          ],
+          correct: 0,
+          explanation:
+            "Ribosomes are the protein builders! They read " +
+            "instructions carried by messenger RNA and " +
+            "join amino acids together."
+        },
+        {
+          heading: "The DNA Control Room",
+          visual: ["🦠", "➡️", "🚪", "➡️", "🧬"],
+          text:
+            "Hepatitis B attaches to a liver cell and enters. " +
+            "Its genetic material reaches the nucleus, where " +
+            "a special viral DNA template can form. That " +
+            "template helps the virus continue making copies.",
+          question:
+            "Where does hepatitis B form its lasting DNA template?",
+          options: [
+            "Inside mitochondria",
+            "Inside the nucleus",
+            "Outside the cell"
+          ],
+          correct: 1,
+          explanation:
+            "Correct! The virus forms a DNA template in the " +
+            "nucleus. The infected cell can then help make " +
+            "more viral components."
+        },
+        {
+          heading: "Powering the Liver",
+          visual: ["🍎", "➡️", "⚡", "➡️", "💪"],
+          text:
+            "Liver cells do lots of important jobs. They " +
+            "process nutrients, help regulate blood sugar, " +
+            "and make useful substances. Mitochondria " +
+            "help supply the energy these activities need.",
+          question:
+            "Why are mitochondria important in liver cells?",
+          options: [
+            "They are a virus",
+            "They store all of the body's blood",
+            "They help provide energy"
+          ],
+          correct: 2,
+          explanation:
+            "Exactly! Mitochondria help turn energy from " +
+            "nutrients into a form the cell can use."
+        }
+      ]
+    },
+
+    "invasion.html": {
+      title: "🦠 Inside the Hepatitis B Invasion",
+      intro:
+        "Now that you know what hepatitis B is, investigate " +
+        "the steps of infection like a real scientist.",
+      rounds: [
+        {
+          heading: "Step 1: Finding a Liver Cell",
+          visual: ["🦠", "➡️", "🔒", "➡️", "🧫"],
+          text:
+            "Hepatitis B doesn't enter every cell equally. " +
+            "It targets liver cells by recognizing a special " +
+            "protein on their surface. Imagine a key " +
+            "fitting into a particular lock.",
+          question:
+            "Why can hepatitis B enter certain liver cells?",
+          options: [
+            "They have a suitable entry protein",
+            "They have no cell membrane",
+            "They are always damaged"
+          ],
+          correct: 0,
+          explanation:
+            "Yes! Hepatitis B uses a particular protein " +
+            "on liver cells to help it enter."
+        },
+        {
+          heading: "Step 2: Making Viral Parts",
+          visual: ["🧬", "➡️", "🏭", "➡️", "🦠"],
+          text:
+            "Once inside, hepatitis B uses the infected " +
+            "cell's resources to produce viral proteins " +
+            "and genetic material. These parts are then " +
+            "assembled into new virus particles.",
+          question:
+            "How does hepatitis B make viral proteins?",
+          options: [
+            "It grows like a plant",
+            "It uses the infected cell's machinery",
+            "It turns into a human cell"
+          ],
+          correct: 1,
+          explanation:
+            "That's right! Viruses depend on living " +
+            "cells to reproduce."
+        },
+        {
+          heading: "Step 3: The Immune Response",
+          visual: ["🦠", "➡️", "🛡️", "➡️", "🔥"],
+          text:
+            "Your immune system recognizes signs of " +
+            "infection and tries to control the virus. " +
+            "Some immune cells attack infected liver " +
+            "cells. This helps fight infection but can " +
+            "also cause inflammation and cell injury.",
+          question:
+            "What can cause much of the liver-cell damage?",
+          options: [
+            "Hugging a classmate",
+            "Drinking water",
+            "The immune response to infected cells"
+          ],
+          correct: 2,
+          explanation:
+            "Correct! The immune response to hepatitis B " +
+            "can injure infected liver cells and cause " +
+            "inflammation."
+        }
+      ]
+    },
+
+    "microscope.html": {
+      title: "🔬 Tissue Detective: Follow the Evidence",
+      intro:
+        "You have compared healthy and affected tissues. " +
+        "Now use the clues to understand how changes in " +
+        "individual cells can affect the whole liver.",
+      rounds: [
+        {
+          heading: "Clue 1: What Is a Tissue?",
+          visual: ["🧫", "➡️", "🧩", "➡️", "🫀"],
+          text:
+            "A tissue is a group of cells working together. " +
+            "The liver contains several kinds of cells " +
+            "and tissues. When hepatitis B infects liver " +
+            "cells, inflammation can disturb the tissue " +
+            "and sometimes injure those cells.",
+          question:
+            "What is a tissue?",
+          options: [
+            "One single atom",
+            "A group of cells working together",
+            "A type of virus"
+          ],
+          correct: 1,
+          explanation:
+            "Exactly! Cells make tissues, and different " +
+            "tissues work together in organs."
+        },
+        {
+          heading: "Clue 2: Signs of Inflammation",
+          visual: ["🧫", "➡️", "🛡️", "➡️", "🔥"],
+          text:
+            "In hepatitis B, immune cells can gather " +
+            "in liver tissue and respond to infection. " +
+            "This is part of inflammation. Some liver " +
+            "cells may be injured in the process.",
+          question:
+            "Which is a sign of an immune response in liver tissue?",
+          options: [
+            "Immune cells gathering near affected cells",
+            "Liver cells turning into bones",
+            "All cell nuclei disappearing instantly"
+          ],
+          correct: 0,
+          explanation:
+            "Correct! Immune cells may gather around " +
+            "infected tissue. This can be part of the " +
+            "body's response to hepatitis B."
+        },
+        {
+          heading: "Clue 3: When Scars Build Up",
+          visual: ["🧫", "➡️", "🩹", "➡️", "🫀"],
+          text:
+            "When the liver experiences repeated injury, " +
+            "scar tissue can sometimes form. This is " +
+            "called fibrosis. Severe, widespread " +
+            "scarring is called cirrhosis. Not everyone " +
+            "with hepatitis B develops these problems.",
+          question:
+            "What is fibrosis?",
+          options: [
+            "A new kind of healthy organ",
+            "An extra cell nucleus",
+            "A buildup of scar tissue"
+          ],
+          correct: 2,
+          explanation:
+            "Yes! Fibrosis is scar tissue formation. " +
+            "It can develop after ongoing liver injury."
+        }
+      ]
+    },
+
+    "lab.html": {
+      title: "🛡️ Rescue Lab: Science in Real Life",
+      intro:
+        "You've learned how hepatitis B affects liver " +
+        "cells. Test your knowledge of prevention, " +
+        "testing, and treatment in everyday situations.",
+      rounds: [
+        {
+          heading: "Scenario 1: A Friend Needs Support",
+          visual: ["👧", "🤝", "👦"],
+          text:
+            "Imagine your friend tells you they have " +
+            "hepatitis B. They worry that classmates " +
+            "will avoid them. Remember: hepatitis B " +
+            "does not spread through hugging, sharing " +
+            "a classroom, or eating together.",
+          question:
+            "What should you do?",
+          options: [
+            "Stop being friends with them",
+            "Treat them kindly and normally",
+            "Tell everyone to stay away"
+          ],
+          correct: 1,
+          explanation:
+            "Exactly! People with hepatitis B deserve " +
+            "respect and friendship. Everyday social " +
+            "contact does not spread the infection."
+        },
+        {
+          heading: "Scenario 2: Preventing Infection",
+          visual: ["💉", "➡️", "🛡️", "➡️", "🙂"],
+          text:
+            "Vaccination helps train your immune " +
+            "system to recognize hepatitis B before " +
+            "infection occurs. It is an important " +
+            "way to prevent hepatitis B.",
+          question:
+            "Which action can help prevent hepatitis B?",
+          options: [
+            "Getting vaccinated",
+            "Avoiding all friends",
+            "Waiting for obvious symptoms"
+          ],
+          correct: 0,
+          explanation:
+            "Correct! Hepatitis B vaccination " +
+            "provides important protection."
+        },
+        {
+          heading: "Scenario 3: Finding an Infection",
+          visual: ["🩸", "➡️", "🔬", "➡️", "🩺"],
+          text:
+            "Some people with hepatitis B feel " +
+            "completely healthy. Doctors use blood " +
+            "tests to check for the infection. " +
+            "People with chronic hepatitis B may " +
+            "need medical monitoring and sometimes " +
+            "antiviral treatment.",
+          question:
+            "Can someone have hepatitis B without symptoms?",
+          options: [
+            "No, everyone looks sick",
+            "Only if they have a broken bone",
+            "Yes, symptoms may be absent"
+          ],
+          correct: 2,
+          explanation:
+            "Yes! Someone can have hepatitis B and " +
+            "feel well. Blood tests can detect it."
+        }
+      ]
+    }
+  };
+
+  const lesson = activities[page];
+  if (!lesson) return;
+
+  const section = document.createElement("section");
+  section.id = "extended-science";
+  section.className = "science-expansion";
+
+  // Add this section after the existing lesson.
+  main.appendChild(section);
+
+  let round = 0;
+  let score = 0;
+
+  function showRound() {
+    if (round >= lesson.rounds.length) {
+      section.innerHTML = `
+        <div class="science-step">BONUS MISSION COMPLETE</div>
+
+        <h2>🏆 Fantastic science detective work!</h2>
+
+        <p>
+          You've finished the extra challenge for
+          this mission!
+        </p>
+
+        <div class="science-visual">
+          <span>🔬</span>
+          <span>🧬</span>
+          <span>🏆</span>
+        </div>
+
+        <div class="science-highlight">
+          <h3>Your score: ${score}/${lesson.rounds.length}</h3>
+
+          <p>
+            The important thing is that you
+            now understand more about how
+            hepatitis B affects liver cells
+            and tissues.
+          </p>
+        </div>
+
+        <button class="science-next"
+                id="restart-science">
+          🔄 Play Again
+        </button>
+      `;
+
+      document.getElementById("restart-science")
+        .addEventListener("click", () => {
+          round = 0;
+          score = 0;
+          showRound();
+        });
+
+      return;
+    }
+
+    const item = lesson.rounds[round];
+
+    section.innerHTML = `
+      <div class="science-step">
+        INTERACTIVE DISCOVERY ${round + 1}
+        OF ${lesson.rounds.length}
+      </div>
+
+      <h2>${round === 0 ? lesson.title : item.heading}</h2>
+
+      ${round === 0 ? `<p>${lesson.intro}</p>` : ""}
+
+      ${round === 0 ? `<h3>${item.heading}</h3>` : ""}
+
+      <div class="science-visual">
+        ${item.visual.map(symbol =>
+          `<span>${symbol}</span>`
+        ).join("")}
+      </div>
+
+      <div class="science-highlight">
+        <p>${item.text}</p>
+      </div>
+
+      <h3>🎯 Science Challenge</h3>
+      <p><strong>${item.question}</strong></p>
+
+      <div class="science-options">
+        ${item.options.map((option, index) => `
+          <button
+            class="science-option"
+            data-science-answer="${index}">
+            ${String.fromCharCode(65 + index)}.
+            ${option}
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="science-response"
+           id="science-response"
+           role="status">
+        🤔 Choose your answer to see what happens!
+      </div>
+
+      <button class="science-next"
+              id="science-next"
+              disabled>
+        ${round === lesson.rounds.length - 1
+          ? "SEE MY RESULTS 🏆"
+          : "NEXT DISCOVERY →"}
+      </button>
+    `;
+
+    let answered = false;
+
+    section.querySelectorAll("[data-science-answer]")
+      .forEach(button => {
+        button.addEventListener("click", () => {
+          if (answered) return;
+          answered = true;
+
+          const chosen = Number(
+            button.dataset.scienceAnswer
+          );
+
+          const correct = chosen === item.correct;
+
+          if (correct) score++;
+
+          section.querySelectorAll("[data-science-answer]")
+            .forEach(option => {
+              option.disabled = true;
+
+              if (
+                Number(option.dataset.scienceAnswer) ===
+                item.correct
+              ) {
+                option.classList.add("correct");
+              } else if (option === button) {
+                option.classList.add("wrong");
+              }
+            });
+
+          document.getElementById("science-response")
+            .textContent =
+              (correct
+                ? "✅ Correct! "
+                : "💡 Good attempt! ") +
+              item.explanation;
+
+          document.getElementById("science-next")
+            .disabled = false;
+        });
+      });
+
+    document.getElementById("science-next")
+      .addEventListener("click", () => {
+        round++;
+        showRound();
+      });
+  }
+
+  showRound();
+})();
