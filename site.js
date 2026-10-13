@@ -1685,3 +1685,806 @@ if (location.pathname.endsWith("microscope.html")) {
     });
   });
 })();
+
+/* ==================================================
+   LIVERQUEST — MISSION 1 CELL CITY UPGRADE
+   Paste once at the VERY END of site.js
+
+   Adds:
+   1. Dr. Binocs video at the top
+   2. Cell City worker/building analogies
+   3. Expanded Grade 7/8 explanations
+   4. A six-question diagram identification quiz
+   ================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "cells.html") return;
+
+  const explorer = document.querySelector(".clean-cell-visual");
+  const buttons = document.getElementById("cell-parts");
+  const title = document.getElementById("part-title");
+  const description = document.getElementById("part-desc");
+  const fact = document.getElementById("part-fact");
+  const challenge = document.querySelector(".challenge");
+
+  if (!explorer || !buttons || !title || !description || !challenge) {
+    console.warn("Mission 1 explorer was not found.");
+    return;
+  }
+
+  /* --------------------------------------------
+     1. STYLING
+     -------------------------------------------- */
+
+  const css = document.createElement("style");
+
+  css.textContent = `
+    .city-video-section {
+      background: linear-gradient(135deg, #f9edff, #e6f8ff);
+      border: 3px solid #d8baf5;
+      border-radius: 28px;
+      padding: 26px;
+      margin-bottom: 30px;
+    }
+
+    .city-video-section h2 {
+      color: #6840b1;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin: 0 0 12px;
+    }
+
+    .city-video-section p {
+      color: #4c5068;
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    .city-video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #222;
+      overflow: hidden;
+      border-radius: 20px;
+      margin: 18px auto;
+      max-width: 850px;
+    }
+
+    .city-video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .city-video-note {
+      background: #fff5d8;
+      border-radius: 15px;
+      padding: 16px 20px;
+      margin-top: 15px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .city-video-note a {
+      color: #6840b1;
+      font-weight: 800;
+    }
+
+    .city-guide {
+      background: #f4edff;
+      border-radius: 18px;
+      padding: 20px;
+      margin: 18px 0;
+      border: 2px solid #d8c3f8;
+    }
+
+    .city-guide h3 {
+      font-size: 1.55rem;
+      color: #6036b0;
+      margin: 0 0 10px;
+    }
+
+    .city-guide p {
+      font-size: 1.13rem;
+      line-height: 1.8;
+      margin: 10px 0;
+      color: #45415f;
+    }
+
+    .city-guide .city-example {
+      background: #ffffff;
+      border-left: 6px solid #8d6be0;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .cell-choices button {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      min-height: 66px;
+    }
+
+    .cell-choices button.selected {
+      background: #d8fbe8;
+      border: 3px solid #27aa76;
+    }
+
+    .point-quiz {
+      background: linear-gradient(135deg, #fff1f8, #e7faff);
+      border: 3px solid #d7baf6;
+      border-radius: 26px;
+      padding: 25px;
+      margin-top: 28px;
+    }
+
+    .point-quiz h2 {
+      color: #6941b5;
+      font-size: 1.85rem;
+      margin: 0 0 12px;
+    }
+
+    .point-quiz p {
+      font-size: 1.12rem;
+      line-height: 1.65;
+    }
+
+    .point-quiz-image {
+      background: #ffffff;
+      border: 2px solid #e0c8f7;
+      border-radius: 20px;
+      max-width: 650px;
+      margin: 18px auto;
+      overflow: hidden;
+    }
+
+    .point-quiz-image svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .point-quiz-answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .point-quiz-answers button {
+      border: 2px solid #b79ae8;
+      border-radius: 15px;
+      background: #ffffff;
+      color: #54378f;
+      padding: 16px;
+      min-height: 65px;
+      font-size: 1.07rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .point-quiz-answers button:hover:not(:disabled) {
+      background: #f0e6ff;
+    }
+
+    .point-quiz-answers button.correct {
+      border-color: #26a575;
+      background: #d5f9e7;
+    }
+
+    .point-quiz-answers button.incorrect {
+      border-color: #da6d76;
+      background: #ffe1e4;
+    }
+
+    .point-quiz-feedback {
+      background: #fff7df;
+      border-radius: 14px;
+      padding: 15px;
+      margin: 15px 0;
+      font-size: 1.1rem;
+      min-height: 55px;
+    }
+
+    .point-quiz-progress {
+      font-weight: 800;
+      color: #6740b4;
+    }
+
+    .point-quiz-next {
+      background: #7650c5;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border: 0;
+      border-radius: 15px;
+      padding: 15px 26px;
+      cursor: pointer;
+    }
+
+    .point-quiz-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 650px) {
+      .city-video-section,
+      .point-quiz {
+        padding: 17px;
+      }
+
+      .point-quiz-answers {
+        grid-template-columns: 1fr;
+      }
+    }
+  `;
+
+  document.head.appendChild(css);
+
+  /* --------------------------------------------
+     2. VIDEO AT THE TOP OF MISSION 1
+     -------------------------------------------- */
+
+  if (!document.getElementById("cell-city-video")) {
+    const video = document.createElement("section");
+    video.id = "cell-city-video";
+    video.className = "city-video-section";
+
+    video.innerHTML = `
+      <span class="pill">🎬 WATCH FIRST!</span>
+
+      <h2>Welcome to Cell City!</h2>
+
+      <p>
+        Imagine that your liver cell is a busy city.
+        Just like a city needs workers, roads,
+        power stations, and a mayor, your cells
+        need different parts working together.
+      </p>
+
+      <p>
+        Watch Dr. Binocs explore the human cell.
+        Pay attention to what each part does.
+        You'll become a Cell City detective afterward!
+      </p>
+
+      <div class="city-video-wrapper">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/8vo59AKzU4Q"
+          title="Human Cell — The Dr. Binocs Show"
+          loading="lazy"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div class="city-video-note">
+        💡 <strong>While watching:</strong>
+        Can you discover which part makes energy,
+        which part builds proteins, and which part
+        controls the cell?
+
+        <p style="margin:8px 0 0">
+          If the player is blocked,
+          <a
+            href="https://www.youtube.com/watch?v=8vo59AKzU4Q"
+            target="_blank"
+            rel="noopener">
+            open the video here
+          </a>.
+          School network permission may still be required.
+        </p>
+      </div>
+    `;
+
+    const firstSection = explorer.closest("section");
+    if (firstSection) firstSection.before(video);
+  }
+
+  /* --------------------------------------------
+     3. CITY WORKER ANALOGIES
+     -------------------------------------------- */
+
+  const cityParts = [
+    {
+      id: "nucleus",
+      name: "🧠 Nucleus",
+      city: "🏛️ City Hall — The Mayor",
+      explanation:
+        "Every city needs someone to help organize what happens. " +
+        "The nucleus is like City Hall. It holds important instructions " +
+        "that guide how the cell grows, works, and makes the things it needs.",
+      analogy:
+        "The mayor helps organize a city. The nucleus helps direct the cell.",
+      hepatitis:
+        "Hepatitis B sends its own instructions into the nucleus " +
+        "so it can make more viruses.",
+      x: 300, y: 228, r: 85
+    },
+    {
+      id: "membrane",
+      name: "🛡️ Cell Membrane",
+      city: "🚪 City Gates — Security Guards",
+      explanation:
+        "Imagine a city surrounded by gates with security guards. " +
+        "The cell membrane forms the outside boundary of the cell. " +
+        "It helps control what comes in and what goes out, including " +
+        "materials the cell needs and waste it wants to remove.",
+      analogy:
+        "Security guards check what enters and leaves a city. " +
+        "The membrane controls what enters and leaves a cell.",
+      hepatitis:
+        "Hepatitis B can attach to a special doorway on a liver cell.",
+      x: 300, y: 240, r: 205
+    },
+    {
+      id: "mitochondria",
+      name: "⚡ Mitochondria",
+      city: "🏭 Power Stations — Energy Workers",
+      explanation:
+        "Cities need electricity to keep their buildings running. " +
+        "Mitochondria are like little power stations inside the cell. " +
+        "They help release useful energy from food so the cell " +
+        "can stay active and carry out its jobs.",
+      analogy:
+        "A power station provides energy for a city. " +
+        "Mitochondria help provide energy for the cell.",
+      hepatitis:
+        "Liver cells need energy to process nutrients and support the body.",
+      x: 414, y: 320, r: 42
+    },
+    {
+      id: "cytoplasm",
+      name: "🫧 Cytoplasm",
+      city: "🏙️ City Space — The Neighbourhood",
+      explanation:
+        "A city needs space for its buildings, roads, and workers. " +
+        "Cytoplasm is the jelly-like material filling much of the cell. " +
+        "The other cell parts sit inside it, and many useful " +
+        "activities happen there every day.",
+      analogy:
+        "The city neighbourhood holds buildings and workers. " +
+        "Cytoplasm surrounds and supports the organelles.",
+      hepatitis:
+        "Some steps in making new hepatitis B viruses happen " +
+        "inside the infected cell.",
+      x: 357, y: 320, r: 27
+    },
+    {
+      id: "ribosomes",
+      name: "🏗️ Ribosomes",
+      city: "🏗️ Construction Workers — The Builders",
+      explanation:
+        "A growing city needs builders to make useful structures. " +
+        "Ribosomes are tiny builders inside a cell. " +
+        "They make proteins, which help cells grow, repair damage, " +
+        "and do their important jobs.",
+      analogy:
+        "Construction workers build things a city needs. " +
+        "Ribosomes build proteins the cell needs.",
+      hepatitis:
+        "Hepatitis B uses the cell's ribosomes to help build virus parts.",
+      x: 181, y: 220, r: 36
+    },
+    {
+      id: "er",
+      name: "🛣️ Endoplasmic Reticulum (ER)",
+      city: "🛣️ Highways — Transport Routes",
+      explanation:
+        "Think about highways connecting places around a city. " +
+        "The endoplasmic reticulum, or ER, is a network of passages " +
+        "inside the cell. It helps make and process materials " +
+        "and helps move some of them through its network.",
+      analogy:
+        "Highways help transport things around a city. " +
+        "The ER helps make, process, and move materials in the cell.",
+      hepatitis:
+        "Some materials used to form hepatitis B virus particles " +
+        "are prepared in the ER.",
+      x: 199, y: 243, r: 52
+    },
+    {
+      id: "golgi",
+      name: "📦 Golgi Apparatus",
+      city: "📮 Post Office — Package Sorters",
+      explanation:
+        "When packages arrive at a post office, workers sort " +
+        "and prepare them for delivery. " +
+        "The Golgi apparatus works in a similar way. " +
+        "It receives materials, makes changes when needed, " +
+        "and sends them to the right places.",
+      analogy:
+        "The post office sorts and delivers packages. " +
+        "The Golgi sorts and sends materials around the cell.",
+      hepatitis:
+        "The Golgi helps the liver cell organize and deliver " +
+        "important materials.",
+      x: 373, y: 376, r: 36
+    },
+    {
+      id: "lysosomes",
+      name: "♻️ Lysosomes",
+      city: "♻️ Recycling Centre — Cleaning Workers",
+      explanation:
+        "A city produces waste and needs people to clean it up. " +
+        "Lysosomes are like recycling centres inside the cell. " +
+        "They break down old, damaged, or unwanted materials, " +
+        "helping keep the cell tidy and working properly.",
+      analogy:
+        "Recycling workers break down unwanted materials. " +
+        "Lysosomes help break down and recycle materials in cells.",
+      hepatitis:
+        "Cleaning and recycling help liver cells stay healthy.",
+      x: 449, y: 220, r: 25
+    }
+  ];
+
+  /* --------------------------------------------
+     4. REFRESH THE INTERACTIVE CELL BUTTONS
+     -------------------------------------------- */
+
+  buttons.innerHTML = cityParts.map((p, i) => `
+    <button data-city-part="${p.id}">
+      ${i + 1}. ${p.name}
+    </button>
+  `).join("");
+
+  let cityGuide = document.getElementById("city-worker-guide");
+
+  if (!cityGuide) {
+    cityGuide = document.createElement("div");
+    cityGuide.id = "city-worker-guide";
+    cityGuide.className = "city-guide";
+
+    cityGuide.innerHTML = `
+      <h3>🏙️ Who Works in Cell City?</h3>
+      <p>
+        Choose a cell part to meet its city worker
+        and find out what job it does.
+      </p>
+    `;
+
+    description.insertAdjacentElement("afterend", cityGuide);
+  }
+
+  const found = new Set();
+
+  buttons.querySelectorAll("[data-city-part]").forEach(button => {
+    button.addEventListener("click", () => {
+      const part = cityParts.find(
+        p => p.id === button.dataset.cityPart
+      );
+
+      if (!part) return;
+      found.add(part.id);
+
+      buttons.querySelectorAll("button").forEach(b => {
+        b.classList.toggle("selected", b === button);
+      });
+
+      title.textContent = part.name;
+      description.textContent = part.explanation;
+
+      cityGuide.innerHTML = `
+        <h3>${part.city}</h3>
+        <p class="city-example">
+          💡 ${part.analogy}
+        </p>
+      `;
+
+      if (fact) {
+        fact.textContent = "🦠 Hepatitis B Connection: " + part.hepatitis;
+      }
+
+      const count = document.getElementById("discovery");
+      if (count) {
+        count.textContent = `${found.size} of 8 parts explored`;
+      }
+
+      // Highlight the selected part in the existing SVG.
+      const ring = explorer.querySelector("#organ-ring");
+      const pointer = explorer.querySelector("#organ-pointer");
+      const tagBackground = explorer.querySelector("#organ-tag-bg");
+      const tag = explorer.querySelector("#organ-tag");
+
+      if (ring) {
+        ring.setAttribute("cx", part.x);
+        ring.setAttribute("cy", part.y);
+        ring.setAttribute("r", part.r);
+        ring.setAttribute("visibility", "visible");
+      }
+
+      if (pointer) {
+        pointer.setAttribute(
+          "d",
+          `M${part.x} ${part.y - part.r} L448 49`
+        );
+        pointer.setAttribute("visibility", "visible");
+      }
+
+      if (tagBackground) {
+        tagBackground.setAttribute("visibility", "visible");
+      }
+
+      if (tag) {
+        tag.textContent = part.name
+          .replace(/^[^\w]+/, "");
+      }
+    });
+  });
+
+  /* --------------------------------------------
+     5. NAME THE ORGANELLE — DIAGRAM QUIZ
+     -------------------------------------------- */
+
+  if (document.getElementById("cell-point-quiz")) return;
+
+  const quiz = document.createElement("section");
+  quiz.id = "cell-point-quiz";
+  quiz.className = "point-quiz";
+
+  quiz.innerHTML = `
+    <span class="pill">🔎 CELL DETECTIVE CHALLENGE</span>
+
+    <h2>🎯 Can You Name That Cell Part?</h2>
+
+    <p>
+      You've explored the city and matched its workers
+      to their jobs. Now it's time for a real detective test!
+    </p>
+
+    <p>
+      Look at the cell diagram below. A green circle
+      will highlight one structure.
+      <strong>Can you identify it?</strong>
+    </p>
+
+    <div class="point-quiz-progress" id="point-quiz-progress">
+      QUESTION 1 / 6
+    </div>
+
+    <div class="point-quiz-image" id="point-quiz-image"></div>
+
+    <h3 id="point-quiz-question">
+      Which part of the cell is highlighted?
+    </h3>
+
+    <div class="point-quiz-answers" id="point-quiz-answers"></div>
+
+    <p class="point-quiz-feedback"
+       id="point-quiz-feedback"
+       role="status">
+      🔎 Look carefully at the green circle.
+    </p>
+
+    <button class="point-quiz-next"
+            id="point-quiz-next"
+            disabled>
+      NEXT QUESTION →
+    </button>
+  `;
+
+  challenge.insertAdjacentElement("afterend", quiz);
+
+  // Six questions, with the four most important
+  // curriculum organelles included.
+  const quizParts = [
+    "nucleus",
+    "mitochondria",
+    "membrane",
+    "golgi",
+    "lysosomes",
+    "er"
+  ];
+
+  let questionNumber = 0;
+  let quizScore = 0;
+  let answered = false;
+
+  const imageArea = document.getElementById("point-quiz-image");
+  const answersArea = document.getElementById("point-quiz-answers");
+  const feedback = document.getElementById("point-quiz-feedback");
+  const next = document.getElementById("point-quiz-next");
+
+  function drawQuizPicture(part) {
+    const originalSVG = explorer.querySelector("svg");
+    if (!originalSVG) {
+      imageArea.textContent = "Cell diagram unavailable.";
+      return;
+    }
+
+    // Copy the current cell illustration.
+    const copy = originalSVG.cloneNode(true);
+
+    // Remove duplicate IDs so the main explorer
+    // and the quiz remain independent.
+    copy.querySelectorAll("[id]").forEach(el => {
+      el.removeAttribute("id");
+    });
+
+    // Hide the original explorer pointer and labels.
+    const all = copy.querySelectorAll(
+      '[visibility="visible"], [visibility="hidden"]'
+    );
+
+    all.forEach(el => {
+      if (
+        el.tagName.toLowerCase() === "circle" ||
+        el.tagName.toLowerCase() === "path" ||
+        el.tagName.toLowerCase() === "rect" ||
+        el.tagName.toLowerCase() === "text"
+      ) {
+        if (el.hasAttribute("visibility")) {
+          el.remove();
+        }
+      }
+    });
+
+    // Draw a new green pointer on the quiz picture.
+    const ns = "http://www.w3.org/2000/svg";
+
+    const ring = document.createElementNS(ns, "circle");
+    ring.setAttribute("cx", part.x);
+    ring.setAttribute("cy", part.y);
+    ring.setAttribute("r", part.r);
+    ring.setAttribute("fill", "none");
+    ring.setAttribute("stroke", "#13b980");
+    ring.setAttribute("stroke-width", "7");
+    ring.setAttribute("stroke-dasharray", "13 7");
+
+    const pointer = document.createElementNS(ns, "path");
+    pointer.setAttribute(
+      "d",
+      `M${part.x} ${part.y - part.r} L490 55`
+    );
+    pointer.setAttribute("fill", "none");
+    pointer.setAttribute("stroke", "#6540bf");
+    pointer.setAttribute("stroke-width", "5");
+    pointer.setAttribute("stroke-linecap", "round");
+
+    const tag = document.createElementNS(ns, "rect");
+    tag.setAttribute("x", "470");
+    tag.setAttribute("y", "18");
+    tag.setAttribute("width", "92");
+    tag.setAttribute("height", "45");
+    tag.setAttribute("rx", "15");
+    tag.setAttribute("fill", "#ffffff");
+    tag.setAttribute("stroke", "#6540bf");
+    tag.setAttribute("stroke-width", "3");
+
+    const question = document.createElementNS(ns, "text");
+    question.setAttribute("x", "516");
+    question.setAttribute("y", "49");
+    question.setAttribute("text-anchor", "middle");
+    question.setAttribute("font-size", "30");
+    question.setAttribute("font-weight", "bold");
+    question.setAttribute("fill", "#6540bf");
+    question.textContent = "?";
+
+    copy.append(ring, pointer, tag, question);
+
+    imageArea.replaceChildren(copy);
+  }
+
+  function showQuestion() {
+    if (questionNumber >= quizParts.length) {
+      document.getElementById("point-quiz-progress")
+        .textContent = "CHALLENGE COMPLETE!";
+
+      imageArea.innerHTML = `
+        <div style="text-align:center;padding:45px">
+          <div style="font-size:80px">🏆</div>
+          <h2>Cell City Detective!</h2>
+          <p>
+            You correctly identified ${quizScore}
+            out of ${quizParts.length} cell parts!
+          </p>
+        </div>
+      `;
+
+      document.getElementById("point-quiz-question")
+        .textContent = "Amazing work investigating Cell City!";
+
+      answersArea.innerHTML = "";
+
+      feedback.textContent =
+        "You've learned how cell structures work together to keep a liver cell alive.";
+
+      next.disabled = false;
+      next.textContent = "TRY THE QUIZ AGAIN ↺";
+      return;
+    }
+
+    answered = false;
+
+    const id = quizParts[questionNumber];
+    const correctPart = cityParts.find(p => p.id === id);
+
+    document.getElementById("point-quiz-progress")
+      .textContent =
+        `QUESTION ${questionNumber + 1} / ${quizParts.length}`;
+
+    document.getElementById("point-quiz-question")
+      .textContent = "Which cell part is highlighted in green?";
+
+    drawQuizPicture(correctPart);
+
+    // Create four different answer choices.
+    const wrongChoices = cityParts.filter(p => p.id !== id);
+
+    // Rotate the distractors so questions differ.
+    const offset = questionNumber % wrongChoices.length;
+    const rotated = wrongChoices
+      .slice(offset)
+      .concat(wrongChoices.slice(0, offset));
+
+    const choices = [
+      correctPart,
+      ...rotated.slice(0, 3)
+    ];
+
+    // Change the answer position each question.
+    const correctPosition = questionNumber % 4;
+    choices.splice(0, 1);
+    choices.splice(correctPosition, 0, correctPart);
+
+    answersArea.innerHTML = choices.map(p => `
+      <button data-quiz-part="${p.id}">
+        ${p.name}
+      </button>
+    `).join("");
+
+    feedback.textContent =
+      "🔎 Look at the green circle and choose the organelle.";
+
+    next.disabled = true;
+    next.textContent =
+      questionNumber === quizParts.length - 1
+        ? "SEE MY SCORE →"
+        : "NEXT QUESTION →";
+
+    answersArea.querySelectorAll("button").forEach(button => {
+      button.addEventListener("click", () => {
+        if (answered) return;
+        answered = true;
+
+        const good = button.dataset.quizPart === id;
+
+        if (good) quizScore++;
+
+        answersArea.querySelectorAll("button").forEach(b => {
+          b.disabled = true;
+
+          if (b.dataset.quizPart === id) {
+            b.classList.add("correct");
+          } else if (b === button) {
+            b.classList.add("incorrect");
+          }
+        });
+
+        feedback.textContent = good
+          ? `✅ Correct! ${correctPart.city}. ${correctPart.analogy}`
+          : `💡 The correct answer is ${correctPart.name}. ${correctPart.analogy}`;
+
+        next.disabled = false;
+      });
+    });
+  }
+
+  next.addEventListener("click", () => {
+    if (questionNumber >= quizParts.length) {
+      questionNumber = 0;
+      quizScore = 0;
+    } else {
+      questionNumber++;
+    }
+
+    showQuestion();
+  });
+
+  showQuestion();
+})();
