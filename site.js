@@ -2508,3 +2508,1514 @@ if (location.pathname.endsWith("cells.html")) {
     `;
   }
 }
+
+/* =====================================================
+   LIVERQUEST — IMPROVED MISSIONS 1–5
+   Paste ONCE at the very bottom of site.js.
+   Keeps your existing video and Mission 1 activities.
+   ===================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+
+  // Shared helpers
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const all = (selector, root = document) =>
+    Array.from(root.querySelectorAll(selector));
+
+  function addStyles() {
+    if ($("#lq-new-styles")) return;
+
+    const style = document.createElement("style");
+    style.id = "lq-new-styles";
+    style.textContent = `
+      .lq-card {
+        background: linear-gradient(135deg,#fff7fc,#effaff);
+        border: 2px solid #e2c8f5;
+        border-radius: 22px;
+        padding: 22px;
+        margin: 20px 0;
+      }
+
+      .lq-card h3 {
+        color: #6842ad;
+        font-size: 1.45rem;
+        margin: 0 0 12px;
+      }
+
+      .lq-card p, .lq-story p {
+        color: #45465c;
+        font-size: 1.08rem;
+        line-height: 1.75;
+      }
+
+      .lq-tag {
+        display: inline-block;
+        padding: 7px 13px;
+        background: #e8dcff;
+        color: #6540a8;
+        font-size: .9rem;
+        font-weight: 800;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
+      .lq-visual {
+        background: #f5faff;
+        border: 2px solid #e1cafa;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 16px 0;
+      }
+
+      .lq-visual svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .lq-answers {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 12px;
+        margin: 18px 0;
+      }
+
+      .lq-answers button, .lq-option {
+        cursor: pointer;
+        border: 2px solid #c8adef;
+        border-radius: 15px;
+        padding: 15px;
+        min-height: 60px;
+        background: #fff;
+        color: #533a8c;
+        font-size: 1.02rem;
+        font-weight: 800;
+        text-align: left;
+      }
+
+      .lq-answers button:hover:not(:disabled),
+      .lq-option:hover:not(:disabled) {
+        background: #eee4ff;
+      }
+
+      .lq-answers button.correct {
+        background: #d9f8e9;
+        border-color: #36b280;
+      }
+
+      .lq-answers button.wrong {
+        background: #ffe3e3;
+        border-color: #e38383;
+      }
+
+      .lq-feedback {
+        background: #fff4dc;
+        padding: 15px;
+        border-radius: 14px;
+        color: #55466b;
+        line-height: 1.6;
+        margin: 15px 0;
+        min-height: 54px;
+      }
+
+      .lq-next {
+        background: #7550c4;
+        color: white;
+        border: none;
+        border-radius: 14px;
+        padding: 15px 24px;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .lq-next:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+      }
+
+      .lq-story {
+        display: grid;
+        grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
+        gap: 24px;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .lq-story h3 {
+        color: #6440aa;
+        font-size: 1.5rem;
+      }
+
+      .lq-story-art {
+        border-radius: 22px;
+        padding: 8px;
+        background: linear-gradient(135deg,#e8f7ff,#fff0f7);
+      }
+
+      .lq-story-art svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .lq-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin: 12px 0;
+      }
+
+      .lq-chip {
+        background: white;
+        border: 2px solid #d9c5f5;
+        color: #62419e;
+        border-radius: 13px;
+        padding: 9px 12px;
+        font-weight: 750;
+      }
+
+      .lq-step-track {
+        display: flex;
+        gap: 9px;
+        margin-bottom: 18px;
+      }
+
+      .lq-step-dot {
+        flex: 1;
+        height: 9px;
+        border-radius: 99px;
+        background: #e7d7f6;
+      }
+
+      .lq-step-dot.active {
+        background: #8c62e0;
+      }
+
+      .lq-evidence {
+        background: #fff;
+        border: 2px solid #dac6f2;
+        border-radius: 20px;
+        padding: 18px;
+      }
+
+      .lq-evidence-picture {
+        min-height: 170px;
+        background: #fff3f8;
+        border-radius: 18px;
+        padding: 16px;
+        display: grid;
+        grid-template-columns: repeat(5,1fr);
+        gap: 7px;
+        margin: 14px 0;
+      }
+
+      .lq-mini-cell {
+        aspect-ratio: 1;
+        background: #f5a9c9;
+        border: 2px solid #ce6f9a;
+        border-radius: 38%;
+        display: grid;
+        place-items: center;
+        color: #7c39a7;
+        font-weight: 900;
+      }
+
+      .lq-mini-cell.hurt {
+        background: #ffbd80;
+        border-color: #eb865b;
+        color: #b8324b;
+      }
+
+      .lq-mini-cell.immune {
+        background: #a3def8;
+        border-color: #449bd1;
+        border-radius: 50%;
+        color: #256aab;
+      }
+
+      .lq-mini-cell.scar {
+        background: repeating-linear-gradient(
+          45deg,#e7b56d 0 7px,#fff1b8 7px 14px
+        );
+        border-color: #c99e52;
+      }
+
+      .lq-highlight {
+        font-weight: 850;
+        color: #643fbc;
+      }
+
+      .lq-lab-explain {
+        background: #eff9ff;
+        border: 2px solid #b8e0f6;
+        border-radius: 16px;
+        padding: 17px;
+        margin: 14px 0;
+        color: #37526d;
+        line-height: 1.7;
+      }
+
+      .lq-game-heading {
+        font-size: 1.7rem;
+        color: #613bb1;
+      }
+
+      .lq-score {
+        font-weight: 850;
+        color: #6543a8;
+        margin: 12px 0;
+      }
+
+      @media(max-width:760px) {
+        .lq-story {
+          grid-template-columns: 1fr;
+        }
+        .lq-answers {
+          grid-template-columns: 1fr;
+        }
+        .lq-card {
+          padding: 17px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  addStyles();
+
+  /* =================================================
+     SHARED SCIENCE ILLUSTRATIONS
+     These are teaching models, not actual micrographs.
+     ================================================= */
+
+  function virusShape(x, y, scale = 1) {
+    return `
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <circle r="31" fill="#fac6df"
+                stroke="#d365a6" stroke-width="6"/>
+        <circle r="15" fill="#9562d9"/>
+        <path d="M-9 -4 Q0 -18 9 -4 Q0 9 -9 -4"
+              fill="none" stroke="#f2e2ff" stroke-width="3"/>
+        ${Array.from({length:10},(_,i)=>{
+          const a=i*Math.PI/5;
+          const x1=Math.cos(a)*31, y1=Math.sin(a)*31;
+          const x2=Math.cos(a)*45, y2=Math.sin(a)*45;
+          return `<line x1="${x1}" y1="${y1}"
+                        x2="${x2}" y2="${y2}"
+                        stroke="#b959a6" stroke-width="5"
+                        stroke-linecap="round"/>
+                  <circle cx="${x2}" cy="${y2}" r="5"
+                          fill="#ed86ba"/>`;
+        }).join("")}
+      </g>`;
+  }
+
+  function cellShape(x, y, radius = 105, infected = false) {
+    return `
+      <g>
+        <circle cx="${x}" cy="${y}" r="${radius}"
+                fill="${infected ? "#ffd9b3" : "#ffc9e2"}"
+                stroke="${infected ? "#e38d5a" : "#dd79b0"}"
+                stroke-width="8"/>
+        <circle cx="${x}" cy="${y}" r="${radius*.32}"
+                fill="#a97adc" stroke="#794ab5" stroke-width="5"/>
+        <circle cx="${x}" cy="${y}" r="${radius*.1}"
+                fill="#7640a4"/>
+        <ellipse cx="${x-radius*.47}" cy="${y+radius*.4}"
+                 rx="${radius*.23}" ry="${radius*.11}"
+                 fill="#f6b55f" stroke="#d28238" stroke-width="3"/>
+        <ellipse cx="${x+radius*.45}" cy="${y-radius*.3}"
+                 rx="${radius*.23}" ry="${radius*.11}"
+                 fill="#f6b55f" stroke="#d28238" stroke-width="3"/>
+      </g>`;
+  }
+
+  function storyImage(step) {
+    const arrow = `
+      <path d="M230 140 L355 140" stroke="#7549c9"
+            stroke-width="9" stroke-linecap="round"/>
+      <path d="M338 126 L358 140 L338 154"
+            fill="none" stroke="#7549c9"
+            stroke-width="9" stroke-linecap="round"/>`;
+
+    const frameStart = `
+      <svg viewBox="0 0 600 300" role="img"
+           aria-label="Illustrated stage of hepatitis B infection">
+        <rect width="600" height="300" rx="25" fill="#f5faff"/>
+        <circle cx="60" cy="45" r="23" fill="#e8d9ff"/>
+        <circle cx="553" cy="257" r="19" fill="#d7f6f3"/>
+    `;
+
+    let content = "";
+
+    switch(step) {
+      case 0:
+        content = `
+          ${virusShape(132,145,1.15)}
+          ${arrow}
+          ${cellShape(477,146,95)}
+          <circle cx="386" cy="146" r="13"
+                  fill="#63c6a4" stroke="#299875" stroke-width="4"/>
+          <text x="300" y="45" font-size="22" fill="#573ca2"
+                text-anchor="middle" font-weight="800">
+            Finding the Cell Doorway
+          </text>`;
+        break;
+
+      case 1:
+        content = `
+          ${cellShape(300,153,114)}
+          ${virusShape(214,145,.55)}
+          ${virusShape(322,182,.36)}
+          <path d="M222 146 Q255 130 277 147"
+                fill="none" stroke="#7549c9"
+                stroke-width="7" stroke-dasharray="10 8"/>
+          <text x="300" y="37" font-size="22" fill="#573ca2"
+                text-anchor="middle" font-weight="800">
+            The Virus Enters
+          </text>`;
+        break;
+
+      case 2:
+        content = `
+          ${cellShape(300,160,113,true)}
+          <path d="M190 154 Q236 92 282 124"
+                fill="none" stroke="#744bc1"
+                stroke-width="7" stroke-dasharray="9 7"/>
+          <rect x="393" y="190" width="76" height="52"
+                rx="13" fill="#89dccc" stroke="#2b9d8e" stroke-width="4"/>
+          <text x="430" y="223" font-size="20" text-anchor="middle"
+                fill="#235e65" font-weight="800">BUILD</text>
+          ${virusShape(196,147,.33)}
+          <text x="300" y="36" font-size="22" fill="#573ca2"
+                text-anchor="middle" font-weight="800">
+            Using the Cell's Workers
+          </text>`;
+        break;
+
+      case 3:
+        content = `
+          ${cellShape(210,153,103,true)}
+          ${virusShape(405,95,.58)}
+          ${virusShape(483,173,.55)}
+          ${virusShape(380,228,.45)}
+          <path d="M310 154 L372 154" stroke="#7549c9"
+                stroke-width="7" stroke-dasharray="10 8"/>
+          <text x="300" y="36" font-size="22" fill="#573ca2"
+                text-anchor="middle" font-weight="800">
+            More Virus Particles
+          </text>`;
+        break;
+
+      case 4:
+        content = `
+          ${cellShape(305,157,103,true)}
+          ${virusShape(302,157,.3)}
+          <g>
+            <circle cx="100" cy="144" r="58"
+                    fill="#b8e4ff" stroke="#4c9bd0"
+                    stroke-width="7"/>
+            <text x="100" y="155" font-size="23" fill="#25649a"
+                  text-anchor="middle" font-weight="800">
+              IMMUNE
+            </text>
+          </g>
+          <path d="M165 145 L197 145" stroke="#4b9bd0"
+                stroke-width="7" stroke-dasharray="8 7"/>
+          <path d="M402 146 L449 105" stroke="#e79946"
+                stroke-width="7"/>
+          <path d="M404 164 L467 194" stroke="#e79946"
+                stroke-width="7"/>
+          <text x="300" y="36" font-size="22" fill="#573ca2"
+                text-anchor="middle" font-weight="800">
+            Immune Defenders Respond
+          </text>`;
+        break;
+    }
+
+    return frameStart + content + "</svg>";
+  }
+
+  /* =================================================
+     MISSION 1 — HOW HBV AFFECTS THE CELL
+     Keeps original video, analogies and games.
+     ================================================= */
+
+  if (page === "cells.html") {
+    const factBox = $("#part-fact");
+
+    if (factBox && !$("#lq-cell-connection")) {
+      const connection = document.createElement("div");
+      connection.id = "lq-cell-connection";
+      connection.className = "lq-card";
+
+      connection.innerHTML = `
+        <span class="lq-tag">🦠 CELL CITY CONNECTION</span>
+        <h3>What happens when hepatitis B enters a liver cell?</h3>
+        <p>
+          Remember that every organelle has a special job.
+          A liver cell is like a busy city where everyone
+          works together.
+        </p>
+        <p>
+          Hepatitis B is a virus that can enter liver cells.
+          It brings instructions that trick some of the
+          cell's workers into helping make more viruses.
+        </p>
+        <p>
+          <strong>The nucleus</strong> receives viral instructions.
+          <strong>Ribosomes</strong> can be used to make virus proteins,
+          and <strong>the ER</strong> helps prepare some of those proteins.
+        </p>
+        <p>
+          This doesn't mean every organelle immediately
+          stops working. The cell may still do many of
+          its normal jobs. However, the body's immune
+          system may recognize infected liver cells and
+          respond, which can cause inflammation and injury.
+        </p>
+      `;
+
+      factBox.insertAdjacentElement("afterend", connection);
+    }
+  }
+
+  /* =================================================
+     MISSION 2 — VIRUS INVASION
+     Clear cartoon introduction and interactive story
+     ================================================= */
+
+  if (page === "invasion.html") {
+    const introPanel = $(".two-col .panel");
+    const explanationPanel = $(".two-col .info-panel");
+    const story = $(".story-stage");
+
+    // Replace confusing full-size micrograph as main image.
+    // Preserve actual scientific image as an optional bonus.
+    if (introPanel && !$("#lq-virus-intro")) {
+      introPanel.innerHTML = `
+        <div id="lq-virus-intro">
+          <span class="lq-tag">🦠 MEET THE VIRUS</span>
+          <h2>What Does Hepatitis B Look Like?</h2>
+
+          <p>
+            Hepatitis B is caused by a tiny virus called HBV.
+            It's so small that we need powerful microscopes
+            to see it.
+          </p>
+
+          <div class="lq-visual">
+            <svg viewBox="0 0 600 330" role="img"
+                 aria-label="Simple labelled hepatitis B virus model">
+              <rect width="600" height="330" rx="25" fill="#f3faff"/>
+              ${virusShape(290,160,2.25)}
+
+              <line x1="366" y1="107" x2="425" y2="64"
+                    stroke="#6245b0" stroke-width="4"/>
+              <rect x="420" y="30" width="160" height="57"
+                    rx="14" fill="white" stroke="#af92e6"
+                    stroke-width="3"/>
+              <text x="500" y="53" text-anchor="middle"
+                    font-size="16" fill="#54398e" font-weight="800">
+                Outer coating
+              </text>
+              <text x="500" y="73" text-anchor="middle"
+                    font-size="13" fill="#54398e">
+                and surface parts
+              </text>
+
+              <line x1="258" y1="170" x2="166" y2="244"
+                    stroke="#6245b0" stroke-width="4"/>
+              <rect x="20" y="240" width="190" height="62"
+                    rx="14" fill="white" stroke="#af92e6"
+                    stroke-width="3"/>
+              <text x="115" y="266" text-anchor="middle"
+                    font-size="16" fill="#54398e" font-weight="800">
+                Inside the virus
+              </text>
+              <text x="115" y="287" text-anchor="middle"
+                    font-size="13" fill="#54398e">
+                are its instructions
+              </text>
+            </svg>
+          </div>
+
+          <p class="caption">
+            Simplified drawing of a virus.
+            Not to scale or an actual microscope photo.
+          </p>
+
+          <div class="lq-card">
+            <h3>💡 How Small Is It?</h3>
+            <p>
+              You cannot see hepatitis B with your eyes.
+              Even an ordinary classroom microscope isn't
+              powerful enough to clearly show individual
+              virus particles.
+            </p>
+          </div>
+
+          <details>
+            <summary style="cursor:pointer;font-weight:800">
+              🔬 Bonus: See a real electron microscope photo
+            </summary>
+
+            <p>
+              Scientists use electron microscopes to
+              study things that are too small for
+              ordinary microscopes.
+              The tiny round shapes in this photo
+              include hepatitis B-related particles.
+            </p>
+
+            <div class="lq-visual">
+              <img
+                src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Hepatitis%20B%20virus%2001.jpg"
+                alt="Electron microscope photograph of hepatitis B particles"
+                loading="lazy"
+                style="width:100%;display:block">
+            </div>
+          </details>
+        </div>`;
+    }
+
+    if (explanationPanel && !$("#lq-inflammation")) {
+      const note = document.createElement("div");
+      note.id = "lq-inflammation";
+      note.className = "lq-card";
+      note.innerHTML = `
+        <h3>🔥 What Does Inflammation Mean?</h3>
+
+        <p>
+          When you scrape your knee, the area might become
+          red, swollen, warm, or sore. That's one example
+          of inflammation.
+        </p>
+
+        <p>
+          <strong>Inflammation is part of your body's
+          response to injury or infection.</strong>
+          Immune defenders travel to the area and
+          try to deal with the problem.
+        </p>
+
+        <p>
+          When hepatitis B infects liver cells, immune
+          defenders may attack those infected cells.
+          This can cause inflammation inside the liver.
+          Because the liver is inside your body,
+          you cannot always see or feel it happening.
+        </p>
+
+        <p>
+          If inflammation continues for a long time,
+          it may injure liver tissue. The good news is
+          that vaccines help prevent hepatitis B,
+          and medical care can help people who have it.
+        </p>
+      `;
+      explanationPanel.appendChild(note);
+    }
+
+    // Replace the emoji-only story, keeping five steps.
+    if (story) {
+      const storySteps = [
+        {
+          title: "Step 1: Find the Doorway",
+          text:
+            "The hepatitis B virus travels through the bloodstream. " +
+            "When it reaches a liver cell, it attaches to a special " +
+            "doorway on the cell's outer membrane.",
+          prompt: "Cell City connection: the membrane acts like a security gate.",
+          answers: ["Cell membrane", "Mitochondria"],
+          correct: 0,
+          feedback: "Correct! The cell membrane controls what enters and leaves."
+        },
+        {
+          title: "Step 2: Enter the Cell",
+          text:
+            "The virus enters the liver cell and releases its " +
+            "instructions. These instructions move toward " +
+            "the nucleus, the cell's control centre.",
+          prompt: "Which organelle acts like City Hall?",
+          answers: ["Lysosome", "Nucleus"],
+          correct: 1,
+          feedback: "Yes! The nucleus is the cell's control centre."
+        },
+        {
+          title: "Step 3: Use the Cell Workers",
+          text:
+            "The virus makes use of the liver cell's own workers. " +
+            "Ribosomes help make viral proteins, while the ER helps " +
+            "prepare some of these materials. " +
+            "These are the same cell parts that normally help " +
+            "the liver cell do its everyday jobs.",
+          prompt: "Which organelles are the protein builders?",
+          answers: ["Ribosomes", "Cell membrane"],
+          correct: 0,
+          feedback: "Exactly! Ribosomes build proteins."
+        },
+        {
+          title: "Step 4: More Viruses Are Made",
+          text:
+            "New virus particles can be assembled and leave " +
+            "the infected liver cell. Some may reach more " +
+            "liver cells and repeat the process.",
+          prompt: "What is the virus using to make more copies?",
+          answers: ["The cell's machinery", "A person's bones"],
+          correct: 0,
+          feedback: "Right! It uses machinery inside liver cells."
+        },
+        {
+          title: "Step 5: Immune Defenders Respond",
+          text:
+            "The immune system notices that liver cells are " +
+            "infected and responds. Immune defenders can " +
+            "attack infected cells, causing inflammation " +
+            "and sometimes injury. If this continues, " +
+            "scar tissue may develop over time.",
+          prompt: "What does inflammation mean here?",
+          answers: [
+            "The body is responding to infection",
+            "The liver has turned into a virus"
+          ],
+          correct: 0,
+          feedback:
+            "Correct! Inflammation is part of the body's response to infection."
+        }
+      ];
+
+      story.classList.add("lq-story");
+      story.innerHTML = `
+        <div class="lq-story-art">
+          <div id="lq-story-illustration"></div>
+          <p class="caption">
+            Colourful teaching illustrations, not real photographs.
+          </p>
+        </div>
+
+        <div>
+          <div class="lq-step-track" id="lq-story-track"></div>
+          <h3 id="lq-story-title"></h3>
+          <p id="lq-story-description"></p>
+
+          <div class="lq-card">
+            <strong id="lq-story-prompt"></strong>
+            <div class="lq-answers" id="lq-story-answers"></div>
+            <p id="lq-story-feedback" class="lq-feedback">
+              Choose an answer to continue.
+            </p>
+          </div>
+
+          <button id="lq-story-next" class="lq-next" disabled>
+            NEXT STEP →
+          </button>
+        </div>
+      `;
+
+      let stepIndex = 0;
+
+      function renderStoryStep() {
+        const item = storySteps[stepIndex];
+
+        $("#lq-story-illustration").innerHTML =
+          storyImage(stepIndex);
+
+        $("#lq-story-title").textContent = item.title;
+        $("#lq-story-description").textContent = item.text;
+        $("#lq-story-prompt").textContent = item.prompt;
+
+        $("#lq-story-track").innerHTML =
+          storySteps.map((_,i) => `
+            <span class="lq-step-dot ${
+              i <= stepIndex ? "active" : ""
+            }"></span>
+          `).join("");
+
+        const answerArea = $("#lq-story-answers");
+        const feedback = $("#lq-story-feedback");
+        const next = $("#lq-story-next");
+
+        feedback.textContent = "Choose an answer to continue.";
+        next.disabled = true;
+        next.textContent =
+          stepIndex === 4 ? "FINISH MISSION →" : "NEXT STEP →";
+
+        answerArea.innerHTML = item.answers.map((answer,i) => `
+          <button data-story-answer="${i}">${answer}</button>
+        `).join("");
+
+        all("[data-story-answer]", answerArea).forEach(button => {
+          button.onclick = () => {
+            const choice = Number(button.dataset.storyAnswer);
+            const correct = choice === item.correct;
+
+            feedback.textContent = correct
+              ? "✅ " + item.feedback
+              : "💡 Look at the explanation and try again.";
+
+            if (correct) {
+              all("button", answerArea).forEach(b => b.disabled = true);
+              button.classList.add("correct");
+              next.disabled = false;
+            } else {
+              button.classList.add("wrong");
+            }
+          };
+        });
+      }
+
+      $("#lq-story-next").onclick = () => {
+        if (stepIndex === 4) {
+          nextPage("microscope.html", "invasion");
+        } else {
+          stepIndex++;
+          renderStoryStep();
+        }
+      };
+
+      renderStoryStep();
+    }
+  }
+
+  /* =================================================
+     MISSION 3 — TISSUE DETECTIVE
+     Organized learning and a new spot-the-clue game
+     ================================================= */
+
+  if (page === "microscope.html") {
+    const comparison = $(".kid-tissue-grid");
+    const question = $("#tissue-feedback");
+
+    // Place a learning guide before the tissue comparison.
+    if (comparison && !$("#lq-tissue-guide")) {
+      const guide = document.createElement("div");
+      guide.id = "lq-tissue-guide";
+      guide.className = "lq-card";
+      guide.innerHTML = `
+        <span class="lq-tag">🔬 TISSUE DETECTIVE GUIDE</span>
+        <h3>From One Cell to a Whole Liver</h3>
+
+        <p>
+          <strong>Cells</strong> are tiny living building blocks.
+          Many similar cells work together to form
+          <strong>tissues</strong>.
+        </p>
+
+        <p>
+          Different tissues work together to build
+          an <strong>organ</strong>, like the liver.
+          The liver helps the digestive system and
+          performs other important jobs for the body.
+        </p>
+
+        <div class="lq-chips">
+          <span class="lq-chip">🧫 Cells</span>
+          <span class="lq-chip">→ 🧩 Tissues</span>
+          <span class="lq-chip">→ 🫀 Liver organ</span>
+          <span class="lq-chip">→ 🧍 Body systems</span>
+        </div>
+
+        <p>
+          In our activity, pink cells represent
+          healthy-looking cells. Orange cells with an X
+          represent cells that have been injured.
+          Blue circles represent immune defenders.
+        </p>
+      `;
+      comparison.before(guide);
+    }
+
+    // Add a new detective game before the existing quiz.
+    if (question && !$("#lq-tissue-game")) {
+      const game = document.createElement("section");
+      game.id = "lq-tissue-game";
+      game.className = "lq-card";
+
+      game.innerHTML = `
+        <span class="lq-tag">🎮 BONUS DETECTIVE GAME</span>
+        <h3>🔎 Spot the Tissue Clue!</h3>
+
+        <p>
+          Study each tissue picture. Your job is to
+          discover what the picture is teaching you.
+          There are four rounds.
+        </p>
+
+        <div class="lq-score" id="lq-tissue-progress"></div>
+
+        <div class="lq-evidence">
+          <h3 id="lq-tissue-title"></h3>
+          <div class="lq-evidence-picture"
+               id="lq-tissue-picture"></div>
+
+          <p id="lq-tissue-prompt"></p>
+
+          <div class="lq-answers" id="lq-tissue-answers"></div>
+
+          <div class="lq-feedback" id="lq-tissue-response"
+               role="status"></div>
+
+          <button class="lq-next" id="lq-tissue-game-next"
+                  disabled>NEXT CLUE →</button>
+        </div>
+      `;
+
+      const originalQuiz = question.closest(".quiz-mini") ||
+        question.previousElementSibling;
+
+      if (originalQuiz && originalQuiz.parentElement) {
+        originalQuiz.before(game);
+      } else {
+        question.before(game);
+      }
+
+      const clues = [
+        {
+          title: "Clue 1: Healthy Tissue",
+          types: [],
+          question: "What do the purple dots represent?",
+          answers: ["Cell nuclei", "Hepatitis B viruses"],
+          correct: 0,
+          feedback:
+            "The purple dots represent nuclei. Most of the illustrated cells are healthy-looking."
+        },
+        {
+          title: "Clue 2: Injured Cells",
+          types: [2,7,12,18],
+          question: "What do the orange cells with X marks represent?",
+          answers: ["Cells getting bigger", "Injured liver cells"],
+          correct: 1,
+          feedback:
+            "The orange X-marked cells represent injury. The X is not the nucleus."
+        },
+        {
+          title: "Clue 3: Immune Defenders",
+          types: [1,6,9,15],
+          immune: true,
+          question: "What might the blue circles represent?",
+          answers: ["Immune cells responding to infection", "Bubbles of drinking water"],
+          correct: 0,
+          feedback:
+            "The blue circles represent immune defenders that respond to infected cells."
+        },
+        {
+          title: "Clue 4: Possible Scarring",
+          types: [3,8,13,18],
+          scar: true,
+          question: "What can the yellow-striped areas represent?",
+          answers: ["New bones growing", "Scar tissue after repeated injury"],
+          correct: 1,
+          feedback:
+            "Scar tissue can develop after repeated liver injury. Not everyone develops it."
+        }
+      ];
+
+      let clueIndex = 0;
+      let clueScore = 0;
+
+      function showClue() {
+        if (clueIndex === clues.length) {
+          $("#lq-tissue-progress").textContent = "ALL CLUES SOLVED";
+          $("#lq-tissue-title").textContent =
+            "🏆 You Are a Tissue Detective!";
+          $("#lq-tissue-picture").innerHTML =
+            `<div style="grid-column:1/-1;text-align:center;font-size:65px">
+              🔬🏆
+            </div>`;
+          $("#lq-tissue-prompt").textContent =
+            `You answered ${clueScore}/4 clues correctly on the first try.`;
+          $("#lq-tissue-answers").innerHTML = "";
+          $("#lq-tissue-response").textContent =
+            "You can now explain how healthy tissue and injured tissue may look different.";
+          $("#lq-tissue-game-next").textContent = "PLAY AGAIN ↺";
+          $("#lq-tissue-game-next").disabled = false;
+          return;
+        }
+
+        const clue = clues[clueIndex];
+        let chosen = false;
+
+        $("#lq-tissue-progress").textContent =
+          `CLUE ${clueIndex+1} OF 4`;
+
+        $("#lq-tissue-title").textContent = clue.title;
+        $("#lq-tissue-prompt").textContent = clue.question;
+        $("#lq-tissue-response").textContent =
+          "Look carefully and choose the best answer.";
+
+        $("#lq-tissue-picture").innerHTML =
+          Array.from({length:20},(_,i) => {
+            let className = "lq-mini-cell";
+            let symbol = "●";
+
+            if (clue.types.includes(i)) {
+              className += " hurt";
+              symbol = "✕";
+            }
+
+            if (clue.immune && [4,14].includes(i)) {
+              className = "lq-mini-cell immune";
+              symbol = "+";
+            }
+
+            if (clue.scar && [5,10,15].includes(i)) {
+              className = "lq-mini-cell scar";
+              symbol = "";
+            }
+
+            return `<span class="${className}">${symbol}</span>`;
+          }).join("");
+
+        const answers = $("#lq-tissue-answers");
+        const next = $("#lq-tissue-game-next");
+
+        next.disabled = true;
+        next.textContent = "NEXT CLUE →";
+
+        answers.innerHTML = clue.answers.map((a,i) =>
+          `<button data-clue="${i}">${a}</button>`
+        ).join("");
+
+        all("[data-clue]", answers).forEach(button => {
+          button.onclick = () => {
+            const correct = Number(button.dataset.clue) === clue.correct;
+
+            if (correct) {
+              if (!chosen) clueScore++;
+              $("#lq-tissue-response").textContent =
+                "✅ " + clue.feedback;
+
+              all("button", answers).forEach(b => b.disabled = true);
+              button.classList.add("correct");
+              next.disabled = false;
+            } else {
+              chosen = true;
+              button.classList.add("wrong");
+              $("#lq-tissue-response").textContent =
+                "Not quite. Check the legend and try again.";
+            }
+          };
+        });
+      }
+
+      $("#lq-tissue-game-next").onclick = () => {
+        if (clueIndex === clues.length) {
+          clueIndex = 0;
+          clueScore = 0;
+        } else {
+          clueIndex++;
+        }
+        showClue();
+      };
+
+      showClue();
+    }
+  }
+
+  /* =================================================
+     MISSION 4 — RESCUE LAB
+     More explanations for slider and prevention activity
+     ================================================= */
+
+  if (page === "lab.html") {
+    const slider = $("#damage");
+    const firstPanel = slider ? slider.closest(".panel") : null;
+    const mythPanel = $("#myth-cards")?.closest(".panel");
+
+    if (firstPanel && !$("#lq-lab-guide")) {
+      const guide = document.createElement("div");
+      guide.id = "lq-lab-guide";
+      guide.className = "lq-lab-explain";
+
+      guide.innerHTML = `
+        <strong>🧪 What Are We Testing?</strong>
+        <p>
+          We're exploring how repeated liver injury
+          might affect tissue over time.
+          Moving the slider does not make
+          real injuries happen. It simply shows
+          possible changes using an educational model.
+        </p>
+      `;
+
+      slider.before(guide);
+
+      const detail = document.createElement("div");
+      detail.id = "lq-lab-stage-detail";
+      detail.className = "lq-lab-explain";
+      $("#damage-caption")?.insertAdjacentElement("afterend", detail);
+
+      const stages = [
+        {
+          title: "😊 Healthy-looking tissue",
+          explanation:
+            "Liver cells can work together to process nutrients, " +
+            "make bile, and help clean the blood. " +
+            "The pink cell model represents many cells doing their usual jobs."
+        },
+        {
+          title: "🛡️ Immune response",
+          explanation:
+            "When the immune system recognizes infected liver cells, " +
+            "it responds to the infection. This can cause inflammation, " +
+            "which means the body's defenses are active in that area. " +
+            "Some liver cells can be injured during this response."
+        },
+        {
+          title: "🩹 Repeated injury",
+          explanation:
+            "If liver injury continues over a long time, " +
+            "the liver may start forming scar tissue. " +
+            "This is called fibrosis. Scar tissue doesn't " +
+            "perform all the jobs that healthy liver cells do."
+        },
+        {
+          title: "⚠️ Extensive scarring",
+          explanation:
+            "In some people, severe long-term scarring can " +
+            "develop. This is called cirrhosis. It may make " +
+            "the liver less able to work normally. " +
+            "This does not happen to everyone with hepatitis B, " +
+            "and medical care can reduce risks."
+        }
+      ];
+
+      function explainSlider() {
+        const n = Number(slider.value);
+        detail.innerHTML = `
+          <strong>${stages[n].title}</strong>
+          <p>${stages[n].explanation}</p>
+        `;
+      }
+
+      slider.addEventListener("input", explainSlider);
+      explainSlider();
+    }
+
+    if (mythPanel && !$("#lq-myth-guide")) {
+      const note = document.createElement("div");
+      note.id = "lq-myth-guide";
+      note.className = "lq-lab-explain";
+
+      note.innerHTML = `
+        <strong>🔎 How Does Hepatitis B Spread?</strong>
+        <p>
+          Hepatitis B can spread when certain infected
+          body fluids enter another person's body.
+          Examples include blood exposure, sharing
+          used needles, and transmission during birth.
+        </p>
+        <p>
+          It <strong>does not spread</strong> through
+          hugging, sharing a desk, or eating lunch
+          together. People with hepatitis B should
+          be treated with kindness and respect.
+        </p>
+        <p>
+          Vaccination is an important way to prevent
+          hepatitis B. Testing and medical treatment
+          also help protect people's health.
+        </p>
+      `;
+
+      mythPanel.insertBefore(note, $("#myth-cards"));
+    }
+  }
+
+  /* =================================================
+     MISSION 5 — FINAL SHOWDOWN
+     Five MCQs plus two different interactive games
+     ================================================= */
+
+  if (page === "finale.html") {
+    const area = $("#quiz-area");
+    const badge = $("#badge-text");
+    const progressLabel = $("#quiz-progress");
+
+    if (area) {
+      const questions = [
+        {
+          q: "Which organ does hepatitis B mainly infect?",
+          a: ["Heart", "Liver", "Brain"],
+          c: 1,
+          why: "Hepatitis B mainly infects liver cells."
+        },
+        {
+          q: "Which cell part acts like City Hall?",
+          a: ["Nucleus", "Mitochondria", "Golgi apparatus"],
+          c: 0,
+          why: "The nucleus contains important instructions that help guide the cell."
+        },
+        {
+          q: "Which Cell City workers build proteins?",
+          a: ["Cell membrane", "Ribosomes", "Lysosomes"],
+          c: 1,
+          why: "Ribosomes build proteins, including some that the virus uses."
+        },
+        {
+          q: "What does inflammation mean?",
+          a: [
+            "The liver disappears",
+            "The body is responding to injury or infection",
+            "The cell turns into a bone"
+          ],
+          c: 1,
+          why: "Inflammation is part of the body's response to infection or injury."
+        },
+        {
+          q: "How can people help prevent hepatitis B?",
+          a: [
+            "Get vaccinated",
+            "Avoid friendly hugs",
+            "Wait for obvious symptoms"
+          ],
+          c: 0,
+          why: "Vaccination helps protect against hepatitis B."
+        }
+      ];
+
+      let quizIndex = 0;
+      let quizScore = 0;
+      let riskyIndex = 0;
+      let riskyScore = 0;
+      let orderIndex = 0;
+      let orderMistake = false;
+
+      function showFinal() {
+        area.innerHTML = `
+          <div class="lq-card">
+            <h2>🏆 Science Defender!</h2>
+            <p>
+              You've explored Cell City, followed the virus,
+              investigated tissue, and tested how to protect people.
+            </p>
+
+            <p class="lq-score">
+              Multiple-choice score: ${quizScore}/5
+            </p>
+
+            <p class="lq-score">
+              Safe or Risky score: ${riskyScore}/3
+            </p>
+
+            <p>
+              Infection story:
+              ${orderMistake ? "Completed with hints" : "Completed in the correct order"}
+            </p>
+
+            <p>
+              Remember: learning the science helps us
+              protect ourselves and treat others kindly.
+            </p>
+
+            <button id="lq-replay" class="lq-next">
+              PLAY AGAIN ↺
+            </button>
+
+            <a href="index.html" class="btn secondary">
+              BACK TO MISSION CONTROL →
+            </a>
+          </div>
+        `;
+
+        progressLabel.textContent = "MISSION COMPLETE";
+        badge.textContent =
+          "🏆 SCIENCE DEFENDER UNLOCKED!";
+
+        saveMission("finale");
+
+        $("#lq-replay").onclick = () => {
+          quizIndex = 0;
+          quizScore = 0;
+          riskyIndex = 0;
+          riskyScore = 0;
+          orderIndex = 0;
+          orderMistake = false;
+          showMCQ();
+        };
+      }
+
+      /* GAME 3 — PUT THE STORY IN ORDER */
+
+      function showOrderGame() {
+        const steps = [
+          {
+            name: "The virus attaches to a liver cell",
+            options: [
+              "The virus attaches to a liver cell",
+              "The liver becomes a bone",
+              "Immune cells turn into viruses"
+            ]
+          },
+          {
+            name: "The virus uses the cell's machinery",
+            options: [
+              "The liver stops needing energy",
+              "The virus uses the cell's machinery",
+              "The cell becomes an organ by itself"
+            ]
+          },
+          {
+            name: "Immune defenders respond",
+            options: [
+              "Hugging causes hepatitis B",
+              "The nucleus leaves the body",
+              "Immune defenders respond"
+            ]
+          }
+        ];
+
+        if (orderIndex === steps.length) {
+          showFinal();
+          return;
+        }
+
+        const item = steps[orderIndex];
+
+        progressLabel.textContent = "ACTIVITY 3 OF 3";
+
+        area.innerHTML = `
+          <div class="lq-card">
+            <span class="lq-tag">🧩 GAME 3 — STORY BUILDER</span>
+            <h2 class="lq-game-heading">
+              Put the Infection Story in Order
+            </h2>
+
+            <p>
+              Choose what happens next.
+              Build the story from the first step
+              to the immune response.
+            </p>
+
+            <div class="lq-chips">
+              <span class="lq-chip">🦠 Virus arrives</span>
+              <span class="lq-chip">→ ?</span>
+              <span class="lq-chip">→ 🛡️ Response</span>
+            </div>
+
+            <h3>Story step ${orderIndex+1} of 3</h3>
+
+            <div class="lq-answers" id="lq-order-answers">
+              ${item.options.map((option,i) => `
+                <button data-order-answer="${i}">
+                  ${option}
+                </button>
+              `).join("")}
+            </div>
+
+            <p id="lq-order-feedback" class="lq-feedback">
+              Which event belongs here?
+            </p>
+
+            <button id="lq-order-next" class="lq-next"
+                    disabled>
+              ${orderIndex === 2 ? "FINISH ADVENTURE →" : "NEXT STEP →"}
+            </button>
+          </div>
+        `;
+
+        all("[data-order-answer]").forEach(b => {
+          b.onclick = () => {
+            const good = b.textContent.trim() === item.name;
+
+            if (!good) {
+              orderMistake = true;
+              b.classList.add("wrong");
+              $("#lq-order-feedback").textContent =
+                "Not quite. Think about what happened in Mission 2.";
+              return;
+            }
+
+            b.classList.add("correct");
+            all("[data-order-answer]").forEach(x => x.disabled = true);
+
+            $("#lq-order-feedback").textContent =
+              "✅ Correct! You've placed this event in the story.";
+
+            $("#lq-order-next").disabled = false;
+          };
+        });
+
+        $("#lq-order-next").onclick = () => {
+          orderIndex++;
+          showOrderGame();
+        };
+      }
+
+      /* GAME 2 — SAFE OR RISKY */
+
+      const situations = [
+        {
+          situation: "Sharing lunch with a classmate",
+          answer: "safe",
+          why: "Sharing food does not spread hepatitis B."
+        },
+        {
+          situation: "Sharing a used needle",
+          answer: "risky",
+          why: "Used needles can carry infected blood."
+        },
+        {
+          situation: "Giving a friend a hug",
+          answer: "safe",
+          why: "Hugging does not spread hepatitis B."
+        }
+      ];
+
+      function showRiskGame() {
+        if (riskyIndex === situations.length) {
+          showOrderGame();
+          return;
+        }
+
+        const item = situations[riskyIndex];
+        progressLabel.textContent = "ACTIVITY 2 OF 3";
+
+        area.innerHTML = `
+          <div class="lq-card">
+            <span class="lq-tag">🛡️ GAME 2 — HEALTH DETECTIVE</span>
+
+            <h2 class="lq-game-heading">Safe or Risky?</h2>
+
+            <p>
+              Decide whether each situation can
+              spread hepatitis B.
+            </p>
+
+            <div class="lq-score">
+              Situation ${riskyIndex+1} of 3
+            </div>
+
+            <div class="lq-card" style="text-align:center">
+              <div style="font-size:60px">
+                ${riskyIndex===0 ? "🥪" : riskyIndex===1 ? "💉" : "🤗"}
+              </div>
+              <h3>${item.situation}</h3>
+            </div>
+
+            <div class="lq-answers">
+              <button data-risk="safe">
+                ✅ Safe — Does not spread HBV
+              </button>
+              <button data-risk="risky">
+                ⚠️ Risky — Can spread HBV
+              </button>
+            </div>
+
+            <p class="lq-feedback" id="lq-risk-feedback">
+              Choose your answer.
+            </p>
+
+            <button id="lq-risk-next" class="lq-next" disabled>
+              NEXT SITUATION →
+            </button>
+          </div>
+        `;
+
+        let attempted = false;
+
+        all("[data-risk]").forEach(b => {
+          b.onclick = () => {
+            const good = b.dataset.risk === item.answer;
+
+            if (!good) attempted = true;
+
+            b.classList.add(good ? "correct" : "wrong");
+
+            $("#lq-risk-feedback").textContent =
+              (good ? "✅ " : "💡 ") + item.why;
+
+            if (good) {
+              if (!attempted) riskyScore++;
+              all("[data-risk]").forEach(x => x.disabled = true);
+              $("#lq-risk-next").disabled = false;
+            }
+          };
+        });
+
+        $("#lq-risk-next").onclick = () => {
+          riskyIndex++;
+          showRiskGame();
+        };
+      }
+
+      /* GAME 1 — FIVE MULTIPLE CHOICE QUESTIONS */
+
+      function showMCQ() {
+        if (quizIndex === questions.length) {
+          showRiskGame();
+          return;
+        }
+
+        const item = questions[quizIndex];
+        progressLabel.textContent = "ACTIVITY 1 OF 3";
+
+        area.innerHTML = `
+          <div class="lq-card">
+            <span class="lq-tag">🎯 GAME 1 — SCIENCE QUIZ</span>
+
+            <h2 class="lq-game-heading">
+              The Five-Question Challenge
+            </h2>
+
+            <div class="lq-score">
+              Question ${quizIndex+1} of 5
+            </div>
+
+            <h3>${item.q}</h3>
+
+            <div class="lq-answers" id="lq-final-answers">
+              ${item.a.map((answer,i) => `
+                <button data-final-answer="${i}">
+                  ${answer}
+                </button>
+              `).join("")}
+            </div>
+
+            <p class="lq-feedback" id="lq-final-feedback">
+              Pick your answer to continue!
+            </p>
+
+            <button id="lq-final-next" class="lq-next" disabled>
+              ${quizIndex===4 ? "PLAY NEXT GAME →" : "NEXT QUESTION →"}
+            </button>
+          </div>
+        `;
+
+        all("[data-final-answer]").forEach(b => {
+          b.onclick = () => {
+            const good = Number(b.dataset.finalAnswer) === item.c;
+            if (good) quizScore++;
+
+            all("[data-final-answer]").forEach(x => {
+              x.disabled = true;
+
+              if (Number(x.dataset.finalAnswer) === item.c) {
+                x.classList.add("correct");
+              } else if (x === b) {
+                x.classList.add("wrong");
+              }
+            });
+
+            $("#lq-final-feedback").textContent =
+              (good ? "✅ Great work! " : "💡 Let's learn! ") +
+              item.why;
+
+            $("#lq-final-next").disabled = false;
+          };
+        });
+
+        $("#lq-final-next").onclick = () => {
+          quizIndex++;
+          showMCQ();
+        };
+      }
+
+      showMCQ();
+    }
+  }
+
+})();
