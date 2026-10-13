@@ -4019,3 +4019,121 @@ if (location.pathname.endsWith("cells.html")) {
   }
 
 })();
+
+/* SHORTER, MORE VISUAL SCIENCE EXPLANATIONS */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+
+  const style = document.createElement("style");
+  style.textContent = `
+    .visual-story {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin:18px 0;
+    }
+    .visual-step {
+      background:#fff;
+      border:2px solid #e4cafa;
+      border-radius:18px;
+      padding:16px 10px;
+      text-align:center;
+    }
+    .visual-step .picture {
+      font-size:clamp(38px,5vw,65px);
+      margin-bottom:10px;
+    }
+    .visual-step strong {
+      display:block;
+      color:#6540b3;
+      font-size:1.05rem;
+    }
+    .visual-step p {
+      margin:8px 0 0;
+      font-size:.95rem;
+      line-height:1.45;
+    }
+    @media(max-width:650px) {
+      .visual-story {
+        grid-template-columns:1fr;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // MISSION 1: Short picture-based explanation
+  if (page === "cells.html") {
+    const section = document.getElementById("lq-cell-connection");
+
+    if (section) {
+      section.innerHTML = `
+        <h3>🦠 How Does Hepatitis B Use a Liver Cell?</h3>
+
+        <div class="visual-story">
+          <div class="visual-step">
+            <div class="picture">🦠 ➜ 🧫</div>
+            <strong>1. Enters</strong>
+            <p>The virus enters a liver cell.</p>
+          </div>
+
+          <div class="visual-step">
+            <div class="picture">🧠 🏭</div>
+            <strong>2. Uses Workers</strong>
+            <p>Cell parts help make virus pieces.</p>
+          </div>
+
+          <div class="visual-step">
+            <div class="picture">🦠 🦠 🦠</div>
+            <strong>3. Makes Copies</strong>
+            <p>New viruses can infect other liver cells.</p>
+          </div>
+        </div>
+
+        <p>
+          💡 <strong>Remember:</strong> The immune system
+          can injure infected cells while fighting the virus.
+        </p>
+      `;
+    }
+  }
+
+  // MISSION 4: Don't reveal all Mythbusters answers
+  if (page === "lab.html") {
+    const section = document.getElementById("lq-myth-guide");
+
+    if (section) {
+      section.innerHTML = `
+        <h3>🔎 How Does Hepatitis B Spread?</h3>
+
+        <div class="visual-story">
+          <div class="visual-step">
+            <div class="picture">🩸</div>
+            <strong>Blood</strong>
+          </div>
+
+          <div class="visual-step">
+            <div class="picture">❓</div>
+            <strong>Possible Exposure?</strong>
+          </div>
+
+          <div class="visual-step">
+            <div class="picture">🕵️</div>
+            <strong>You Decide!</strong>
+          </div>
+        </div>
+
+        <p>
+          Hepatitis B can spread when infected blood
+          enters another person's body.
+        </p>
+
+        <p>
+          <strong>Your mission:</strong>
+          Decide which situations are risky
+          and which are safe. Look for clues!
+        </p>
+      `;
+    }
+  }
+})();
