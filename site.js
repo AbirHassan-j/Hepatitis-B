@@ -1253,3 +1253,62 @@ const routes = {
 };
 
 (routes[currentPage] || initHome)();
+
+/* MISSION 3 — ADD TISSUE COLOUR LEGEND */
+
+if (location.pathname.endsWith("microscope.html")) {
+  const tissueGrid = document.querySelector(".kid-tissue-grid");
+
+  if (tissueGrid && !document.querySelector(".tissue-legend")) {
+    tissueGrid.insertAdjacentHTML("afterend", `
+      <div class="tissue-legend">
+        <h3>🎨 What Do the Colours Mean?</h3>
+        <p>Use this guide to investigate the liver tissue!</p>
+
+        <div class="tissue-legend-grid">
+
+          <div class="legend-item">
+            <span class="legend-symbol healthy-symbol"></span>
+            <div>
+              <strong>Pink — Healthy-looking liver cell</strong>
+              <p>A cell working normally.</p>
+            </div>
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-symbol nucleus-symbol"></span>
+            <div>
+              <strong>Purple — Nucleus</strong>
+              <p>Contains the cell's DNA instructions.</p>
+            </div>
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-symbol injured-symbol">✕</span>
+            <div>
+              <strong>Orange + Red X — Injured liver cell</strong>
+              <p>Shows injury that may happen during the immune response to hepatitis B.</p>
+            </div>
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-symbol immune-symbol">+</span>
+            <div>
+              <strong>Blue — Immune defender</strong>
+              <p>An immune cell responding to infection.</p>
+            </div>
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-symbol scar-symbol"></span>
+            <div>
+              <strong>Yellow bands — Scar tissue</strong>
+              <p>May develop after repeated liver injury over time.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `);
+  }
+}
