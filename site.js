@@ -4137,3 +4137,825 @@ if (location.pathname.endsWith("cells.html")) {
     }
   }
 })();
+
+/* ========================================================
+   LIVERQUEST — SAVE THE LIVER! 10-ROUND RESCUE ADVENTURE
+   Paste ONCE at the VERY BOTTOM of site.js.
+   Replaces the previous 3-round rescue game.
+   ======================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "finale.html") return;
+
+  // Remove the previous 3-round rescue game.
+  document.getElementById("liver-rescue-game")?.remove();
+  document.getElementById("lq-rescue-10")?.remove();
+
+  const css = document.createElement("style");
+  css.textContent = `
+    #lq-rescue-10 {
+      margin: 35px 0;
+      padding: clamp(16px,4vw,32px);
+      background: linear-gradient(145deg,#f9edff,#e9faff,#fff3e4);
+      border: 3px solid #d6b8f4;
+      border-radius: 28px;
+      color: #493e65;
+    }
+
+    #lq-rescue-10 h2 {
+      font-size: clamp(1.8rem,4vw,2.5rem);
+      color: #6540b0;
+      margin: 12px 0;
+    }
+
+    #lq-rescue-10 h3 {
+      color: #563898;
+      font-size: 1.35rem;
+    }
+
+    #lq-rescue-10 p {
+      line-height: 1.65;
+    }
+
+    .rescue10-header {
+      text-align: center;
+      max-width: 680px;
+      margin: auto;
+    }
+
+    .rescue10-stats {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-weight: 800;
+      margin: 22px 0 10px;
+    }
+
+    .rescue10-track {
+      height: 16px;
+      border-radius: 99px;
+      overflow: hidden;
+      background: #e3d4f2;
+    }
+
+    .rescue10-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg,#59cda4,#8d64e5);
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+
+    .rescue10-scene {
+      position: relative;
+      margin: 20px auto;
+      max-width: 670px;
+      border: 3px solid #e0c6f4;
+      border-radius: 24px;
+      background: white;
+      overflow: hidden;
+    }
+
+    .rescue10-scene svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .rescue10-bubble {
+      background: white;
+      border: 2px solid #dfcef5;
+      border-radius: 18px;
+      padding: 20px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .rescue10-bubble h3 {
+      margin-top: 0;
+    }
+
+    .rescue10-answers {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .rescue10-answer {
+      background: white;
+      border: 2px solid #bfa5ef;
+      border-radius: 17px;
+      padding: 18px 12px;
+      min-height: 80px;
+      font-size: 1.04rem;
+      font-weight: 800;
+      color: #51378d;
+      cursor: pointer;
+      transition: transform .15s, background .15s;
+    }
+
+    .rescue10-answer:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #efe5ff;
+    }
+
+    .rescue10-answer.correct {
+      background: #d6fae5;
+      border-color: #38b67c;
+    }
+
+    .rescue10-answer.wrong {
+      background: #ffe0e4;
+      border-color: #e27d8d;
+    }
+
+    .rescue10-result {
+      display: none;
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 18px;
+      background: #fff4d9;
+      border: 2px solid #f0d68d;
+    }
+
+    .rescue10-result.visible {
+      display: block;
+      animation: rescue10-pop .25s ease-out;
+    }
+
+    .rescue10-result.success {
+      background: #e7faef;
+      border-color: #85d7ac;
+    }
+
+    .rescue10-result h3 {
+      margin: 0 0 9px;
+    }
+
+    .rescue10-consequence {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .rescue10-effect-icon {
+      font-size: 3.5rem;
+      text-align: center;
+    }
+
+    .rescue10-btn {
+      display: block;
+      background: #7951ca;
+      color: white;
+      padding: 15px 26px;
+      border: none;
+      border-radius: 15px;
+      font-weight: 850;
+      font-size: 1.05rem;
+      cursor: pointer;
+      margin: 20px auto 0;
+    }
+
+    .rescue10-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .rescue10-tiny {
+      font-size: .9rem;
+      color: #665a78;
+      text-align: center;
+    }
+
+    .rescue10-finish {
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 24px;
+      border: 2px solid #dac0f0;
+    }
+
+    .rescue10-trophy {
+      font-size: 5rem;
+    }
+
+    @keyframes rescue10-pop {
+      from { opacity:0;transform:scale(.96); }
+      to { opacity:1;transform:scale(1); }
+    }
+
+    @media(max-width:650px) {
+      .rescue10-answers {
+        grid-template-columns: 1fr;
+      }
+
+      .rescue10-consequence {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+  `;
+  document.head.appendChild(css);
+
+  const game = document.createElement("section");
+  game.id = "lq-rescue-10";
+
+  const main = document.querySelector("main");
+  const finalLayout = document.querySelector(".final-layout");
+
+  if (finalLayout) {
+    finalLayout.insertAdjacentElement("afterend", game);
+  } else if (main) {
+    main.appendChild(game);
+  } else {
+    return;
+  }
+
+  /* --------------------------------------------------
+     TEN MISSIONS
+     All answers are based on Missions 1–4.
+     -------------------------------------------------- */
+
+  const rounds = [
+    {
+      scene: "🦠 A Virus Approaches!",
+      situation:
+        "A hepatitis B virus reaches a liver cell. " +
+        "Where does it attach before entering?",
+      choices: [
+        "🛡️ Cell membrane",
+        "⚡ Mitochondria",
+        "📦 Golgi apparatus"
+      ],
+      correct: 0,
+      good:
+        "The cell membrane has a special doorway that " +
+        "hepatitis B can attach to.",
+      bad:
+        "That part is inside the cell! The virus first " +
+        "needs to attach to the outer membrane.",
+      goodIcon: "🛡️",
+      badIcon: "🚧",
+      organ: "membrane"
+    },
+    {
+      scene: "🧠 Inside Cell City",
+      situation:
+        "The virus has entered the liver cell. " +
+        "Which organelle is the control centre?",
+      choices: [
+        "♻️ Lysosomes",
+        "🧠 Nucleus",
+        "🫧 Cytoplasm"
+      ],
+      correct: 1,
+      good:
+        "The nucleus stores important instructions " +
+        "that help guide the cell's work.",
+      bad:
+        "Not quite. Remember City Hall? The nucleus " +
+        "is the cell's control centre.",
+      goodIcon: "🏛️",
+      badIcon: "❓",
+      organ: "nucleus"
+    },
+    {
+      scene: "🏗️ The Protein Factory",
+      situation:
+        "The virus is using some of the cell's workers. " +
+        "Which organelles build proteins?",
+      choices: [
+        "🏗️ Ribosomes",
+        "🚪 Cell membrane",
+        "⚡ Mitochondria"
+      ],
+      correct: 0,
+      good:
+        "Ribosomes are the cell's protein builders. " +
+        "Hepatitis B can use them to make viral proteins.",
+      bad:
+        "The protein-building workers haven't been identified. " +
+        "Think of the construction workers from Cell City!",
+      goodIcon: "🏗️",
+      badIcon: "🧩",
+      organ: "ribosomes"
+    },
+    {
+      scene: "🛣️ The Cell Highway",
+      situation:
+        "Some proteins need to be made and prepared " +
+        "inside the cell. Which structure helps with this?",
+      choices: [
+        "🧠 Nucleus",
+        "🛣️ Endoplasmic reticulum",
+        "♻️ Lysosomes"
+      ],
+      correct: 1,
+      good:
+        "The ER is like a factory network and highway. " +
+        "It helps make, process, and move materials.",
+      bad:
+        "Those materials still need the right processing area. " +
+        "Remember the ER highways!",
+      goodIcon: "🛣️",
+      badIcon: "🚦",
+      organ: "er"
+    },
+    {
+      scene: "⚡ Powering the Cell",
+      situation:
+        "Liver cells need energy to do their everyday jobs. " +
+        "Which organelles help provide it?",
+      choices: [
+        "📦 Golgi apparatus",
+        "🛡️ Cell membrane",
+        "⚡ Mitochondria"
+      ],
+      correct: 2,
+      good:
+        "Mitochondria help supply usable energy. " +
+        "They're like Cell City's power stations!",
+      bad:
+        "The cell still needs its power stations! " +
+        "Mitochondria help provide energy.",
+      goodIcon: "🔋",
+      badIcon: "💡",
+      organ: "mitochondria"
+    },
+    {
+      scene: "🛡️ Immune Defenders Arrive",
+      situation:
+        "Immune defenders notice infected liver cells. " +
+        "What can their response cause?",
+      choices: [
+        "🔥 Inflammation and cell injury",
+        "🦴 The liver grows bones",
+        "✨ All infected cells become stronger"
+      ],
+      correct: 0,
+      good:
+        "The immune response helps fight infection, " +
+        "but it can also cause inflammation and injure cells.",
+      bad:
+        "Immune defenders are responding to infection. " +
+        "That response can cause inflammation and injury.",
+      goodIcon: "🛡️",
+      badIcon: "🔥",
+      organ: "immune"
+    },
+    {
+      scene: "🔬 Tissue Detective",
+      situation:
+        "You're examining our tissue model. " +
+        "What do orange cells marked with X represent?",
+      choices: [
+        "😊 Healthy-looking liver cells",
+        "🩹 Injured liver cells",
+        "💧 Drops of water"
+      ],
+      correct: 1,
+      good:
+        "Exactly! The orange X-marked shapes represent injured cells. " +
+        "The purple dots represent nuclei.",
+      bad:
+        "The tissue clue was missed. In our model, " +
+        "orange X-marked cells represent cell injury.",
+      goodIcon: "🔬",
+      badIcon: "🔎",
+      organ: "tissue"
+    },
+    {
+      scene: "🩹 The Tissue Time Machine",
+      situation:
+        "Imagine liver injury continues for a long time. " +
+        "What may develop in the tissue?",
+      choices: [
+        "🦴 Extra bones",
+        "🌼 Flower petals",
+        "🩹 Scar tissue"
+      ],
+      correct: 2,
+      good:
+        "Repeated injury can sometimes cause scar tissue, " +
+        "called fibrosis, to form.",
+      bad:
+        "Repeated injury can sometimes lead to scarring. " +
+        "Not everyone with hepatitis B develops it.",
+      goodIcon: "🩹",
+      badIcon: "⚠️",
+      organ: "scar"
+    },
+    {
+      scene: "🩸 The Transmission Mystery",
+      situation:
+        "Which situation could spread hepatitis B?",
+      choices: [
+        "🤗 Hugging a classmate",
+        "🩸 Infected blood entering an open cut",
+        "🥪 Sharing a lunch table"
+      ],
+      correct: 1,
+      good:
+        "Hepatitis B can spread when infected blood " +
+        "enters another person's body.",
+      bad:
+        "That is not a usual way hepatitis B spreads. " +
+        "The important clue is exposure to infected blood.",
+      goodIcon: "🩸",
+      badIcon: "🔍",
+      organ: "blood"
+    },
+    {
+      scene: "💉 The Final Protection Choice",
+      situation:
+        "Your science team wants to help prevent hepatitis B. " +
+        "Which action helps protect people?",
+      choices: [
+        "🚫 Avoid hugging friends",
+        "🎲 Wait for symptoms",
+        "💉 Hepatitis B vaccination"
+      ],
+      correct: 2,
+      good:
+        "Vaccination helps your immune system protect you " +
+        "against hepatitis B.",
+      bad:
+        "That would not provide reliable protection. " +
+        "Vaccination is an important way to prevent hepatitis B.",
+      goodIcon: "🏆",
+      badIcon: "🛡️",
+      organ: "vaccine"
+    }
+  ];
+
+  let round = 0;
+  let score = 0;
+  let attempts = 0;
+  let mistakes = [];
+
+  /* --------------------------------------------------
+     COLOURFUL SCENE WITH ORGANELLES
+     -------------------------------------------------- */
+
+  function sceneSVG(organ, wrong = false) {
+    const focus = {
+      membrane: [300,155,116],
+      nucleus: [300,155,42],
+      ribosomes: [226,135,17],
+      er: [246,209,35],
+      mitochondria: [365,211,36],
+      immune: [136,156,46],
+      tissue: [300,155,95],
+      scar: [345,215,42],
+      blood: [135,155,42],
+      vaccine: [135,155,42]
+    };
+
+    const [x,y,r] = focus[organ] || [300,155,95];
+
+    let special = "";
+
+    if (organ === "immune") {
+      special = `
+        <circle cx="136" cy="156" r="38"
+                fill="#a8dfff" stroke="#478dc5" stroke-width="5"/>
+        <text x="136" y="163" text-anchor="middle"
+              font-size="28" fill="#2569a0">+</text>`;
+    }
+
+    if (organ === "tissue" || organ === "scar") {
+      special = `
+        <g>
+          <rect x="208" y="90" width="186" height="140" rx="15"
+                fill="#ffe2d7" stroke="#edb5aa" stroke-width="4"/>
+          ${Array.from({length:12},(_,i)=>{
+            const cx=234+(i%4)*43;
+            const cy=116+Math.floor(i/4)*42;
+            const hurt=[2,5,9].includes(i);
+            return `<circle cx="${cx}" cy="${cy}" r="18"
+                            fill="${hurt?"#ffba79":"#f7a7c4"}"
+                            stroke="#d7779c" stroke-width="3"/>
+                    <circle cx="${cx}" cy="${cy}" r="6"
+                            fill="#925bbd"/>
+                    ${hurt?`<text x="${cx}" y="${cy+7}"
+                             font-size="24" text-anchor="middle"
+                             fill="#c43951">×</text>`:""}`;
+          }).join("")}
+          ${organ==="scar"?
+            `<path d="M345 101 L345 220"
+                   stroke="#d6a757" stroke-width="14"
+                   stroke-dasharray="10 6"/>`:""}
+        </g>`;
+    }
+
+    if (organ === "blood" || organ === "vaccine") {
+      special = `
+        <path d="M136 92 C116 126 98 145 98 170
+                 A38 38 0 0 0 174 170
+                 C174 145 155 118 136 92Z"
+              fill="#f07b92" stroke="#c85677" stroke-width="5"/>
+        <text x="136" y="183" text-anchor="middle"
+              fill="white" font-size="30">●</text>`;
+    }
+
+    return `
+      <svg viewBox="0 0 600 320"
+           role="img"
+           aria-label="Simplified teaching illustration of a liver cell">
+        <rect width="600" height="320" rx="24" fill="#f5faff"/>
+
+        <circle cx="300" cy="155" r="116"
+                fill="${wrong?"#ffe1ce":"#ffd2e6"}"
+                stroke="${wrong?"#ee9870":"#df7aac"}"
+                stroke-width="8"/>
+
+        <circle cx="300" cy="155" r="42"
+                fill="#b18ae0" stroke="#7d4bb7"
+                stroke-width="6"/>
+
+        <circle cx="300" cy="155" r="13" fill="#7641ad"/>
+
+        <g fill="none" stroke="#8276d1" stroke-width="8"
+           stroke-linecap="round">
+          <path d="M260 112 Q200 100 206 140 Q222 153 254 142"/>
+          <path d="M254 181 Q197 177 209 212 Q230 232 265 205"/>
+        </g>
+
+        <g fill="#7744ad">
+          <circle cx="226" cy="135" r="6"/>
+          <circle cx="236" cy="118" r="6"/>
+          <circle cx="216" cy="202" r="6"/>
+        </g>
+
+        <ellipse cx="365" cy="211" rx="35" ry="19"
+                 fill="#f7bd70" stroke="#d4843d"
+                 stroke-width="4"
+                 transform="rotate(-20 365 211)"/>
+
+        <ellipse cx="367" cy="96" rx="30" ry="17"
+                 fill="#f7bd70" stroke="#d4843d"
+                 stroke-width="4"/>
+
+        <g fill="none" stroke="#37bba9"
+           stroke-width="7" stroke-linecap="round">
+          <path d="M300 243 Q345 260 380 239"/>
+          <path d="M309 256 Q344 270 370 253"/>
+        </g>
+
+        <circle cx="386" cy="147" r="14"
+                fill="#f6d86e" stroke="#d8a944"
+                stroke-width="4"/>
+
+        <g transform="translate(125 115)">
+          <circle r="23" fill="#f4a8d0"
+                  stroke="#bb5d9b" stroke-width="5"/>
+          <circle r="10" fill="#955ac4"/>
+          ${Array.from({length:8},(_,i)=>{
+            const a=i*Math.PI/4;
+            return `<circle cx="${Math.cos(a)*31}"
+                            cy="${Math.sin(a)*31}"
+                            r="5" fill="#d66da8"/>`;
+          }).join("")}
+        </g>
+
+        ${special}
+
+        <circle cx="${x}" cy="${y}" r="${r}"
+                fill="none"
+                stroke="${wrong?"#e45e6b":"#25b981"}"
+                stroke-width="6"
+                stroke-dasharray="12 8"/>
+
+        <text x="300" y="298" text-anchor="middle"
+              font-size="17" font-weight="bold"
+              fill="#6644a2">
+          ${wrong?"Let's investigate that clue!":"Cell City Rescue"}
+        </text>
+      </svg>`;
+  }
+
+  function layout() {
+    game.innerHTML = `
+      <div class="rescue10-header">
+        <span class="pill">🎮 INTERACTIVE SCIENCE ADVENTURE</span>
+
+        <h2>🛡️ Save the Liver!</h2>
+
+        <p>
+          Complete 10 rescue challenges.
+          Make choices, see what happens,
+          and learn from your mistakes!
+        </p>
+      </div>
+
+      <div class="rescue10-stats">
+        <span id="rescue10-round">Round 1 / 10</span>
+        <span id="rescue10-score">⭐ 0 points</span>
+      </div>
+
+      <div class="rescue10-track">
+        <div class="rescue10-fill" id="rescue10-fill"></div>
+      </div>
+
+      <div class="rescue10-scene" id="rescue10-scene"></div>
+
+      <div class="rescue10-bubble">
+        <h3 id="rescue10-heading"></h3>
+        <p id="rescue10-question"></p>
+      </div>
+
+      <div class="rescue10-answers" id="rescue10-answers"></div>
+
+      <div class="rescue10-result" id="rescue10-result"
+           role="status" aria-live="polite"></div>
+
+      <button id="rescue10-next" class="rescue10-btn" disabled>
+        NEXT RESCUE ROUND →
+      </button>
+
+      <p class="rescue10-tiny">
+        Educational simulation: your choices change
+        this game, not what happens in real infections.
+      </p>
+    `;
+  }
+
+  function showRound() {
+    if (round >= rounds.length) {
+      showResults();
+      return;
+    }
+
+    const item = rounds[round];
+    attempts = 0;
+
+    document.getElementById("rescue10-round").textContent =
+      `MISSION ${round+1} / 10`;
+
+    document.getElementById("rescue10-score").textContent =
+      `⭐ ${score} points`;
+
+    document.getElementById("rescue10-fill").style.width =
+      `${(round/rounds.length)*100}%`;
+
+    document.getElementById("rescue10-scene").innerHTML =
+      sceneSVG(item.organ);
+
+    document.getElementById("rescue10-heading").textContent =
+      item.scene;
+
+    document.getElementById("rescue10-question").textContent =
+      item.situation;
+
+    const answers = document.getElementById("rescue10-answers");
+    const result = document.getElementById("rescue10-result");
+    const next = document.getElementById("rescue10-next");
+
+    result.className = "rescue10-result";
+    result.innerHTML = "";
+
+    next.disabled = true;
+    next.textContent =
+      round === 9 ? "SEE YOUR RESCUE RESULTS →" : "NEXT RESCUE ROUND →";
+
+    answers.innerHTML = item.choices.map((choice,i) => `
+      <button class="rescue10-answer"
+              data-rescue10="${i}">
+        ${choice}
+      </button>
+    `).join("");
+
+    answers.querySelectorAll("button").forEach(button => {
+      button.onclick = () => {
+        const selected = Number(button.dataset.rescue10);
+        const correct = selected === item.correct;
+
+        if (correct) {
+          if (attempts === 0) score++;
+
+          answers.querySelectorAll("button").forEach(b => {
+            b.disabled = true;
+            if (Number(b.dataset.rescue10) === item.correct) {
+              b.classList.add("correct");
+            }
+          });
+
+          result.className = "rescue10-result visible success";
+          result.innerHTML = `
+            <div class="rescue10-consequence">
+              <div class="rescue10-effect-icon">${item.goodIcon}</div>
+              <div>
+                <h3>✅ Science Defender Success!</h3>
+                <p>${item.good}</p>
+                <strong>
+                  ${attempts === 0
+                    ? "⭐ +1 point!"
+                    : "Great recovery! You've learned the clue."}
+                </strong>
+              </div>
+            </div>
+          `;
+
+          next.disabled = false;
+          document.getElementById("rescue10-score").textContent =
+            `⭐ ${score} points`;
+
+        } else {
+          attempts++;
+          if (!mistakes.includes(round)) mistakes.push(round);
+          button.classList.add("wrong");
+
+          document.getElementById("rescue10-scene").innerHTML =
+            sceneSVG(item.organ, true);
+
+          result.className = "rescue10-result visible";
+          result.innerHTML = `
+            <div class="rescue10-consequence">
+              <div class="rescue10-effect-icon">${item.badIcon}</div>
+              <div>
+                <h3>⚠️ Your Investigation Hit a Roadblock!</h3>
+                <p>${item.bad}</p>
+                <p>
+                  <strong>Consequence:</strong>
+                  Your science team hasn't solved this part
+                  of the infection mystery yet.
+                  Look at the clue and try again!
+                </p>
+              </div>
+            </div>
+          `;
+        }
+      };
+    });
+  }
+
+  function showResults() {
+    document.getElementById("rescue10-fill").style.width = "100%";
+
+    game.innerHTML = `
+      <div class="rescue10-finish">
+        <div class="rescue10-trophy">
+          ${score >= 8 ? "🏆" : "🎖️"}
+        </div>
+
+        <h2>Mission Complete!</h2>
+
+        <h3>You scored ${score} / 10!</h3>
+
+        <p>
+          ${
+            score === 10
+              ? "Amazing! You solved every rescue mystery on your first try!"
+              : score >= 7
+              ? "Great work! You understand many of the important cell and tissue clues."
+              : "Good effort! Every mistake helped you learn something new."
+          }
+        </p>
+
+        <div class="rescue10-bubble">
+          <h3>🧠 What Did You Discover?</h3>
+          <p>
+            Hepatitis B can enter liver cells
+            and use their machinery to make more viruses.
+          </p>
+          <p>
+            The immune response can cause inflammation
+            and sometimes damage liver tissue.
+          </p>
+          <p>
+            Vaccination helps prevent hepatitis B.
+          </p>
+        </div>
+
+        <p>
+          You completed all 10 science rescue challenges!
+        </p>
+
+        <button class="rescue10-btn" id="rescue10-replay">
+          🔄 PLAY AGAIN
+        </button>
+      </div>
+    `;
+
+    document.getElementById("rescue10-replay").onclick = () => {
+      round = 0;
+      score = 0;
+      attempts = 0;
+      mistakes = [];
+      layout();
+      showRound();
+    };
+  }
+
+  layout();
+
+  document.getElementById("rescue10-next").onclick = () => {
+    round++;
+    showRound();
+  };
+
+  showRound();
+})();
