@@ -4959,3 +4959,892 @@ if (location.pathname.endsWith("cells.html")) {
 
   showRound();
 })();
+
+/* ======================================================
+   LIVERQUEST: ULTIMATE RESCUE MISSION
+   10 DIFFERENT INTERACTIVE MINI-GAMES
+   Paste ONCE at the VERY BOTTOM of site.js.
+   Replaces both earlier Save the Liver games.
+   ====================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "finale.html") return;
+
+  // Remove old versions so there is only one rescue game.
+  document.getElementById("liver-rescue-game")?.remove();
+  document.getElementById("lq-rescue-10")?.remove();
+  document.getElementById("lq-ultimate-rescue")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "lq-ultimate-style";
+  style.textContent = `
+    #lq-ultimate-rescue {
+      margin: 32px 0;
+      padding: clamp(15px, 4vw, 30px);
+      background: linear-gradient(145deg,#fceeff,#eaf9ff,#fff7ea);
+      border: 3px solid #d5b8f1;
+      border-radius: 26px;
+      color: #47385e;
+      box-sizing: border-box;
+    }
+    #lq-ultimate-rescue * { box-sizing: border-box; }
+    #lq-ultimate-rescue h2,
+    #lq-ultimate-rescue h3 { color: #603ca5; }
+    #lq-ultimate-rescue h2 { font-size: clamp(1.6rem,4vw,2.3rem); }
+    #lq-ultimate-rescue p { line-height: 1.6; }
+    .ur-top { text-align:center; }
+    .ur-label {
+      display:inline-block; background:#e8dbff; color:#603b9d;
+      border-radius:99px; padding:7px 14px; font-weight:800;
+    }
+    .ur-stats {
+      display:flex; justify-content:space-between;
+      flex-wrap:wrap; gap:10px; font-weight:850; margin:20px 0 10px;
+    }
+    .ur-track {
+      height:13px; background:#e1d2f2;
+      border-radius:99px; overflow:hidden;
+    }
+    .ur-fill {
+      height:100%; width:0%;
+      background:linear-gradient(90deg,#51bfa7,#8763db);
+      transition:width .25s;
+    }
+    .ur-board {
+      background:#fff; border:2px solid #dcc4f3;
+      border-radius:22px; padding:clamp(13px,3vw,22px);
+      margin-top:20px; min-height:270px;
+    }
+    .ur-board h3 { margin:8px 0 12px; }
+    .ur-choices {
+      display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px; margin:15px 0;
+    }
+    .ur-choice, .ur-cell, .ur-token {
+      border:2px solid #c9aff0; background:#fff;
+      color:#57398e; font:inherit; font-weight:800;
+      border-radius:15px; padding:13px;
+      cursor:pointer; min-height:54px;
+    }
+    .ur-choice:hover:not(:disabled),
+    .ur-cell:hover:not(:disabled),
+    .ur-token:hover:not(:disabled) {
+      background:#f1e9ff; transform:translateY(-1px);
+    }
+    .ur-choice:disabled, .ur-cell:disabled,
+    .ur-token:disabled { cursor:default; }
+    .ur-selected { background:#dff7ec!important; border-color:#31a979!important; }
+    .ur-wrong { background:#ffe1e3!important; border-color:#d8727b!important; }
+    .ur-good { background:#e2f8ee!important; border-color:#39b58b!important; }
+    .ur-feedback {
+      margin:15px 0; padding:15px;
+      background:#fff1d9; border:2px solid #efd18b;
+      border-radius:16px; min-height:54px; line-height:1.6;
+    }
+    .ur-feedback.success {
+      background:#e2f8ed; border-color:#71c69e;
+    }
+    .ur-next {
+      border:0; padding:15px 24px; border-radius:14px;
+      color:#fff; background:#7550c4; font-size:1rem;
+      font-weight:850; cursor:pointer; display:block;
+      margin:20px auto 5px;
+    }
+    .ur-next:disabled { opacity:.45; cursor:not-allowed; }
+    .ur-scene {
+      border-radius:18px;
+      background:linear-gradient(125deg,#eaf7ff,#fff0f8);
+      border:2px solid #d7c6ef;
+      padding:15px; margin:15px 0; text-align:center;
+    }
+    .ur-big { font-size:clamp(45px,9vw,75px); margin:5px; }
+    .ur-cells {
+      display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:8px; margin:16px auto; max-width:520px;
+    }
+    .ur-cell {
+      aspect-ratio:1; min-height:0; padding:5px;
+      background:#f8b6d1; border-color:#d779a7;
+      border-radius:38%; color:#8046ab;
+      display:grid; place-items:center;
+      font-size:clamp(18px,3vw,26px);
+    }
+    .ur-cell.injured { background:#ffbd85; border-color:#df8754; color:#b43a45; }
+    .ur-cell.immune { border-radius:50%; background:#a9e1fa; border-color:#549ed2; color:#2974a5; }
+    .ur-cell.scar {
+      background:repeating-linear-gradient(45deg,#eed093 0 8px,#fff0c6 8px 16px);
+      border-color:#c8a25f;
+    }
+    .ur-cell:disabled { opacity:1; }
+    .ur-tiles {
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px; margin:18px 0;
+    }
+    .ur-tile {
+      background:#f9f4ff; border:2px solid #dac5ee;
+      border-radius:18px; padding:15px;
+      text-align:center; min-width:0;
+    }
+    .ur-emoji { font-size:clamp(30px,5vw,52px); }
+    .ur-tile strong { display:block; margin:8px 0; }
+    .ur-step {
+      background:#f0e8ff; padding:12px; border-radius:12px;
+      margin:8px 0; font-weight:800; text-align:center;
+    }
+    .ur-meter {
+      height:20px; background:#eee3f7; border-radius:99px;
+      overflow:hidden; margin:10px 0;
+    }
+    .ur-meter-fill {
+      height:100%; width:0%; background:#81c6bf; transition:width .25s;
+    }
+    .ur-slot {
+      border:2px dashed #af8ed5; background:#faf7ff;
+      border-radius:12px; padding:13px;
+      min-height:52px; text-align:center;
+      margin:8px 0; font-weight:700;
+    }
+    .ur-slider { width:100%; accent-color:#865ac6; cursor:pointer; }
+    .ur-check {
+      display:flex; align-items:center; gap:10px;
+      padding:14px; margin:9px 0; border-radius:12px;
+      border:2px solid #dcc8f0; cursor:pointer;
+      font-weight:750; background:#fff;
+    }
+    .ur-check input { width:20px; height:20px; accent-color:#7550c4; }
+    .ur-comparison {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:15px; align-items:start;
+    }
+    .ur-mini-grid {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:4px;
+    }
+    .ur-mini-grid .ur-cell {
+      font-size:18px;
+    }
+    .ur-small { font-size:.9rem; color:#696079; }
+    .ur-complete {
+      text-align:center; padding:24px;
+      background:white; border-radius:22px;
+    }
+    @media(max-width:650px) {
+      .ur-choices, .ur-tiles { grid-template-columns:1fr; }
+      .ur-comparison { gap:8px; }
+      .ur-mini-grid { gap:2px; }
+      .ur-mini-grid .ur-cell { font-size:13px; padding:0; }
+    }
+  `;
+  document.getElementById("lq-ultimate-style")?.remove();
+  document.head.appendChild(style);
+
+  const game = document.createElement("section");
+  game.id = "lq-ultimate-rescue";
+
+  const existing = document.querySelector(".final-layout");
+  if (existing) {
+    existing.insertAdjacentElement("afterend", game);
+  } else {
+    const main = document.querySelector("main");
+    if (!main) return;
+    main.appendChild(game);
+  }
+
+  let level = 0;
+  let stars = 0;
+  let mistakes = 0;
+  let solved = false;
+
+  const titles = [
+    "Virus Detective",
+    "Cell City Repair",
+    "Build Healthy Tissue",
+    "Inflammation Control",
+    "The Cell Delivery Service",
+    "Microscope Mystery",
+    "The Tissue Time Machine",
+    "Build the Body",
+    "Outbreak Detective",
+    "The Final Science Report"
+  ];
+
+  function showFeedback(message, good = false) {
+    const el = game.querySelector("#ur-feedback");
+    if (!el) return;
+    el.innerHTML = message;
+    el.className = "ur-feedback" + (good ? " success" : "");
+  }
+
+  function wrong(message) {
+    if (solved) return;
+    mistakes++;
+    showFeedback("⚠️ <strong>Something went wrong!</strong> " + message);
+  }
+
+  function win(message) {
+    if (solved) return;
+    solved = true;
+    stars++;
+    showFeedback("✅ <strong>Challenge complete!</strong> " + message, true);
+    const next = game.querySelector("#ur-next");
+    if (next) next.disabled = false;
+    game.querySelector("#ur-stars").textContent = "⭐ " + stars + " / 10";
+  }
+
+  function cellGrid(types = [], count = 15, clickable = false) {
+    return `<div class="ur-cells">
+      ${Array.from({length:count}, (_,i) => {
+        const type = types[i] || "healthy";
+        const character =
+          type === "injured" ? "✕" :
+          type === "immune" ? "+" :
+          type === "scar" ? "" : "●";
+        return `<button class="ur-cell ${type}"
+          data-cell="${i}" ${clickable ? "" : "disabled"}
+          aria-label="Cell ${i+1}, ${type}">${character}</button>`;
+      }).join("")}
+    </div>`;
+  }
+
+  function sceneCard(emoji, title, subtitle) {
+    return `<div class="ur-tile">
+      <div class="ur-emoji">${emoji}</div>
+      <strong>${title}</strong>
+      <span class="ur-small">${subtitle}</span>
+    </div>`;
+  }
+
+  function options(answers, callback) {
+    const area = game.querySelector("#ur-controls");
+    area.innerHTML = `<div class="ur-choices">
+      ${answers.map((x,i) =>
+        `<button class="ur-choice" data-answer="${i}">${x}</button>`
+      ).join("")}</div>`;
+
+    area.querySelectorAll("[data-answer]").forEach(button => {
+      button.onclick = () =>
+        callback(Number(button.dataset.answer), button);
+    });
+  }
+
+  function disableAnswers() {
+    game.querySelectorAll("[data-answer]").forEach(b => b.disabled = true);
+  }
+
+  function drawLevel() {
+    solved = false;
+    const index = level;
+
+    if (level === 10) {
+      finish();
+      return;
+    }
+
+    game.innerHTML = `
+      <div class="ur-top">
+        <span class="ur-label">🎮 LIVERQUEST RESCUE ARCADE</span>
+        <h2>🛡️ The Ultimate Rescue Mission</h2>
+        <p>Investigate, experiment, repair and discover!</p>
+      </div>
+
+      <div class="ur-stats">
+        <span>MISSION ${level+1} / 10</span>
+        <span id="ur-stars">⭐ ${stars} / 10</span>
+      </div>
+      <div class="ur-track">
+        <div class="ur-fill" style="width:${level*10}%"></div>
+      </div>
+
+      <div class="ur-board">
+        <h3>${titles[index]}</h3>
+        <div id="ur-scene"></div>
+        <div id="ur-controls"></div>
+        <div id="ur-feedback" class="ur-feedback" role="status">
+          🎯 Complete the challenge to unlock the next mission.
+        </div>
+      </div>
+
+      <button id="ur-next" class="ur-next" disabled>
+        ${level===9 ? "FINISH ADVENTURE →" : "NEXT MISSION →"}
+      </button>
+      <p class="ur-small" style="text-align:center">
+        Illustrations are simplified learning models, not medical tests.
+      </p>
+    `;
+
+    game.querySelector("#ur-next").onclick = () => {
+      level++;
+      drawLevel();
+    };
+
+    [
+      virusDetective, cityRepair, buildTissue, inflammation,
+      delivery, microscope, timeMachine, buildBody,
+      exposure, finalReport
+    ][level]();
+  }
+
+  /* 1 — VIRUS DETECTIVE: FIND EVIDENCE OF INJURY */
+
+  function virusDetective() {
+    game.querySelector("#ur-scene").innerHTML = `
+      <p>A tissue sample arrives in your science lab.
+      Find the <strong>three visibly injured cells</strong>
+      in this model.</p>
+      ${cellGrid(
+        Array.from({length:15},(_,i) =>
+          [2,8,12].includes(i) ? "injured" : "healthy"
+        ),15,true)}
+      <p class="ur-small">Pink = healthy-looking.
+      Orange X = injured. Purple dot = nucleus.
+      Appearance alone doesn't prove a cell is infected.</p>
+    `;
+
+    const selected = new Set();
+
+    game.querySelectorAll("[data-cell]").forEach(b => {
+      b.onclick = () => {
+        const i = Number(b.dataset.cell);
+        if ([2,8,12].includes(i)) {
+          selected.add(i);
+          b.classList.add("ur-selected");
+          b.disabled = true;
+          if (selected.size === 3) {
+            win("You identified all three injured cells!");
+          } else {
+            showFeedback(`🔬 Nice find! ${selected.size} of 3 clues discovered.`,true);
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          wrong("That cell is pink and healthy-looking in our model. Try an orange cell with an X.");
+        }
+      };
+    });
+
+    game.querySelector("#ur-controls").innerHTML =
+      `<div class="ur-step">🔎 Injured cells to locate: 3</div>`;
+  }
+
+  /* 2 — CELL CITY REPAIR: RESTORE JOBS */
+
+  function cityRepair() {
+    const jobs = [
+      {name:"Power Station",emoji:"⚡",part:"Mitochondria",
+       choices:["Mitochondria","Lysosomes"]},
+      {name:"Shipping Centre",emoji:"📦",part:"Golgi apparatus",
+       choices:["Nucleus","Golgi apparatus"]},
+      {name:"Recycling Centre",emoji:"♻️",part:"Lysosomes",
+       choices:["Lysosomes","Cell membrane"]}
+    ];
+    let job = 0;
+
+    function render() {
+      game.querySelector("#ur-scene").innerHTML = `
+        <p>Three Cell City buildings need their workers.
+        Assign the right organelle to each building.</p>
+        <div class="ur-tiles">
+          ${jobs.map((j,i)=>sceneCard(
+            j.emoji,j.name,i<job?"✅ Working":"💤 Waiting"
+          )).join("")}
+        </div>
+        <div class="ur-step">Building ${job+1}: ${jobs[job].name}</div>
+      `;
+      options(jobs[job].choices,(i,b)=>{
+        if(jobs[job].choices[i] === jobs[job].part) {
+          job++;
+          if(job===3) {
+            game.querySelector("#ur-scene").innerHTML =
+              `<div class="ur-scene"><div class="ur-big">🏙️ ✨</div>
+              <h3>All three buildings are working!</h3></div>`;
+            disableAnswers();
+            win("Cell City has its power, shipping and recycling jobs back!");
+          } else {
+            showFeedback("✅ Building restored! Find the next worker.",true);
+            render();
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          wrong("That worker has a different job. The building is still waiting.");
+        }
+      });
+    }
+    render();
+  }
+
+  /* 3 — BUILD HEALTHY TISSUE */
+
+  function buildTissue() {
+    const types = ["healthy","injured","healthy",
+                   "immune","healthy","scar"];
+    const picked = new Set();
+
+    game.querySelector("#ur-scene").innerHTML = `
+      <p>Build a model of <strong>healthy-looking liver tissue</strong>.
+      Choose the three pink cells with purple nuclei.
+      Don't choose injured cells, immune cells or scar tissue.</p>
+      <div class="ur-scene">
+        ${cellGrid(types,6,true)}
+      </div>
+      <div id="ur-tissue-build" class="ur-slot">
+        Tissue model: 0 / 3 cells placed
+      </div>
+    `;
+
+    game.querySelectorAll("[data-cell]").forEach(b=>{
+      b.onclick=()=>{
+        const i=Number(b.dataset.cell);
+        if(types[i]==="healthy") {
+          picked.add(i);
+          b.classList.add("ur-selected");
+          b.disabled=true;
+          game.querySelector("#ur-tissue-build").textContent =
+            `Tissue model: ${picked.size} / 3 cells placed`;
+          if(picked.size===3) {
+            game.querySelector("#ur-tissue-build").innerHTML =
+              "🧫 🧫 🧫 — Healthy-looking tissue model completed!";
+            win("Many liver cells working together form liver tissue.");
+          } else {
+            showFeedback("✅ Cell added to your tissue model.",true);
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          wrong("That isn't a healthy-looking liver cell in this model. The tissue builder rejected it.");
+        }
+      };
+    });
+
+    game.querySelector("#ur-controls").innerHTML =
+      `<p class="ur-small">Choose carefully: cell appearance provides clues, not a complete diagnosis.</p>`;
+  }
+
+  /* 4 — INFLAMMATION SIMULATION */
+
+  function inflammation() {
+    let value=0;
+
+    game.querySelector("#ur-scene").innerHTML = `
+      <p>Move the slider to explore how different
+      levels of immune activity are represented
+      in this simplified model.</p>
+      <div class="ur-scene">
+        <div id="ur-immune-picture"></div>
+        <strong id="ur-immune-caption"></strong>
+      </div>
+      <label for="ur-immune-range"><strong>Immune-response model</strong></label>
+      <input class="ur-slider" id="ur-immune-range"
+             type="range" min="0" max="4" value="0" step="1">
+      <p class="ur-small">
+        This slider is an illustration, not a medical measurement.
+      </p>
+    `;
+
+    const slider=game.querySelector("#ur-immune-range");
+    const picture=game.querySelector("#ur-immune-picture");
+    const caption=game.querySelector("#ur-immune-caption");
+
+    function update(){
+      value=Number(slider.value);
+      const labels=[
+        "No immune activity shown",
+        "Some immune activity shown",
+        "Immune response with mild injury",
+        "Stronger inflammation and more injury",
+        "Extensive injury in this model"
+      ];
+      const types=Array.from({length:15},(_,i)=>
+        i<Math.max(0,value-1)*3 ? "injured" :
+        [10,13].includes(i)&&value>0 ? "immune":"healthy"
+      );
+      picture.innerHTML=cellGrid(types,15);
+      caption.textContent=labels[value];
+    }
+
+    slider.oninput=update;
+    update();
+
+    game.querySelector("#ur-controls").innerHTML=`
+      <p><strong>Your task:</strong>
+      Make the model show several injured cells
+      and immune defenders by moving the slider.</p>
+      <button class="ur-choice" id="ur-immune-check">
+        CHECK MY SIMULATION
+      </button>
+    `;
+
+    game.querySelector("#ur-immune-check").onclick=()=>{
+      if(value>=3) {
+        win("You modelled how a stronger immune response can be linked with more tissue injury.");
+      } else {
+        wrong("Your model shows less injury than the target scene. Move the slider farther to investigate.");
+      }
+    };
+  }
+
+  /* 5 — CELL DELIVERY SERVICE */
+
+  function delivery() {
+    const route=["Ribosomes","ER","Golgi apparatus","Destination"];
+    let step=0;
+
+    function render() {
+      game.querySelector("#ur-scene").innerHTML=`
+        <p>Guide a cell's <strong>newly made secreted protein</strong>
+        along a simplified delivery route.
+        Select its next stop.</p>
+        <div class="ur-scene">
+          <div class="ur-big">📦 ${step===0?"🏗️":step===1?"🛣️":step===2?"📮":"🚚"}</div>
+          <div class="ur-step">
+            ${route.slice(0,step).join(" → ") || "Start: new protein"}
+            ${step>0?" → ":""} 📦
+          </div>
+        </div>
+      `;
+
+      const choices=["ER","Golgi apparatus","Destination","Ribosomes"];
+      options(choices,(i,b)=>{
+        if(choices[i]===route[step]) {
+          step++;
+          if(step===4){
+            game.querySelector("#ur-scene").innerHTML=`
+              <div class="ur-scene"><div class="ur-big">📦 ✅</div>
+              <h3>Package delivered!</h3>
+              <p>Ribosomes → ER → Golgi apparatus → Destination</p></div>`;
+            disableAnswers();
+            win("You followed a simplified route used by many proteins that leave cells.");
+          } else {
+            showFeedback("✅ Package reached the next station!",true);
+            render();
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          game.querySelector(".ur-big").textContent="📦 ↩️";
+          wrong("Wrong delivery station! The package is sent back. Check the route and try again.");
+        }
+      });
+    }
+    render();
+  }
+
+  /* 6 — MICROSCOPE SPOT-THE-DIFFERENCE */
+
+  function microscope() {
+    const changes=[2,7,10];
+    const found=new Set();
+
+    const left=Array(16).fill("healthy");
+    const right=left.slice();
+    right[2]="injured";
+    right[7]="immune";
+    right[10]="scar";
+
+    function grid(types,clickable){
+      return `<div class="ur-mini-grid">
+        ${types.map((t,i)=>
+          `<button class="ur-cell ${t}" data-spot="${i}"
+           ${clickable?"":"disabled"} aria-label="Tissue position ${i+1}">
+           ${t==="healthy"?"●":t==="injured"?"✕":t==="immune"?"+":""}
+          </button>`).join("")}
+        </div>`;
+    }
+
+    game.querySelector("#ur-scene").innerHTML=`
+      <p>Compare two illustrated tissue samples.
+      Find <strong>three changed positions</strong>
+      in Sample B by clicking them.</p>
+      <div class="ur-comparison">
+        <div class="ur-tile">
+          <strong>Sample A</strong>
+          ${grid(left,false)}
+        </div>
+        <div class="ur-tile">
+          <strong>Sample B</strong>
+          ${grid(right,true)}
+        </div>
+      </div>
+      <div id="ur-found" class="ur-step">Differences found: 0 / 3</div>
+    `;
+
+    game.querySelectorAll(".ur-tile:last-child [data-spot]").forEach(b=>{
+      b.onclick=()=>{
+        const i=Number(b.dataset.spot);
+        if(changes.includes(i)){
+          found.add(i);
+          b.classList.add("ur-selected");
+          b.disabled=true;
+          game.querySelector("#ur-found").textContent=
+            `Differences found: ${found.size} / 3`;
+          if(found.size===3) {
+            win("You spotted an injured cell, an immune cell and an area representing scar tissue!");
+          } else {
+            showFeedback("🔎 Difference found! Keep looking.",true);
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          wrong("That position looks the same in both samples. Look for a different colour or pattern.");
+        }
+      };
+    });
+
+    game.querySelector("#ur-controls").innerHTML=
+      `<p class="ur-small">Pink with purple dot = healthy-looking cell;
+      orange X = injured; blue + = immune cell; striped = scarring.</p>`;
+  }
+
+  /* 7 — TISSUE TIME MACHINE */
+
+  function timeMachine() {
+    let value=0;
+    const captions=[
+      "Healthy-looking tissue",
+      "Inflammation and some injury",
+      "Repeated injury with possible fibrosis",
+      "More extensive scarring in this model"
+    ];
+
+    game.querySelector("#ur-scene").innerHTML=`
+      <p>Travel through a simplified model showing
+      <strong>possible</strong> effects of continuing liver injury.</p>
+      <input id="ur-time" class="ur-slider"
+             type="range" min="0" max="3" value="0">
+      <div class="ur-scene">
+        <strong id="ur-time-caption"></strong>
+        <div id="ur-time-picture"></div>
+        <div class="ur-meter">
+          <div class="ur-meter-fill" id="ur-time-meter"></div>
+        </div>
+        <p id="ur-time-function" class="ur-small"></p>
+      </div>
+    `;
+
+    function update(){
+      value=Number(game.querySelector("#ur-time").value);
+      const types=Array.from({length:15},(_,i)=>{
+        if(value>=2 && i%5===0) return "scar";
+        if(value>=3 && i%3===0) return "injured";
+        if(value>=1 && [3,8].includes(i)) return "injured";
+        return "healthy";
+      });
+      game.querySelector("#ur-time-picture").innerHTML=cellGrid(types);
+      game.querySelector("#ur-time-caption").textContent=captions[value];
+      game.querySelector("#ur-time-meter").style.width=`${value*30}%`;
+      game.querySelector("#ur-time-function").textContent=
+        value===0?"Many healthy liver cells are shown.":
+        value===1?"Immune-related injury may occur.":
+        value===2?"Scar tissue cannot do all the jobs of healthy liver cells.":
+        "Extensive scarring may make normal liver function harder.";
+    }
+
+    game.querySelector("#ur-time").oninput=update;
+    update();
+
+    game.querySelector("#ur-controls").innerHTML=`
+      <p><strong>Your mission:</strong> Find the stage where
+      scar tissue first appears in this model.</p>
+      <button class="ur-choice" id="ur-time-check">LOCK IN STAGE</button>
+    `;
+
+    game.querySelector("#ur-time-check").onclick=()=>{
+      if(value===2) {
+        win("You found the first illustrated fibrosis stage! Real liver disease does not always follow this path.");
+      } else {
+        wrong("That's not the first scarring stage shown here. Watch for the striped areas.");
+      }
+    };
+  }
+
+  /* 8 — BUILD THE BODY */
+
+  function buildBody() {
+    const order=[
+      ["Cell","🧫"],["Tissue","🧩"],
+      ["Organ (liver)","🫀"],["Organ system","🧍"]
+    ];
+    let step=0;
+
+    function render(){
+      game.querySelector("#ur-scene").innerHTML=`
+        <p>Build the body from <strong>smallest to largest</strong>.
+        Choose what comes next!</p>
+        <div class="ur-slot">
+          ${order.slice(0,step).map(x=>x[1]+" "+x[0]).join(" → ") ||
+          "Choose the smallest level to begin."}
+        </div>
+        <div class="ur-scene">
+          <div class="ur-big">
+            ${step===0?"🧫":step===1?"🧩":step===2?"🫀":"🧍"}
+          </div>
+        </div>
+      `;
+
+      options(["Organ system","Tissue","Cell","Organ (liver)"],(i,b)=>{
+        const answer=["Organ system","Tissue","Cell","Organ (liver)"][i];
+        if(answer===order[step][0]){
+          step++;
+          if(step===4){
+            game.querySelector("#ur-scene").innerHTML=`
+              <div class="ur-scene">
+                <div class="ur-big">🧫 → 🧩 → 🫀 → 🧍</div>
+                <h3>Body organization complete!</h3>
+              </div>`;
+            disableAnswers();
+            win("Cells form tissues, tissues build organs, and organs work within organ systems.");
+          } else {
+            showFeedback("✅ Great! Add the next level.",true);
+            render();
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          wrong("That level doesn't fit yet. Build from smaller structures to larger ones.");
+        }
+      });
+    }
+    render();
+  }
+
+  /* 9 — BLOOD EXPOSURE DETECTIVE */
+
+  function exposure() {
+    game.querySelector("#ur-scene").innerHTML=`
+      <p>Review three illustrated situations.
+      Identify the one that could involve
+      <strong>infected blood entering someone's body</strong>.</p>
+      <div class="ur-tiles">
+        ${sceneCard("🤗","Friendly greeting","Two classmates hug.")}
+        ${sceneCard("🩹","First aid mix-up","Blood from another person reaches an open cut.")}
+        ${sceneCard("📚","Study time","Two classmates share a desk.")}
+      </div>
+    `;
+
+    options([
+      "🤗 Friendly greeting",
+      "🩹 First aid mix-up",
+      "📚 Study time"
+    ],(i,b)=>{
+      if(i===1) {
+        disableAnswers();
+        b.classList.add("ur-good");
+        win("Exposure to infected blood can spread hepatitis B. Casual contact such as hugging or desk sharing does not.");
+      } else {
+        b.classList.add("ur-wrong");
+        wrong("That is casual contact. Look for a situation involving blood entering another person's body.");
+      }
+    });
+  }
+
+  /* 10 — BUILD THE FINAL SCIENCE REPORT */
+
+  function finalReport() {
+    const cases=[
+      {
+        title:"CELL EVIDENCE",
+        options:[
+          "The virus can use liver-cell machinery.",
+          "The virus turns cells into bones."
+        ],
+        correct:0,
+        icon:"🧫"
+      },
+      {
+        title:"TISSUE EVIDENCE",
+        options:[
+          "Infected cells always look orange.",
+          "The immune response may injure liver tissue."
+        ],
+        correct:1,
+        icon:"🔬"
+      },
+      {
+        title:"PROTECTION EVIDENCE",
+        options:[
+          "Vaccination helps prevent hepatitis B.",
+          "Staying away from classmates prevents hepatitis B."
+        ],
+        correct:0,
+        icon:"🛡️"
+      }
+    ];
+
+    let evidence=0;
+
+    function render() {
+      game.querySelector("#ur-scene").innerHTML=`
+        <p>Your science team needs <strong>three correct evidence cards</strong>
+        for its final report. Pick the statement supported by your journey.</p>
+        <div class="ur-scene">
+          <div class="ur-big">📋 ${cases[evidence].icon}</div>
+          <h3>${cases[evidence].title}</h3>
+          <div class="ur-step">Evidence collected: ${evidence} / 3</div>
+        </div>
+      `;
+
+      options(cases[evidence].options,(i,b)=>{
+        if(i===cases[evidence].correct) {
+          evidence++;
+          if(evidence===3) {
+            game.querySelector("#ur-scene").innerHTML=`
+              <div class="ur-scene">
+                <div class="ur-big">📋 ✅ 🏆</div>
+                <h3>Science report approved!</h3>
+                <p>Cell effects ✅ Tissue effects ✅ Protection ✅</p>
+              </div>`;
+            disableAnswers();
+            win("You connected what happens inside liver cells to tissue injury and ways to prevent hepatitis B.");
+          } else {
+            showFeedback("✅ Evidence added to the report!",true);
+            render();
+          }
+        } else {
+          b.classList.add("ur-wrong");
+          wrong("That statement is not supported by the science. The report needs better evidence.");
+        }
+      });
+    }
+    render();
+  }
+
+  /* COMPLETION SCREEN */
+
+  function finish() {
+    game.innerHTML=`
+      <div class="ur-complete">
+        <div class="ur-big">🏆 🧬 🛡️</div>
+        <h2>Ultimate Science Defender!</h2>
+        <p>You completed <strong>all 10 mini-games!</strong></p>
+
+        <div class="ur-scene">
+          <h3>⭐ ${stars} / 10 Stars Earned</h3>
+          <p>Challenges completed: 10 / 10</p>
+          <p>Learning setbacks: ${mistakes}</p>
+        </div>
+
+        <h3>What Have You Discovered?</h3>
+        <p>
+          🧫 Liver cells contain organelles that work together.
+        </p>
+        <p>
+          🔬 Hepatitis B and the immune response can affect liver tissue.
+        </p>
+        <p>
+          🫀 Healthy liver tissue helps the organ do important jobs.
+        </p>
+        <p>
+          🛡️ Vaccination helps prevent hepatitis B.
+        </p>
+
+        <button class="ur-next" id="ur-replay">
+          🔄 PLAY THE RESCUE ARCADE AGAIN
+        </button>
+      </div>
+    `;
+
+    game.querySelector("#ur-replay").onclick=()=>{
+      level=0;
+      stars=0;
+      mistakes=0;
+      drawLevel();
+    };
+  }
+
+  drawLevel();
+})();
