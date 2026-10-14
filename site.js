@@ -4137,3 +4137,1384 @@ if (location.pathname.endsWith("cells.html")) {
     }
   }
 })();
+
+/* ============================================================
+   LIVERQUEST — EXPERT RESCUE ARCADE 3.0
+   Ten challenging visual games for Grades 7–8
+
+   PASTE ONCE AT THE VERY BOTTOM OF site.js
+
+   Keeps the original five-question final quiz.
+   Removes displayed versions of older rescue games.
+   ============================================================ */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "finale.html") return;
+
+  [
+    "liver-rescue-game",
+    "lq-rescue-10",
+    "lq-ultimate-rescue",
+    "lq-expert-arcade",
+    "lq-expert-2",
+    "lq-expert-3"
+  ].forEach(id => document.getElementById(id)?.remove());
+
+  document.getElementById("lq-expert-3-style")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "lq-expert-3-style";
+  style.textContent = `
+    #lq-expert-3 {
+      color:#43375e;
+      background:linear-gradient(140deg,#f8edff,#e9faff,#fff4e9);
+      border:3px solid #d8baf2;
+      border-radius:26px;
+      padding:clamp(15px,4vw,30px);
+      margin:30px 0;
+      font-family:inherit;
+    }
+
+    #lq-expert-3 * {
+      box-sizing:border-box;
+    }
+
+    #lq-expert-3 h2,
+    #lq-expert-3 h3 {
+      color:#6642aa;
+    }
+
+    #lq-expert-3 p {
+      line-height:1.55;
+    }
+
+    .x3-header {
+      text-align:center;
+    }
+
+    .x3-header h2 {
+      font-size:clamp(1.6rem,4vw,2.4rem);
+      margin:12px 0;
+    }
+
+    .x3-label {
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:99px;
+      background:#e7d7ff;
+      color:#593894;
+      font-weight:850;
+    }
+
+    .x3-stats {
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:20px 0 10px;
+      font-weight:850;
+    }
+
+    .x3-progress {
+      background:#e2d4f1;
+      height:14px;
+      border-radius:99px;
+      overflow:hidden;
+    }
+
+    .x3-progress div {
+      height:100%;
+      background:linear-gradient(90deg,#41bb96,#8c63dd);
+      transition:width .3s;
+    }
+
+    .x3-panel {
+      background:white;
+      border:2px solid #dcc4f3;
+      padding:clamp(14px,3vw,24px);
+      border-radius:22px;
+      margin:20px 0;
+    }
+
+    .x3-scene {
+      background:linear-gradient(135deg,#effaff,#fff0f8);
+      border:2px solid #e1c9f3;
+      border-radius:18px;
+      padding:16px;
+      margin:16px 0;
+      text-align:center;
+    }
+
+    .x3-icon {
+      font-size:clamp(42px,8vw,70px);
+      margin:10px 0;
+    }
+
+    .x3-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin:15px 0;
+    }
+
+    .x3-grid.three {
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .x3-card {
+      text-align:center;
+      background:#faf6ff;
+      padding:14px;
+      border:2px solid #d5bcf0;
+      border-radius:17px;
+    }
+
+    .x3-card strong {
+      display:block;
+      margin:8px 0;
+    }
+
+    .x3-card p {
+      font-size:.92rem;
+      margin:6px 0;
+    }
+
+    .x3-card.off {
+      background:#e9e5ee;
+      filter:grayscale(1);
+    }
+
+    .x3-card.bad {
+      background:#ffe0dd;
+      border-color:#dd7f84;
+    }
+
+    .x3-card.good {
+      background:#ddf9e9;
+      border-color:#40b58a;
+    }
+
+    .x3-button {
+      border:2px solid #c8aff0;
+      background:white;
+      color:#523588;
+      border-radius:15px;
+      padding:14px;
+      min-height:55px;
+      width:100%;
+      cursor:pointer;
+      font-size:1rem;
+      font-weight:800;
+    }
+
+    .x3-button:hover:not(:disabled) {
+      background:#eee5ff;
+    }
+
+    .x3-button.selected {
+      background:#ddf7eb;
+      border-color:#36ae86;
+    }
+
+    .x3-button.wrong {
+      background:#ffe0e3;
+      border-color:#dc6875;
+      animation:x3-shake .3s;
+    }
+
+    .x3-button:disabled {
+      cursor:default;
+    }
+
+    .x3-next {
+      display:block;
+      background:#7650c6;
+      border:0;
+      border-radius:15px;
+      padding:15px 25px;
+      color:white;
+      font-size:1rem;
+      font-weight:850;
+      margin:20px auto 5px;
+      cursor:pointer;
+    }
+
+    .x3-next:disabled {
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    .x3-feedback {
+      background:#fff2d9;
+      border:2px solid #ecd39e;
+      border-radius:15px;
+      padding:15px;
+      margin:18px 0;
+      min-height:55px;
+      line-height:1.6;
+    }
+
+    .x3-feedback.good {
+      background:#dff8e9;
+      border-color:#70c79c;
+    }
+
+    .x3-cells {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:7px;
+      max-width:480px;
+      margin:15px auto;
+    }
+
+    .x3-cell {
+      aspect-ratio:1;
+      border-radius:38%;
+      background:#f5a9cb;
+      border:3px solid #d579a6;
+      color:#8247aa;
+      font-size:clamp(15px,3vw,25px);
+      font-weight:900;
+      cursor:pointer;
+      min-width:0;
+      display:grid;
+      place-items:center;
+      padding:3px;
+    }
+
+    .x3-cell.injured {
+      background:#ffc082;
+      border-color:#e48b56;
+      color:#b63e4a;
+    }
+
+    .x3-cell.immune {
+      background:#a8def9;
+      border-color:#549dce;
+      border-radius:50%;
+      color:#236eaa;
+    }
+
+    .x3-cell.scar {
+      background:repeating-linear-gradient(
+        45deg,#e2bd7a 0 7px,#fff1c6 7px 14px
+      );
+      border-color:#c6a269;
+    }
+
+    .x3-cell.selected {
+      outline:4px solid #30b98c;
+      outline-offset:1px;
+    }
+
+    .x3-cell.wrong {
+      outline:4px solid #df6875;
+      outline-offset:1px;
+    }
+
+    .x3-cell:disabled {
+      opacity:1;
+      cursor:default;
+    }
+
+    .x3-track {
+      background:#e7d9ef;
+      height:18px;
+      border-radius:99px;
+      overflow:hidden;
+      margin:12px 0;
+    }
+
+    .x3-track div {
+      height:100%;
+      background:linear-gradient(90deg,#66c6aa,#e8a36f);
+      transition:width .25s;
+    }
+
+    .x3-slider {
+      width:100%;
+      accent-color:#7a50c4;
+      cursor:pointer;
+    }
+
+    .x3-route {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px;
+      margin:18px 0;
+    }
+
+    .x3-chip {
+      background:#eee5ff;
+      border:2px solid #d2baf0;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:800;
+    }
+
+    .x3-small {
+      font-size:.9rem;
+      color:#6c6278;
+    }
+
+    .x3-end {
+      text-align:center;
+      background:white;
+      border:2px solid #d7c0ef;
+      border-radius:22px;
+      padding:25px;
+    }
+
+    @keyframes x3-shake {
+      0%,100% {transform:translateX(0)}
+      25% {transform:translateX(-6px)}
+      75% {transform:translateX(6px)}
+    }
+
+    @media(max-width:650px) {
+      .x3-grid,
+      .x3-grid.three {
+        grid-template-columns:1fr;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const game = document.createElement("section");
+  game.id = "lq-expert-3";
+
+  const finalLayout = document.querySelector(".final-layout");
+  const main = document.querySelector("main");
+
+  if (finalLayout) {
+    finalLayout.insertAdjacentElement("afterend",game);
+  } else if (main) {
+    main.appendChild(game);
+  } else {
+    return;
+  }
+
+  const $ = selector => game.querySelector(selector);
+  const $$ = selector => [...game.querySelectorAll(selector)];
+
+  let level = 0;
+  let stars = 0;
+  let mistakes = 0;
+  let complete = false;
+
+  const names = [
+    "Virus Detective",
+    "Cell City Emergency",
+    "Tissue Reconstruction",
+    "Immune Response Lab",
+    "Protein Delivery Disaster",
+    "Microscope Mystery",
+    "Fibrosis Case Files",
+    "The Domino Effect",
+    "Blood Exposure Investigation",
+    "The Final Science Report"
+  ];
+
+  function card(icon,title,description,status="") {
+    return `
+      <div class="x3-card ${status}">
+        <div class="x3-icon">${icon}</div>
+        <strong>${title}</strong>
+        <p>${description}</p>
+      </div>
+    `;
+  }
+
+  function cellGrid(types,clickable=false) {
+    return `
+      <div class="x3-cells">
+        ${types.map((type,i)=>`
+          <button
+            type="button"
+            class="x3-cell ${type}"
+            data-cell="${i}"
+            ${clickable?"":"disabled"}
+            aria-label="Position ${i+1}: ${type}"
+          >${
+            type==="healthy"?"●":
+            type==="injured"?"×":
+            type==="immune"?"+":""
+          }</button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function feedback(message,good=false) {
+    const box=$("#x3-feedback");
+    if (!box) return;
+    box.className="x3-feedback"+(good?" good":"");
+    box.textContent=message;
+  }
+
+  function setback(message) {
+    if (complete) return;
+    mistakes++;
+    feedback("⚠️ INVESTIGATION SETBACK: "+message);
+  }
+
+  function win(message) {
+    if (complete) return;
+    complete=true;
+    stars++;
+    $("#x3-stars").textContent="⭐ "+stars+"/10";
+    $("#x3-next").disabled=false;
+    feedback("✅ CHALLENGE COMPLETE! "+message,true);
+  }
+
+  function options(labels,callback) {
+    $("#x3-controls").innerHTML=`
+      <div class="x3-grid">
+        ${labels.map((label,i)=>`
+          <button class="x3-button" data-option="${i}">
+            ${label}
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    $$("[data-option]").forEach(button=>{
+      button.onclick=()=>callback(
+        Number(button.dataset.option),
+        button
+      );
+    });
+  }
+
+  function render() {
+    complete=false;
+
+    if (level===10) {
+      finish();
+      return;
+    }
+
+    game.innerHTML=`
+      <div class="x3-header">
+        <span class="x3-label">🧬 ADVANCED SCIENCE ADVENTURE</span>
+        <h2>🛡️ LiverQuest: Expert Rescue 3.0</h2>
+        <p>Investigate • Experiment • Repair • Solve</p>
+      </div>
+
+      <div class="x3-stats">
+        <span>MISSION ${level+1} / 10</span>
+        <span id="x3-stars">⭐ ${stars}/10</span>
+      </div>
+
+      <div class="x3-progress">
+        <div style="width:${level*10}%"></div>
+      </div>
+
+      <div class="x3-panel">
+        <h3>${names[level]}</h3>
+        <div id="x3-scene"></div>
+        <div id="x3-controls"></div>
+        <div id="x3-feedback" class="x3-feedback" role="status">
+          🔎 Investigate the evidence to unlock the next level.
+        </div>
+      </div>
+
+      <button class="x3-next" id="x3-next" disabled>
+        ${level===9?"SEE MY RESULTS →":"NEXT MISSION →"}
+      </button>
+
+      <p class="x3-small" style="text-align:center">
+        Simplified educational models, not clinical predictions.
+      </p>
+    `;
+
+    $("#x3-next").onclick=()=>{
+      level++;
+      render();
+    };
+
+    [
+      virusDetective,
+      cellEmergency,
+      tissueReconstruction,
+      immuneResponse,
+      proteinDelivery,
+      microscopeMystery,
+      fibrosisInvestigation,
+      dominoEffect,
+      bloodInvestigation,
+      finalReport
+    ][level]();
+  }
+
+  /* =====================================================
+     GAME 1: VIRUS DETECTIVE
+     Use multiple pieces of evidence.
+     ===================================================== */
+
+  function virusDetective() {
+    $("#x3-scene").innerHTML=`
+      <p>Three samples have arrived at your laboratory.
+      Which conclusions are supported by the evidence?</p>
+
+      <div class="x3-grid three" id="x3-samples">
+        ${card("🧫","SAMPLE A","Cells look healthy")}
+        ${card("🔬","SAMPLE B","Visible cell injury")}
+        ${card("🧪","SAMPLE C","HBV test positive, cells look normal")}
+      </div>
+
+      <strong>Select the TWO supported conclusions.</strong>
+    `;
+
+    const answers=[
+      "Sample B shows visible injury.",
+      "Sample A is definitely free from HBV.",
+      "Sample C may have infected cells that look normal.",
+      "All injured cells must contain HBV."
+    ];
+
+    const selected=new Set();
+
+    $("#x3-controls").innerHTML=`
+      <div class="x3-grid">
+        ${answers.map((a,i)=>`
+          <button class="x3-button" data-evidence="${i}">${a}</button>
+        `).join("")}
+      </div>
+      <button class="x3-button" id="x3-check-evidence">
+        SUBMIT LAB EVIDENCE
+      </button>
+    `;
+
+    $$("[data-evidence]").forEach(b=>{
+      b.onclick=()=>{
+        const i=Number(b.dataset.evidence);
+        if(selected.has(i)){
+          selected.delete(i);
+          b.classList.remove("selected");
+        } else {
+          selected.add(i);
+          b.classList.add("selected");
+        }
+      };
+    });
+
+    $("#x3-check-evidence").onclick=()=>{
+      if(selected.size===2 && selected.has(0) && selected.has(2)){
+        $("#x3-samples").innerHTML=`
+          ${card("🔬","Injury","Observed","good")}
+          ${card("🧪","Infection","Confirmed by testing","good")}
+          ${card("✅","Evidence","Verified!","good")}
+        `;
+        win("Visible injury and confirmed infection are not the same thing.");
+      } else {
+        $("#x3-samples").innerHTML=`
+          ${card("❓","Uncertain","More evidence needed","bad")}
+          ${card("🔎","Review","Check your claims","bad")}
+          ${card("🧪","Testing","Matters!","bad")}
+        `;
+        setback("Your report claims more than the evidence proves. Check the differences between appearance and infection.");
+      }
+    };
+  }
+
+  /* =====================================================
+     GAME 2: CELL CITY EMERGENCY
+     Repair two different problems.
+     ===================================================== */
+
+  function cellEmergency() {
+    const problems=[
+      {
+        text:"A cell must build proteins and prepare them for export.",
+        pair:[0,1]
+      },
+      {
+        text:"A cell needs usable energy and must break down old material.",
+        pair:[2,3]
+      }
+    ];
+
+    const workers=[
+      "🏗️ Ribosomes",
+      "🛣️ Rough ER",
+      "⚡ Mitochondria",
+      "♻️ Lysosomes",
+      "📦 Golgi apparatus"
+    ];
+
+    let stage=0;
+    let selected=new Set();
+
+    function draw() {
+      selected=new Set();
+
+      $("#x3-scene").innerHTML=`
+        <p>Assign <strong>TWO organelles</strong> to solve each emergency.</p>
+
+        <div class="x3-grid three" id="x3-buildings">
+          ${card("🏭","Factory","Offline","off")}
+          ${card("⚡","Power Station","Offline","off")}
+          ${card("♻️","Recycling","Offline","off")}
+        </div>
+
+        <div class="x3-scene">
+          <h3>Emergency ${stage+1} / 2</h3>
+          <p>${problems[stage].text}</p>
+        </div>
+      `;
+
+      $("#x3-controls").innerHTML=`
+        <div class="x3-grid">
+          ${workers.map((w,i)=>`
+            <button class="x3-button" data-worker="${i}">${w}</button>
+          `).join("")}
+        </div>
+
+        <button class="x3-button" id="x3-fix">
+          ACTIVATE REPAIR TEAM
+        </button>
+      `;
+
+      $$("[data-worker]").forEach(b=>{
+        b.onclick=()=>{
+          const i=Number(b.dataset.worker);
+
+          if(selected.has(i)){
+            selected.delete(i);
+            b.classList.remove("selected");
+          } else if(selected.size<2){
+            selected.add(i);
+            b.classList.add("selected");
+          }
+        };
+      });
+
+      $("#x3-fix").onclick=()=>{
+        const correct=
+          selected.size===2 &&
+          problems[stage].pair.every(i=>selected.has(i));
+
+        if(!correct){
+          $("#x3-buildings").innerHTML=`
+            ${card("🚨","Factory","Still offline","bad")}
+            ${card("💤","Power","Interrupted","bad")}
+            ${card("🗑️","Recycling","Backed up","bad")}
+          `;
+          setback("Wrong workers assigned. The buildings remain offline. Review each organelle's job.");
+          return;
+        }
+
+        $("#x3-buildings").innerHTML=`
+          ${card("✅","Factory","Running","good")}
+          ${card("✅","Power","Running","good")}
+          ${card("✅","Recycling","Running","good")}
+        `;
+
+        if(stage===0){
+          stage=1;
+          feedback("✅ Factory repair successful! Now solve emergency 2.",true);
+
+          $("#x3-controls").innerHTML=`
+            <button class="x3-button" id="x3-second">
+              CONTINUE TO EMERGENCY 2 →
+            </button>
+          `;
+          $("#x3-second").onclick=draw;
+        } else {
+          $("#x3-controls").innerHTML="";
+          win("You restored the important cell functions using the right organelles.");
+        }
+      };
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     GAME 3: TISSUE RECONSTRUCTION
+     Build a 60:40 cell sample.
+     ===================================================== */
+
+  function tissueReconstruction() {
+    let healthy=0;
+    let injured=0;
+
+    $("#x3-scene").innerHTML=`
+      <p>Build a model containing:</p>
+
+      <div class="x3-grid">
+        ${card("🧫","60%","Healthy-looking cells")}
+        ${card("🩹","40%","Injured cells")}
+      </div>
+
+      <div class="x3-scene">
+        <div id="x3-tissue"></div>
+        <strong id="x3-tissue-count"></strong>
+      </div>
+
+      <p class="x3-small">
+        You must use exactly 10 cells.
+      </p>
+    `;
+
+    $("#x3-controls").innerHTML=`
+      <div class="x3-grid">
+        <button class="x3-button" id="x3-addhealthy">+ PINK CELL</button>
+        <button class="x3-button" id="x3-addinjured">+ INJURED CELL</button>
+        <button class="x3-button" id="x3-reset">RESET SAMPLE</button>
+        <button class="x3-button" id="x3-test">TEST SAMPLE</button>
+      </div>
+    `;
+
+    function update(){
+      const types=[
+        ...Array(healthy).fill("healthy"),
+        ...Array(injured).fill("injured")
+      ];
+
+      $("#x3-tissue").innerHTML=cellGrid(types);
+      $("#x3-tissue-count").textContent=
+        `${healthy} healthy + ${injured} injured = ${healthy+injured}/10`;
+    }
+
+    $("#x3-addhealthy").onclick=()=>{
+      if(healthy+injured<10)healthy++;
+      update();
+    };
+
+    $("#x3-addinjured").onclick=()=>{
+      if(healthy+injured<10)injured++;
+      update();
+    };
+
+    $("#x3-reset").onclick=()=>{
+      healthy=0;
+      injured=0;
+      $("#x3-tissue").style.background="";
+      update();
+    };
+
+    $("#x3-test").onclick=()=>{
+      if(healthy===6 && injured===4){
+        $("#x3-tissue").style.background="#e1faeb";
+        win("Your tissue model has the correct proportions!");
+      } else {
+        $("#x3-tissue").style.background="#ffe4da";
+        setback("The sample doesn't match 60:40. Reset and calculate the right number of each type.");
+      }
+    };
+
+    update();
+  }
+
+  /* =====================================================
+     GAME 4: IMMUNE RESPONSE SIMULATOR
+     Two variables + animated tissue changes.
+     ===================================================== */
+
+  function immuneResponse() {
+    $("#x3-scene").innerHTML=`
+      <p>Adjust two variables to reach the target.</p>
+
+      <div class="x3-scene">
+        <label>
+          <strong>Infected cells: <span id="x3-inf">40%</span></strong>
+        </label>
+
+        <input type="range" id="x3-infection" class="x3-slider"
+          min="0" max="100" step="10" value="40">
+
+        <label>
+          <strong>Immune-response strength:
+          <span id="x3-imm">40%</span></strong>
+        </label>
+
+        <input type="range" id="x3-immune" class="x3-slider"
+          min="0" max="100" step="10" value="40">
+
+        <h3>Injury indicator: <span id="x3-injury">16</span></h3>
+
+        <div class="x3-track">
+          <div id="x3-injurybar"></div>
+        </div>
+
+        <div id="x3-immune-tissue"></div>
+      </div>
+
+      <p class="x3-small">
+        Classroom model: infection % × immune strength % ÷ 100.
+        These numbers are invented for learning.
+      </p>
+
+      <strong>🎯 Target: Infection = 60%, injury indicator = 30.</strong>
+    `;
+
+    const infection=$("#x3-infection");
+    const immune=$("#x3-immune");
+
+    function update(){
+      const a=Number(infection.value);
+      const b=Number(immune.value);
+      const indicator=Math.round(a*b/100);
+
+      $("#x3-inf").textContent=a+"%";
+      $("#x3-imm").textContent=b+"%";
+      $("#x3-injury").textContent=indicator;
+      $("#x3-injurybar").style.width=indicator+"%";
+
+      const count=Math.round(indicator/10);
+      $("#x3-immune-tissue").innerHTML=cellGrid(
+        Array.from({length:10},(_,i)=>
+          i<count?"injured":"healthy"
+        )
+      );
+    }
+
+    infection.oninput=update;
+    immune.oninput=update;
+    update();
+
+    $("#x3-controls").innerHTML=`
+      <button class="x3-button" id="x3-run">
+        RUN EXPERIMENT
+      </button>
+    `;
+
+    $("#x3-run").onclick=()=>{
+      if(Number(infection.value)===60 &&
+         Number(immune.value)===50){
+        $("#x3-injurybar").style.background="#40ba8d";
+        win("You achieved the target by adjusting both variables.");
+      } else {
+        $("#x3-injurybar").style.background="#e37870";
+        setback("The indicator isn't at the target. Hold infection at 60% and solve for immune strength.");
+      }
+    };
+  }
+
+  /* =====================================================
+     GAME 5: PROTEIN DELIVERY DISASTER
+     Package travels between stations.
+     ===================================================== */
+
+  function proteinDelivery() {
+    const route=[
+      "Ribosomes",
+      "Rough ER",
+      "Golgi apparatus",
+      "Cell membrane"
+    ];
+
+    let step=0;
+
+    function draw(){
+      $("#x3-scene").innerHTML=`
+        <p>A protein must be prepared for export.
+        Guide its package through the cell.</p>
+
+        <div class="x3-scene">
+          <div class="x3-icon" id="x3-package">📦 🚚</div>
+
+          <div class="x3-route">
+            ${route.slice(0,step).map(name=>`
+              <span class="x3-chip">✅ ${name}</span>
+            `).join("")}
+
+            <span class="x3-chip">❓ NEXT STATION</span>
+          </div>
+        </div>
+
+        <p class="x3-small">
+          Hint: Protein builders → processing passages
+          → packaging centre → outer boundary.
+        </p>
+      `;
+
+      const remaining=route.filter(
+        name=>!route.slice(0,step).includes(name)
+      );
+
+      options(remaining,(i,b)=>{
+        const answer=remaining[i];
+
+        if(answer!==route[step]){
+          $("#x3-package").textContent="📦 ↩️ 🚫";
+          b.classList.add("wrong");
+          setback("The package reached the wrong station and was returned. Find the next processing step.");
+          return;
+        }
+
+        step++;
+
+        if(step===route.length){
+          $("#x3-scene").innerHTML=`
+            <div class="x3-scene">
+              <div class="x3-icon">📦 ✅ 🎉</div>
+              <h3>Package Delivered!</h3>
+              <p>${route.join(" → ")}</p>
+            </div>
+          `;
+
+          $("#x3-controls").innerHTML="";
+          win("You completed a common protein secretion pathway.");
+        } else {
+          feedback("✅ Package successfully delivered to the next station.",true);
+          draw();
+        }
+      });
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     GAME 6: MICROSCOPE MYSTERY
+     Spot three differences and interpret them.
+     ===================================================== */
+
+  function microscopeMystery() {
+    const sampleA=Array(15).fill("healthy");
+    const sampleB=sampleA.slice();
+
+    sampleB[2]="injured";
+    sampleB[8]="immune";
+    sampleB[12]="scar";
+
+    const found=new Set();
+
+    $("#x3-scene").innerHTML=`
+      <p>Compare the two samples.
+      Click the <strong>three changed positions</strong> in Sample B.</p>
+
+      <div class="x3-grid">
+        <div class="x3-scene">
+          <strong>SAMPLE A</strong>
+          ${cellGrid(sampleA)}
+        </div>
+
+        <div class="x3-scene" id="x3-sample-b">
+          <strong>SAMPLE B</strong>
+          ${cellGrid(sampleB,true)}
+        </div>
+      </div>
+
+      <p id="x3-found">Differences found: 0/3</p>
+      <p class="x3-small">
+        Purple dot = nucleus. Orange X = injured cell.
+        Blue + = immune cell. Stripes = scar tissue.
+      </p>
+    `;
+
+    $("#x3-controls").innerHTML=`
+      <div id="x3-interpret" style="display:none">
+        <h3>What can you conclude?</h3>
+
+        <div class="x3-grid">
+          <button class="x3-button" data-conclusion="0">
+            Sample B definitely has hepatitis B.
+          </button>
+
+          <button class="x3-button" data-conclusion="1">
+            Sample B shows changes, but their cause
+            cannot be proven by appearance alone.
+          </button>
+        </div>
+      </div>
+    `;
+
+    $$("#x3-sample-b [data-cell]").forEach(button=>{
+      button.onclick=()=>{
+        const i=Number(button.dataset.cell);
+
+        if([2,8,12].includes(i)){
+          found.add(i);
+          button.classList.add("selected");
+          button.disabled=true;
+
+          $("#x3-found").textContent=
+            `Differences found: ${found.size}/3`;
+
+          if(found.size===3){
+            $("#x3-interpret").style.display="block";
+            feedback("🔬 You found every change. Now interpret the evidence.",true);
+          }
+        } else {
+          button.classList.add("wrong");
+          setback("That cell looks the same in both samples. Compare the colours and patterns.");
+        }
+      };
+    });
+
+    $$("[data-conclusion]").forEach(button=>{
+      button.onclick=()=>{
+        if(Number(button.dataset.conclusion)===1){
+          win("Correct! A tissue picture alone cannot confirm the cause of injury.");
+        } else {
+          button.classList.add("wrong");
+          setback("A picture cannot confirm HBV infection. A specific test would be needed.");
+        }
+      };
+    });
+  }
+
+  /* =====================================================
+     GAME 7: FIBROSIS CASE FILES
+     Compare histories and see tissue consequences.
+     ===================================================== */
+
+  function fibrosisInvestigation() {
+    $("#x3-scene").innerHTML=`
+      <p>Examine three fictional histories.
+      Which raises the <strong>greatest concern for scarring</strong>?</p>
+
+      <div class="x3-grid three" id="x3-patients">
+        ${card("📅","CASE A","Brief inflammation, then recovery")}
+        ${card("📆","CASE B","Repeated injury for several years")}
+        ${card("🗓️","CASE C","No ongoing injury identified")}
+      </div>
+
+      <div id="x3-fibrosis-picture" class="x3-scene">
+        <div class="x3-icon">🔬 ❓</div>
+        <p>Select a case to investigate.</p>
+      </div>
+    `;
+
+    options(["CASE A","CASE B","CASE C"],(i,b)=>{
+      if(i===1){
+        $("#x3-fibrosis-picture").innerHTML=`
+          <h3>Possible Tissue Consequence</h3>
+
+          ${cellGrid(
+            Array.from({length:15},(_,j)=>
+              [0,5,10].includes(j)?"scar":
+              [2,7].includes(j)?"injured":"healthy"
+            )
+          )}
+
+          <p>Repeated liver injury may cause fibrosis.</p>
+        `;
+
+        win("Repeated injury over time raises concern for scarring. Medical testing would still be needed.");
+      } else {
+        b.classList.add("wrong");
+
+        $("#x3-fibrosis-picture").innerHTML=`
+          <div class="x3-icon">🔎 ↩️</div>
+          <p>Review the timeline. Which case involves ongoing injury?</p>
+        `;
+
+        setback("That history provides less evidence of ongoing injury. Compare how long the injury lasted.");
+      }
+    });
+  }
+
+  /* =====================================================
+     GAME 8: THE DOMINO EFFECT
+     Build a cause-and-effect chain.
+     ===================================================== */
+
+  function dominoEffect() {
+    const chain=[
+      "Injury to some liver cells",
+      "Changes in liver tissue",
+      "Reduced ability to perform some liver jobs",
+      "Possible effects on digestion and other body processes"
+    ];
+
+    let position=0;
+
+    function draw(){
+      $("#x3-scene").innerHTML=`
+        <p>Build a cause-and-effect chain,
+        starting inside a liver cell.</p>
+
+        <div class="x3-scene">
+          <div class="x3-icon">🧫 → 🧩 → 🫀 → 🧍</div>
+
+          <div class="x3-route">
+            ${chain.slice(0,position).map(x=>`
+              <span class="x3-chip">✅ ${x}</span>
+            `).join("")}
+
+            <span class="x3-chip">❓ WHAT HAPPENS NEXT?</span>
+          </div>
+        </div>
+      `;
+
+      const remaining=chain.filter(
+        x=>!chain.slice(0,position).includes(x)
+      );
+
+      options(remaining,(i,b)=>{
+        if(remaining[i]!==chain[position]){
+          b.classList.add("wrong");
+          setback("That effect belongs at a different level. Work from cells toward body systems.");
+          return;
+        }
+
+        position++;
+
+        if(position===chain.length){
+          $("#x3-scene").innerHTML=`
+            <div class="x3-scene">
+              <div class="x3-icon">🧫 → 🧩 → 🫀 → 🧍</div>
+              <h3>Domino Chain Complete!</h3>
+              <p>Cell → Tissue → Organ → Body systems</p>
+            </div>
+          `;
+
+          $("#x3-controls").innerHTML="";
+          win("You connected cell injury to possible effects on liver and body functions.");
+        } else {
+          feedback("✅ Correct connection. What happens next?",true);
+          draw();
+        }
+      });
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     GAME 9: BLOOD EXPOSURE INVESTIGATION
+     Solve two connected scenarios.
+     ===================================================== */
+
+  function bloodInvestigation() {
+    const scenarios=[
+      {
+        icon:"🩹 🩸",
+        situation:
+          "During a school activity, one student's blood " +
+          "contacts another student's open cut.",
+        choices:[
+          "Tell a responsible adult and follow first-aid procedures.",
+          "Ignore it because both students feel healthy.",
+          "Assume hepatitis B was definitely transmitted."
+        ],
+        correct:0
+      },
+      {
+        icon:"🏫 🤝",
+        situation:
+          "Classmates worry about sitting next to the injured student.",
+        choices:[
+          "Avoid sharing a classroom with the student.",
+          "Explain that ordinary classroom contact does not spread hepatitis B.",
+          "Tell everyone that the student has hepatitis B."
+        ],
+        correct:1
+      }
+    ];
+
+    let stage=0;
+
+    function draw(){
+      $("#x3-scene").innerHTML=`
+        <p>Investigate a school safety situation.
+        Choose the most responsible action.</p>
+
+        <div class="x3-scene" id="x3-exposure-picture">
+          <div class="x3-icon">${scenarios[stage].icon}</div>
+          <h3>Investigation ${stage+1}/2</h3>
+          <p>${scenarios[stage].situation}</p>
+        </div>
+      `;
+
+      options(scenarios[stage].choices,(i,b)=>{
+        if(i!==scenarios[stage].correct){
+          b.classList.add("wrong");
+
+          $("#x3-exposure-picture").innerHTML=`
+            <div class="x3-icon">⚠️ 🔎</div>
+            <h3>Check Your Safety Decision</h3>
+            <p>Avoid assumptions and unnecessary fear.</p>
+          `;
+
+          setback("Your decision may delay proper help or create misinformation. Think about exposure and respectful behaviour.");
+          return;
+        }
+
+        if(stage===0){
+          stage=1;
+          feedback("✅ Appropriate response. Now consider how classmates should react.",true);
+
+          $("#x3-controls").innerHTML=`
+            <button class="x3-button" id="x3-next-investigation">
+              CONTINUE INVESTIGATION →
+            </button>
+          `;
+          $("#x3-next-investigation").onclick=draw;
+        } else {
+          $("#x3-controls").innerHTML="";
+          win("You handled a possible blood exposure responsibly and avoided spreading misinformation.");
+        }
+      });
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     GAME 10: FINAL SCIENCE REPORT
+     Combine cellular, tissue and organ evidence.
+     ===================================================== */
+
+  function finalReport() {
+    const reports=[
+      {
+        label:"CELL LEVEL",
+        icon:"🧬",
+        evidence:"A laboratory test confirms HBV in some liver cells.",
+        choices:[
+          "The virus may use liver-cell machinery.",
+          "Every organelle must immediately stop working.",
+          "The virus changes cells into immune cells."
+        ],
+        correct:0
+      },
+      {
+        label:"TISSUE LEVEL",
+        icon:"🔬",
+        evidence:"The tissue model shows injured cells and immune defenders.",
+        choices:[
+          "The picture proves the person has cirrhosis.",
+          "The immune response may be contributing to injury.",
+          "Every normal-looking cell must be uninfected."
+        ],
+        correct:1
+      },
+      {
+        label:"ORGAN LEVEL",
+        icon:"🫀",
+        evidence:"The fictional case describes long-term injury and increasing scar tissue.",
+        choices:[
+          "Scarring always improves the liver's jobs.",
+          "The liver stops being part of body systems.",
+          "Extensive scarring may interfere with liver function."
+        ],
+        correct:2
+      }
+    ];
+
+    let stage=0;
+    const collected=[];
+
+    function draw(){
+      const item=reports[stage];
+
+      $("#x3-scene").innerHTML=`
+        <p>Build your final science report using
+        evidence from all the previous missions.</p>
+
+        <div class="x3-scene">
+          <div class="x3-icon">${item.icon}</div>
+          <h3>${item.label}</h3>
+          <p><strong>Evidence:</strong> ${item.evidence}</p>
+        </div>
+
+        <div class="x3-route">
+          ${collected.map(x=>`
+            <span class="x3-chip">✅ ${x}</span>
+          `).join("")}
+
+          <span class="x3-chip">📋 REPORT ${stage+1}/3</span>
+        </div>
+
+        <strong>Choose the conclusion best supported by the evidence.</strong>
+      `;
+
+      options(item.choices,(i,b)=>{
+        if(i!==item.correct){
+          b.classList.add("wrong");
+          setback("The report contains an unsupported claim. Choose the conclusion that follows from the evidence.");
+          return;
+        }
+
+        collected.push(item.label);
+        stage++;
+
+        if(stage===3){
+          $("#x3-scene").innerHTML=`
+            <div class="x3-scene">
+              <div class="x3-icon">🧬 🔬 🫀 🏆</div>
+              <h3>FINAL SCIENCE REPORT APPROVED!</h3>
+
+              <div class="x3-grid three">
+                ${card("✅","CELL","Evidence collected","good")}
+                ${card("✅","TISSUE","Evidence collected","good")}
+                ${card("✅","ORGAN","Evidence collected","good")}
+              </div>
+            </div>
+          `;
+
+          $("#x3-controls").innerHTML="";
+          win("You connected hepatitis B infection, tissue injury, and possible effects on liver function.");
+        } else {
+          feedback("✅ Evidence accepted! Continue the report.",true);
+
+          $("#x3-controls").innerHTML=`
+            <button class="x3-button" id="x3-next-report">
+              ADD NEXT EVIDENCE →
+            </button>
+          `;
+          $("#x3-next-report").onclick=draw;
+        }
+      });
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     FINAL REWARD SCREEN
+     ===================================================== */
+
+  function finish() {
+    game.innerHTML=`
+      <div class="x3-end">
+        <div class="x3-icon">🏆 🧬 🛡️</div>
+
+        <h2>Ultimate Science Defender!</h2>
+
+        <p>You completed all ten expert investigations!</p>
+
+        <div class="x3-scene">
+          <div style="font-size:42px;font-weight:900;color:#6742ab">
+            ⭐ ${stars}/10
+          </div>
+          <p>Expert challenges completed</p>
+          <p>Learning setbacks: ${mistakes}</p>
+        </div>
+
+        <h3>What You Discovered</h3>
+
+        <div class="x3-grid">
+          ${card("🧫","CELLS","Hepatitis B uses liver-cell machinery.","good")}
+          ${card("🔬","TISSUES","The immune response may cause tissue injury.","good")}
+          ${card("🫀","ORGANS","Ongoing injury may affect liver function.","good")}
+          ${card("🛡️","PROTECTION","Vaccination helps prevent hepatitis B.","good")}
+        </div>
+
+        <p>Every mistake was another chance to investigate!</p>
+
+        <button class="x3-next" id="x3-replay">
+          🔄 PLAY AGAIN
+        </button>
+      </div>
+    `;
+
+    $("#x3-replay").onclick=()=>{
+      level=0;
+      stars=0;
+      mistakes=0;
+      render();
+    };
+  }
+
+  render();
+})();
