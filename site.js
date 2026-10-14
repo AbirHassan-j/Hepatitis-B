@@ -4374,1477 +4374,1027 @@ if (location.pathname.endsWith("cells.html")) {
     return;
   }
 
-  /* --------------------------------------------------
-     TEN MISSIONS
-     All answers are based on Missions 1–4.
-     -------------------------------------------------- */
-
-  const rounds = [
-    {
-      scene: "🦠 A Virus Approaches!",
-      situation:
-        "A hepatitis B virus reaches a liver cell. " +
-        "Where does it attach before entering?",
-      choices: [
-        "🛡️ Cell membrane",
-        "⚡ Mitochondria",
-        "📦 Golgi apparatus"
-      ],
-      correct: 0,
-      good:
-        "The cell membrane has a special doorway that " +
-        "hepatitis B can attach to.",
-      bad:
-        "That part is inside the cell! The virus first " +
-        "needs to attach to the outer membrane.",
-      goodIcon: "🛡️",
-      badIcon: "🚧",
-      organ: "membrane"
-    },
-    {
-      scene: "🧠 Inside Cell City",
-      situation:
-        "The virus has entered the liver cell. " +
-        "Which organelle is the control centre?",
-      choices: [
-        "♻️ Lysosomes",
-        "🧠 Nucleus",
-        "🫧 Cytoplasm"
-      ],
-      correct: 1,
-      good:
-        "The nucleus stores important instructions " +
-        "that help guide the cell's work.",
-      bad:
-        "Not quite. Remember City Hall? The nucleus " +
-        "is the cell's control centre.",
-      goodIcon: "🏛️",
-      badIcon: "❓",
-      organ: "nucleus"
-    },
-    {
-      scene: "🏗️ The Protein Factory",
-      situation:
-        "The virus is using some of the cell's workers. " +
-        "Which organelles build proteins?",
-      choices: [
-        "🏗️ Ribosomes",
-        "🚪 Cell membrane",
-        "⚡ Mitochondria"
-      ],
-      correct: 0,
-      good:
-        "Ribosomes are the cell's protein builders. " +
-        "Hepatitis B can use them to make viral proteins.",
-      bad:
-        "The protein-building workers haven't been identified. " +
-        "Think of the construction workers from Cell City!",
-      goodIcon: "🏗️",
-      badIcon: "🧩",
-      organ: "ribosomes"
-    },
-    {
-      scene: "🛣️ The Cell Highway",
-      situation:
-        "Some proteins need to be made and prepared " +
-        "inside the cell. Which structure helps with this?",
-      choices: [
-        "🧠 Nucleus",
-        "🛣️ Endoplasmic reticulum",
-        "♻️ Lysosomes"
-      ],
-      correct: 1,
-      good:
-        "The ER is like a factory network and highway. " +
-        "It helps make, process, and move materials.",
-      bad:
-        "Those materials still need the right processing area. " +
-        "Remember the ER highways!",
-      goodIcon: "🛣️",
-      badIcon: "🚦",
-      organ: "er"
-    },
-    {
-      scene: "⚡ Powering the Cell",
-      situation:
-        "Liver cells need energy to do their everyday jobs. " +
-        "Which organelles help provide it?",
-      choices: [
-        "📦 Golgi apparatus",
-        "🛡️ Cell membrane",
-        "⚡ Mitochondria"
-      ],
-      correct: 2,
-      good:
-        "Mitochondria help supply usable energy. " +
-        "They're like Cell City's power stations!",
-      bad:
-        "The cell still needs its power stations! " +
-        "Mitochondria help provide energy.",
-      goodIcon: "🔋",
-      badIcon: "💡",
-      organ: "mitochondria"
-    },
-    {
-      scene: "🛡️ Immune Defenders Arrive",
-      situation:
-        "Immune defenders notice infected liver cells. " +
-        "What can their response cause?",
-      choices: [
-        "🔥 Inflammation and cell injury",
-        "🦴 The liver grows bones",
-        "✨ All infected cells become stronger"
-      ],
-      correct: 0,
-      good:
-        "The immune response helps fight infection, " +
-        "but it can also cause inflammation and injure cells.",
-      bad:
-        "Immune defenders are responding to infection. " +
-        "That response can cause inflammation and injury.",
-      goodIcon: "🛡️",
-      badIcon: "🔥",
-      organ: "immune"
-    },
-    {
-      scene: "🔬 Tissue Detective",
-      situation:
-        "You're examining our tissue model. " +
-        "What do orange cells marked with X represent?",
-      choices: [
-        "😊 Healthy-looking liver cells",
-        "🩹 Injured liver cells",
-        "💧 Drops of water"
-      ],
-      correct: 1,
-      good:
-        "Exactly! The orange X-marked shapes represent injured cells. " +
-        "The purple dots represent nuclei.",
-      bad:
-        "The tissue clue was missed. In our model, " +
-        "orange X-marked cells represent cell injury.",
-      goodIcon: "🔬",
-      badIcon: "🔎",
-      organ: "tissue"
-    },
-    {
-      scene: "🩹 The Tissue Time Machine",
-      situation:
-        "Imagine liver injury continues for a long time. " +
-        "What may develop in the tissue?",
-      choices: [
-        "🦴 Extra bones",
-        "🌼 Flower petals",
-        "🩹 Scar tissue"
-      ],
-      correct: 2,
-      good:
-        "Repeated injury can sometimes cause scar tissue, " +
-        "called fibrosis, to form.",
-      bad:
-        "Repeated injury can sometimes lead to scarring. " +
-        "Not everyone with hepatitis B develops it.",
-      goodIcon: "🩹",
-      badIcon: "⚠️",
-      organ: "scar"
-    },
-    {
-      scene: "🩸 The Transmission Mystery",
-      situation:
-        "Which situation could spread hepatitis B?",
-      choices: [
-        "🤗 Hugging a classmate",
-        "🩸 Infected blood entering an open cut",
-        "🥪 Sharing a lunch table"
-      ],
-      correct: 1,
-      good:
-        "Hepatitis B can spread when infected blood " +
-        "enters another person's body.",
-      bad:
-        "That is not a usual way hepatitis B spreads. " +
-        "The important clue is exposure to infected blood.",
-      goodIcon: "🩸",
-      badIcon: "🔍",
-      organ: "blood"
-    },
-    {
-      scene: "💉 The Final Protection Choice",
-      situation:
-        "Your science team wants to help prevent hepatitis B. " +
-        "Which action helps protect people?",
-      choices: [
-        "🚫 Avoid hugging friends",
-        "🎲 Wait for symptoms",
-        "💉 Hepatitis B vaccination"
-      ],
-      correct: 2,
-      good:
-        "Vaccination helps your immune system protect you " +
-        "against hepatitis B.",
-      bad:
-        "That would not provide reliable protection. " +
-        "Vaccination is an important way to prevent hepatitis B.",
-      goodIcon: "🏆",
-      badIcon: "🛡️",
-      organ: "vaccine"
-    }
-  ];
-
-  let round = 0;
-  let score = 0;
-  let attempts = 0;
-  let mistakes = [];
-
-  /* --------------------------------------------------
-     COLOURFUL SCENE WITH ORGANELLES
-     -------------------------------------------------- */
-
-  function sceneSVG(organ, wrong = false) {
-    const focus = {
-      membrane: [300,155,116],
-      nucleus: [300,155,42],
-      ribosomes: [226,135,17],
-      er: [246,209,35],
-      mitochondria: [365,211,36],
-      immune: [136,156,46],
-      tissue: [300,155,95],
-      scar: [345,215,42],
-      blood: [135,155,42],
-      vaccine: [135,155,42]
-    };
-
-    const [x,y,r] = focus[organ] || [300,155,95];
-
-    let special = "";
-
-    if (organ === "immune") {
-      special = `
-        <circle cx="136" cy="156" r="38"
-                fill="#a8dfff" stroke="#478dc5" stroke-width="5"/>
-        <text x="136" y="163" text-anchor="middle"
-              font-size="28" fill="#2569a0">+</text>`;
-    }
-
-    if (organ === "tissue" || organ === "scar") {
-      special = `
-        <g>
-          <rect x="208" y="90" width="186" height="140" rx="15"
-                fill="#ffe2d7" stroke="#edb5aa" stroke-width="4"/>
-          ${Array.from({length:12},(_,i)=>{
-            const cx=234+(i%4)*43;
-            const cy=116+Math.floor(i/4)*42;
-            const hurt=[2,5,9].includes(i);
-            return `<circle cx="${cx}" cy="${cy}" r="18"
-                            fill="${hurt?"#ffba79":"#f7a7c4"}"
-                            stroke="#d7779c" stroke-width="3"/>
-                    <circle cx="${cx}" cy="${cy}" r="6"
-                            fill="#925bbd"/>
-                    ${hurt?`<text x="${cx}" y="${cy+7}"
-                             font-size="24" text-anchor="middle"
-                             fill="#c43951">×</text>`:""}`;
-          }).join("")}
-          ${organ==="scar"?
-            `<path d="M345 101 L345 220"
-                   stroke="#d6a757" stroke-width="14"
-                   stroke-dasharray="10 6"/>`:""}
-        </g>`;
-    }
-
-    if (organ === "blood" || organ === "vaccine") {
-      special = `
-        <path d="M136 92 C116 126 98 145 98 170
-                 A38 38 0 0 0 174 170
-                 C174 145 155 118 136 92Z"
-              fill="#f07b92" stroke="#c85677" stroke-width="5"/>
-        <text x="136" y="183" text-anchor="middle"
-              fill="white" font-size="30">●</text>`;
-    }
-
-    return `
-      <svg viewBox="0 0 600 320"
-           role="img"
-           aria-label="Simplified teaching illustration of a liver cell">
-        <rect width="600" height="320" rx="24" fill="#f5faff"/>
-
-        <circle cx="300" cy="155" r="116"
-                fill="${wrong?"#ffe1ce":"#ffd2e6"}"
-                stroke="${wrong?"#ee9870":"#df7aac"}"
-                stroke-width="8"/>
-
-        <circle cx="300" cy="155" r="42"
-                fill="#b18ae0" stroke="#7d4bb7"
-                stroke-width="6"/>
-
-        <circle cx="300" cy="155" r="13" fill="#7641ad"/>
-
-        <g fill="none" stroke="#8276d1" stroke-width="8"
-           stroke-linecap="round">
-          <path d="M260 112 Q200 100 206 140 Q222 153 254 142"/>
-          <path d="M254 181 Q197 177 209 212 Q230 232 265 205"/>
-        </g>
-
-        <g fill="#7744ad">
-          <circle cx="226" cy="135" r="6"/>
-          <circle cx="236" cy="118" r="6"/>
-          <circle cx="216" cy="202" r="6"/>
-        </g>
-
-        <ellipse cx="365" cy="211" rx="35" ry="19"
-                 fill="#f7bd70" stroke="#d4843d"
-                 stroke-width="4"
-                 transform="rotate(-20 365 211)"/>
-
-        <ellipse cx="367" cy="96" rx="30" ry="17"
-                 fill="#f7bd70" stroke="#d4843d"
-                 stroke-width="4"/>
-
-        <g fill="none" stroke="#37bba9"
-           stroke-width="7" stroke-linecap="round">
-          <path d="M300 243 Q345 260 380 239"/>
-          <path d="M309 256 Q344 270 370 253"/>
-        </g>
-
-        <circle cx="386" cy="147" r="14"
-                fill="#f6d86e" stroke="#d8a944"
-                stroke-width="4"/>
-
-        <g transform="translate(125 115)">
-          <circle r="23" fill="#f4a8d0"
-                  stroke="#bb5d9b" stroke-width="5"/>
-          <circle r="10" fill="#955ac4"/>
-          ${Array.from({length:8},(_,i)=>{
-            const a=i*Math.PI/4;
-            return `<circle cx="${Math.cos(a)*31}"
-                            cy="${Math.sin(a)*31}"
-                            r="5" fill="#d66da8"/>`;
-          }).join("")}
-        </g>
-
-        ${special}
-
-        <circle cx="${x}" cy="${y}" r="${r}"
-                fill="none"
-                stroke="${wrong?"#e45e6b":"#25b981"}"
-                stroke-width="6"
-                stroke-dasharray="12 8"/>
-
-        <text x="300" y="298" text-anchor="middle"
-              font-size="17" font-weight="bold"
-              fill="#6644a2">
-          ${wrong?"Let's investigate that clue!":"Cell City Rescue"}
-        </text>
-      </svg>`;
-  }
-
-  function layout() {
-    game.innerHTML = `
-      <div class="rescue10-header">
-        <span class="pill">🎮 INTERACTIVE SCIENCE ADVENTURE</span>
-
-        <h2>🛡️ Save the Liver!</h2>
-
-        <p>
-          Complete 10 rescue challenges.
-          Make choices, see what happens,
-          and learn from your mistakes!
-        </p>
-      </div>
-
-      <div class="rescue10-stats">
-        <span id="rescue10-round">Round 1 / 10</span>
-        <span id="rescue10-score">⭐ 0 points</span>
-      </div>
-
-      <div class="rescue10-track">
-        <div class="rescue10-fill" id="rescue10-fill"></div>
-      </div>
-
-      <div class="rescue10-scene" id="rescue10-scene"></div>
-
-      <div class="rescue10-bubble">
-        <h3 id="rescue10-heading"></h3>
-        <p id="rescue10-question"></p>
-      </div>
-
-      <div class="rescue10-answers" id="rescue10-answers"></div>
-
-      <div class="rescue10-result" id="rescue10-result"
-           role="status" aria-live="polite"></div>
-
-      <button id="rescue10-next" class="rescue10-btn" disabled>
-        NEXT RESCUE ROUND →
-      </button>
-
-      <p class="rescue10-tiny">
-        Educational simulation: your choices change
-        this game, not what happens in real infections.
-      </p>
-    `;
-  }
-
-  function showRound() {
-    if (round >= rounds.length) {
-      showResults();
-      return;
-    }
-
-    const item = rounds[round];
-    attempts = 0;
-
-    document.getElementById("rescue10-round").textContent =
-      `MISSION ${round+1} / 10`;
-
-    document.getElementById("rescue10-score").textContent =
-      `⭐ ${score} points`;
-
-    document.getElementById("rescue10-fill").style.width =
-      `${(round/rounds.length)*100}%`;
-
-    document.getElementById("rescue10-scene").innerHTML =
-      sceneSVG(item.organ);
-
-    document.getElementById("rescue10-heading").textContent =
-      item.scene;
-
-    document.getElementById("rescue10-question").textContent =
-      item.situation;
-
-    const answers = document.getElementById("rescue10-answers");
-    const result = document.getElementById("rescue10-result");
-    const next = document.getElementById("rescue10-next");
-
-    result.className = "rescue10-result";
-    result.innerHTML = "";
-
-    next.disabled = true;
-    next.textContent =
-      round === 9 ? "SEE YOUR RESCUE RESULTS →" : "NEXT RESCUE ROUND →";
-
-    answers.innerHTML = item.choices.map((choice,i) => `
-      <button class="rescue10-answer"
-              data-rescue10="${i}">
-        ${choice}
-      </button>
-    `).join("");
-
-    answers.querySelectorAll("button").forEach(button => {
-      button.onclick = () => {
-        const selected = Number(button.dataset.rescue10);
-        const correct = selected === item.correct;
-
-        if (correct) {
-          if (attempts === 0) score++;
-
-          answers.querySelectorAll("button").forEach(b => {
-            b.disabled = true;
-            if (Number(b.dataset.rescue10) === item.correct) {
-              b.classList.add("correct");
-            }
-          });
-
-          result.className = "rescue10-result visible success";
-          result.innerHTML = `
-            <div class="rescue10-consequence">
-              <div class="rescue10-effect-icon">${item.goodIcon}</div>
-              <div>
-                <h3>✅ Science Defender Success!</h3>
-                <p>${item.good}</p>
-                <strong>
-                  ${attempts === 0
-                    ? "⭐ +1 point!"
-                    : "Great recovery! You've learned the clue."}
-                </strong>
-              </div>
-            </div>
-          `;
-
-          next.disabled = false;
-          document.getElementById("rescue10-score").textContent =
-            `⭐ ${score} points`;
-
-        } else {
-          attempts++;
-          if (!mistakes.includes(round)) mistakes.push(round);
-          button.classList.add("wrong");
-
-          document.getElementById("rescue10-scene").innerHTML =
-            sceneSVG(item.organ, true);
-
-          result.className = "rescue10-result visible";
-          result.innerHTML = `
-            <div class="rescue10-consequence">
-              <div class="rescue10-effect-icon">${item.badIcon}</div>
-              <div>
-                <h3>⚠️ Your Investigation Hit a Roadblock!</h3>
-                <p>${item.bad}</p>
-                <p>
-                  <strong>Consequence:</strong>
-                  Your science team hasn't solved this part
-                  of the infection mystery yet.
-                  Look at the clue and try again!
-                </p>
-              </div>
-            </div>
-          `;
-        }
-      };
-    });
-  }
-
-  function showResults() {
-    document.getElementById("rescue10-fill").style.width = "100%";
-
-    game.innerHTML = `
-      <div class="rescue10-finish">
-        <div class="rescue10-trophy">
-          ${score >= 8 ? "🏆" : "🎖️"}
-        </div>
-
-        <h2>Mission Complete!</h2>
-
-        <h3>You scored ${score} / 10!</h3>
-
-        <p>
-          ${
-            score === 10
-              ? "Amazing! You solved every rescue mystery on your first try!"
-              : score >= 7
-              ? "Great work! You understand many of the important cell and tissue clues."
-              : "Good effort! Every mistake helped you learn something new."
-          }
-        </p>
-
-        <div class="rescue10-bubble">
-          <h3>🧠 What Did You Discover?</h3>
-          <p>
-            Hepatitis B can enter liver cells
-            and use their machinery to make more viruses.
-          </p>
-          <p>
-            The immune response can cause inflammation
-            and sometimes damage liver tissue.
-          </p>
-          <p>
-            Vaccination helps prevent hepatitis B.
-          </p>
-        </div>
-
-        <p>
-          You completed all 10 science rescue challenges!
-        </p>
-
-        <button class="rescue10-btn" id="rescue10-replay">
-          🔄 PLAY AGAIN
-        </button>
-      </div>
-    `;
-
-    document.getElementById("rescue10-replay").onclick = () => {
-      round = 0;
-      score = 0;
-      attempts = 0;
-      mistakes = [];
-      layout();
-      showRound();
-    };
-  }
-
-  layout();
-
-  document.getElementById("rescue10-next").onclick = () => {
-    round++;
-    showRound();
-  };
-
-  showRound();
-})();
-
-/* ======================================================
-   LIVERQUEST: ULTIMATE RESCUE MISSION
-   10 DIFFERENT INTERACTIVE MINI-GAMES
-   Paste ONCE at the VERY BOTTOM of site.js.
-   Replaces both earlier Save the Liver games.
-   ====================================================== */
+/* ===========================================================
+   LIVERQUEST — GRADE 7/8 EXPERT RESCUE ARCADE
+   10 challenging, varied science activities
+   PASTE ONCE at the VERY BOTTOM of site.js.
+   =========================================================== */
 
 (function () {
   const page = location.pathname.split("/").pop() || "index.html";
   if (page !== "finale.html") return;
 
-  // Remove old versions so there is only one rescue game.
-  document.getElementById("liver-rescue-game")?.remove();
-  document.getElementById("lq-rescue-10")?.remove();
-  document.getElementById("lq-ultimate-rescue")?.remove();
+  // Remove displayed versions of the earlier rescue games.
+  [
+    "liver-rescue-game",
+    "lq-rescue-10",
+    "lq-ultimate-rescue",
+    "lq-expert-arcade"
+  ].forEach(id => document.getElementById(id)?.remove());
+
+  document.getElementById("lq-expert-css")?.remove();
 
   const style = document.createElement("style");
-  style.id = "lq-ultimate-style";
+  style.id = "lq-expert-css";
   style.textContent = `
-    #lq-ultimate-rescue {
-      margin: 32px 0;
-      padding: clamp(15px, 4vw, 30px);
-      background: linear-gradient(145deg,#fceeff,#eaf9ff,#fff7ea);
-      border: 3px solid #d5b8f1;
-      border-radius: 26px;
-      color: #47385e;
-      box-sizing: border-box;
+    #lq-expert-arcade {
+      --purple:#6844ad;
+      --mint:#35b492;
+      margin:30px 0;
+      padding:clamp(15px,3vw,28px);
+      border:3px solid #dec5f6;
+      border-radius:26px;
+      background:linear-gradient(140deg,#fbedff,#e9f9ff,#fff5eb);
+      color:#43375c;
     }
-    #lq-ultimate-rescue * { box-sizing: border-box; }
-    #lq-ultimate-rescue h2,
-    #lq-ultimate-rescue h3 { color: #603ca5; }
-    #lq-ultimate-rescue h2 { font-size: clamp(1.6rem,4vw,2.3rem); }
-    #lq-ultimate-rescue p { line-height: 1.6; }
-    .ur-top { text-align:center; }
-    .ur-label {
-      display:inline-block; background:#e8dbff; color:#603b9d;
-      border-radius:99px; padding:7px 14px; font-weight:800;
+    #lq-expert-arcade * {box-sizing:border-box}
+    #lq-expert-arcade h2,
+    #lq-expert-arcade h3 {color:#6844ad}
+    #lq-expert-arcade p {line-height:1.55}
+    .ex-top {text-align:center}
+    .ex-top h2 {font-size:clamp(1.6rem,4vw,2.3rem)}
+    .ex-tag {
+      display:inline-block;padding:7px 15px;border-radius:99px;
+      background:#e5d6ff;color:#59388d;font-weight:850;
     }
-    .ur-stats {
-      display:flex; justify-content:space-between;
-      flex-wrap:wrap; gap:10px; font-weight:850; margin:20px 0 10px;
+    .ex-stats {
+      display:flex;justify-content:space-between;gap:12px;
+      flex-wrap:wrap;font-weight:850;margin:18px 0 8px;
     }
-    .ur-track {
-      height:13px; background:#e1d2f2;
-      border-radius:99px; overflow:hidden;
-    }
-    .ur-fill {
-      height:100%; width:0%;
-      background:linear-gradient(90deg,#51bfa7,#8763db);
+    .ex-progress {height:13px;background:#e5d6f3;border-radius:99px;overflow:hidden}
+    .ex-progress div {
+      height:100%;background:linear-gradient(90deg,#48c2a7,#9069dc);
       transition:width .25s;
     }
-    .ur-board {
-      background:#fff; border:2px solid #dcc4f3;
-      border-radius:22px; padding:clamp(13px,3vw,22px);
-      margin-top:20px; min-height:270px;
+    .ex-panel {
+      background:white;border:2px solid #decaf2;border-radius:20px;
+      padding:clamp(14px,3vw,23px);margin:18px 0;
     }
-    .ur-board h3 { margin:8px 0 12px; }
-    .ur-choices {
-      display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px; margin:15px 0;
+    .ex-scene {
+      background:linear-gradient(135deg,#eefaff,#fff0f9);
+      border:2px solid #d9c4ef;border-radius:18px;
+      padding:16px;margin:14px 0;
     }
-    .ur-choice, .ur-cell, .ur-token {
-      border:2px solid #c9aff0; background:#fff;
-      color:#57398e; font:inherit; font-weight:800;
-      border-radius:15px; padding:13px;
-      cursor:pointer; min-height:54px;
+    .ex-grid {
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;margin:15px 0;
     }
-    .ur-choice:hover:not(:disabled),
-    .ur-cell:hover:not(:disabled),
-    .ur-token:hover:not(:disabled) {
-      background:#f1e9ff; transform:translateY(-1px);
+    .ex-grid.three {grid-template-columns:repeat(3,minmax(0,1fr))}
+    .ex-option {
+      width:100%;background:#fff;color:#543b85;
+      border:2px solid #cbb4ef;border-radius:14px;
+      padding:13px;font-size:1rem;font-weight:750;
+      cursor:pointer;min-height:53px;
     }
-    .ur-choice:disabled, .ur-cell:disabled,
-    .ur-token:disabled { cursor:default; }
-    .ur-selected { background:#dff7ec!important; border-color:#31a979!important; }
-    .ur-wrong { background:#ffe1e3!important; border-color:#d8727b!important; }
-    .ur-good { background:#e2f8ee!important; border-color:#39b58b!important; }
-    .ur-feedback {
-      margin:15px 0; padding:15px;
-      background:#fff1d9; border:2px solid #efd18b;
-      border-radius:16px; min-height:54px; line-height:1.6;
+    .ex-option:hover:not(:disabled) {background:#f0e9ff}
+    .ex-option.selected {background:#e4f7ef;border-color:#39b48d}
+    .ex-option.bad {background:#ffe0e2;border-color:#db7383}
+    .ex-option:disabled {cursor:default;opacity:.8}
+    .ex-feedback {
+      background:#fff2d8;border:2px solid #ebd29c;
+      border-radius:15px;padding:14px;margin:15px 0;line-height:1.6;
     }
-    .ur-feedback.success {
-      background:#e2f8ed; border-color:#71c69e;
+    .ex-feedback.good {background:#e2f8ea;border-color:#74c89a}
+    .ex-next {
+      display:block;margin:18px auto 5px;background:#7852c5;
+      border:0;border-radius:14px;padding:14px 24px;
+      color:white;font-size:1rem;font-weight:850;cursor:pointer;
     }
-    .ur-next {
-      border:0; padding:15px 24px; border-radius:14px;
-      color:#fff; background:#7550c4; font-size:1rem;
-      font-weight:850; cursor:pointer; display:block;
-      margin:20px auto 5px;
+    .ex-next:disabled {opacity:.4;cursor:not-allowed}
+    .ex-cells {
+      display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:7px;max-width:480px;margin:15px auto;
     }
-    .ur-next:disabled { opacity:.45; cursor:not-allowed; }
-    .ur-scene {
-      border-radius:18px;
-      background:linear-gradient(125deg,#eaf7ff,#fff0f8);
-      border:2px solid #d7c6ef;
-      padding:15px; margin:15px 0; text-align:center;
+    .ex-cell {
+      aspect-ratio:1;border-radius:38%;background:#f5a8cc;
+      border:3px solid #d174a6;display:grid;place-items:center;
+      color:#8046ae;font-size:clamp(16px,3vw,25px);font-weight:850;
+      min-width:0;cursor:pointer;
     }
-    .ur-big { font-size:clamp(45px,9vw,75px); margin:5px; }
-    .ur-cells {
-      display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:8px; margin:16px auto; max-width:520px;
+    .ex-cell.injured {background:#ffc181;border-color:#e18a52;color:#b63c50}
+    .ex-cell.immune {background:#a6dff9;border-color:#5c9ccd;border-radius:50%}
+    .ex-cell.scar {
+      background:repeating-linear-gradient(45deg,#f4d6a3 0 7px,#fff3cf 7px 14px);
+      border-color:#c39c61;
     }
-    .ur-cell {
-      aspect-ratio:1; min-height:0; padding:5px;
-      background:#f8b6d1; border-color:#d779a7;
-      border-radius:38%; color:#8046ab;
-      display:grid; place-items:center;
-      font-size:clamp(18px,3vw,26px);
+    .ex-cell.selected {outline:4px solid #30b78b;outline-offset:2px}
+    .ex-cell.bad {outline:4px solid #e16a70;outline-offset:2px}
+    .ex-number {font-size:2rem;font-weight:900;color:#6b49b7}
+    .ex-card {
+      border:2px solid #d4baf0;border-radius:17px;
+      padding:15px;text-align:center;background:#f9f5ff;
     }
-    .ur-cell.injured { background:#ffbd85; border-color:#df8754; color:#b43a45; }
-    .ur-cell.immune { border-radius:50%; background:#a9e1fa; border-color:#549ed2; color:#2974a5; }
-    .ur-cell.scar {
-      background:repeating-linear-gradient(45deg,#eed093 0 8px,#fff0c6 8px 16px);
-      border-color:#c8a25f;
+    .ex-card .art {font-size:clamp(32px,6vw,60px);margin-bottom:8px}
+    .ex-card strong {display:block}
+    .ex-card p {font-size:.92rem;margin-bottom:0}
+    .ex-row {display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+    .ex-chip {
+      background:#f3eaff;border:2px solid #d4b9f1;border-radius:12px;
+      padding:10px;font-weight:800;
     }
-    .ur-cell:disabled { opacity:1; }
-    .ur-tiles {
-      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px; margin:18px 0;
+    .ex-slider {width:100%;accent-color:#7552c3;cursor:pointer}
+    .ex-track {
+      height:13px;background:#ebdff5;border-radius:99px;overflow:hidden;
     }
-    .ur-tile {
-      background:#f9f4ff; border:2px solid #dac5ee;
-      border-radius:18px; padding:15px;
-      text-align:center; min-width:0;
-    }
-    .ur-emoji { font-size:clamp(30px,5vw,52px); }
-    .ur-tile strong { display:block; margin:8px 0; }
-    .ur-step {
-      background:#f0e8ff; padding:12px; border-radius:12px;
-      margin:8px 0; font-weight:800; text-align:center;
-    }
-    .ur-meter {
-      height:20px; background:#eee3f7; border-radius:99px;
-      overflow:hidden; margin:10px 0;
-    }
-    .ur-meter-fill {
-      height:100%; width:0%; background:#81c6bf; transition:width .25s;
-    }
-    .ur-slot {
-      border:2px dashed #af8ed5; background:#faf7ff;
-      border-radius:12px; padding:13px;
-      min-height:52px; text-align:center;
-      margin:8px 0; font-weight:700;
-    }
-    .ur-slider { width:100%; accent-color:#865ac6; cursor:pointer; }
-    .ur-check {
-      display:flex; align-items:center; gap:10px;
-      padding:14px; margin:9px 0; border-radius:12px;
-      border:2px solid #dcc8f0; cursor:pointer;
-      font-weight:750; background:#fff;
-    }
-    .ur-check input { width:20px; height:20px; accent-color:#7550c4; }
-    .ur-comparison {
-      display:grid; grid-template-columns:1fr 1fr;
-      gap:15px; align-items:start;
-    }
-    .ur-mini-grid {
-      display:grid; grid-template-columns:repeat(4,1fr);
-      gap:4px;
-    }
-    .ur-mini-grid .ur-cell {
-      font-size:18px;
-    }
-    .ur-small { font-size:.9rem; color:#696079; }
-    .ur-complete {
-      text-align:center; padding:24px;
-      background:white; border-radius:22px;
+    .ex-track div {height:100%;background:#61c7ab;transition:width .2s}
+    .ex-note {font-size:.9rem;color:#64576f}
+    .ex-summary {
+      text-align:center;background:white;padding:25px;
+      border-radius:22px;border:2px solid #d4baf0;
     }
     @media(max-width:650px) {
-      .ur-choices, .ur-tiles { grid-template-columns:1fr; }
-      .ur-comparison { gap:8px; }
-      .ur-mini-grid { gap:2px; }
-      .ur-mini-grid .ur-cell { font-size:13px; padding:0; }
+      .ex-grid,.ex-grid.three {grid-template-columns:1fr}
     }
   `;
-  document.getElementById("lq-ultimate-style")?.remove();
   document.head.appendChild(style);
 
-  const game = document.createElement("section");
-  game.id = "lq-ultimate-rescue";
+  const root = document.createElement("section");
+  root.id = "lq-expert-arcade";
 
-  const existing = document.querySelector(".final-layout");
-  if (existing) {
-    existing.insertAdjacentElement("afterend", game);
+  const oldLayout = document.querySelector(".final-layout");
+  const main = document.querySelector("main");
+
+  if (oldLayout) {
+    oldLayout.insertAdjacentElement("afterend", root);
+  } else if (main) {
+    main.appendChild(root);
   } else {
-    const main = document.querySelector("main");
-    if (!main) return;
-    main.appendChild(game);
+    return;
   }
+
+  const $ = s => root.querySelector(s);
+  const $$ = s => Array.from(root.querySelectorAll(s));
+
+  const titles = [
+    "Virus Detective",
+    "Cell City Emergency",
+    "Tissue Reconstruction",
+    "Immune Response Lab",
+    "Protein Pathway Puzzle",
+    "Microscope Investigation",
+    "Fibrosis Case Files",
+    "The Domino Effect",
+    "Exposure Investigation",
+    "The Final Case File"
+  ];
 
   let level = 0;
   let stars = 0;
   let mistakes = 0;
-  let solved = false;
+  let completed = false;
 
-  const titles = [
-    "Virus Detective",
-    "Cell City Repair",
-    "Build Healthy Tissue",
-    "Inflammation Control",
-    "The Cell Delivery Service",
-    "Microscope Mystery",
-    "The Tissue Time Machine",
-    "Build the Body",
-    "Outbreak Detective",
-    "The Final Science Report"
-  ];
+  function scene(html) {
+    $("#ex-scene").innerHTML = html;
+  }
 
-  function showFeedback(message, good = false) {
-    const el = game.querySelector("#ur-feedback");
-    if (!el) return;
+  function feedback(message, good=false) {
+    const el = $("#ex-feedback");
+    el.className = "ex-feedback" + (good ? " good" : "");
     el.innerHTML = message;
-    el.className = "ur-feedback" + (good ? " success" : "");
   }
 
   function wrong(message) {
-    if (solved) return;
+    if (completed) return;
     mistakes++;
-    showFeedback("⚠️ <strong>Something went wrong!</strong> " + message);
+    feedback("⚠️ <strong>Investigation setback!</strong> " + message);
   }
 
-  function win(message) {
-    if (solved) return;
-    solved = true;
+  function success(message) {
+    if (completed) return;
+    completed = true;
     stars++;
-    showFeedback("✅ <strong>Challenge complete!</strong> " + message, true);
-    const next = game.querySelector("#ur-next");
-    if (next) next.disabled = false;
-    game.querySelector("#ur-stars").textContent = "⭐ " + stars + " / 10";
+    $("#ex-stars").textContent = "⭐ " + stars + "/10";
+    $("#ex-next").disabled = false;
+    feedback("✅ <strong>Evidence accepted!</strong> " + message,true);
   }
 
-  function cellGrid(types = [], count = 15, clickable = false) {
-    return `<div class="ur-cells">
-      ${Array.from({length:count}, (_,i) => {
-        const type = types[i] || "healthy";
-        const character =
-          type === "injured" ? "✕" :
-          type === "immune" ? "+" :
-          type === "scar" ? "" : "●";
-        return `<button class="ur-cell ${type}"
-          data-cell="${i}" ${clickable ? "" : "disabled"}
-          aria-label="Cell ${i+1}, ${type}">${character}</button>`;
+  function choices(labels, handler) {
+    $("#ex-controls").innerHTML =
+      `<div class="ex-grid">${labels.map((x,i) =>
+        `<button type="button" class="ex-option" data-choice="${i}">
+          ${x}
+        </button>`).join("")}</div>`;
+
+    $$("[data-choice]").forEach(b => {
+      b.onclick = () => handler(Number(b.dataset.choice),b);
+    });
+  }
+
+  function cellMap(types, interactive=false) {
+    return `<div class="ex-cells">
+      ${types.map((type,i)=>{
+        const symbol = type==="injured"?"✕":
+          type==="immune"?"+":type==="scar"?"":"●";
+        return `<button type="button" class="ex-cell ${type}"
+          data-cell="${i}" ${interactive?"":"disabled"}
+          aria-label="Position ${i+1}, ${type}">
+          ${symbol}
+        </button>`;
       }).join("")}
     </div>`;
   }
 
-  function sceneCard(emoji, title, subtitle) {
-    return `<div class="ur-tile">
-      <div class="ur-emoji">${emoji}</div>
+  function panel(title,description,visual) {
+    return `<div class="ex-card">
+      <div class="art">${visual}</div>
       <strong>${title}</strong>
-      <span class="ur-small">${subtitle}</span>
+      <p>${description}</p>
     </div>`;
   }
 
-  function options(answers, callback) {
-    const area = game.querySelector("#ur-controls");
-    area.innerHTML = `<div class="ur-choices">
-      ${answers.map((x,i) =>
-        `<button class="ur-choice" data-answer="${i}">${x}</button>`
-      ).join("")}</div>`;
+  function render() {
+    completed = false;
 
-    area.querySelectorAll("[data-answer]").forEach(button => {
-      button.onclick = () =>
-        callback(Number(button.dataset.answer), button);
-    });
-  }
-
-  function disableAnswers() {
-    game.querySelectorAll("[data-answer]").forEach(b => b.disabled = true);
-  }
-
-  function drawLevel() {
-    solved = false;
-    const index = level;
-
-    if (level === 10) {
-      finish();
+    if (level >= 10) {
+      ending();
       return;
     }
 
-    game.innerHTML = `
-      <div class="ur-top">
-        <span class="ur-label">🎮 LIVERQUEST RESCUE ARCADE</span>
-        <h2>🛡️ The Ultimate Rescue Mission</h2>
-        <p>Investigate, experiment, repair and discover!</p>
+    root.innerHTML = `
+      <div class="ex-top">
+        <span class="ex-tag">🧬 SCIENCE INVESTIGATION ARCADE</span>
+        <h2>🛡️ LiverQuest: Expert Rescue</h2>
+        <p>Examine evidence. Test your ideas. Solve the case.</p>
       </div>
 
-      <div class="ur-stats">
-        <span>MISSION ${level+1} / 10</span>
-        <span id="ur-stars">⭐ ${stars} / 10</span>
-      </div>
-      <div class="ur-track">
-        <div class="ur-fill" style="width:${level*10}%"></div>
+      <div class="ex-stats">
+        <span>CASE ${level+1} OF 10</span>
+        <span id="ex-stars">⭐ ${stars}/10</span>
       </div>
 
-      <div class="ur-board">
-        <h3>${titles[index]}</h3>
-        <div id="ur-scene"></div>
-        <div id="ur-controls"></div>
-        <div id="ur-feedback" class="ur-feedback" role="status">
-          🎯 Complete the challenge to unlock the next mission.
+      <div class="ex-progress">
+        <div style="width:${level*10}%"></div>
+      </div>
+
+      <div class="ex-panel">
+        <h3>${titles[level]}</h3>
+        <div id="ex-scene"></div>
+        <div id="ex-controls"></div>
+        <div class="ex-feedback" id="ex-feedback" role="status">
+          🔍 Follow the evidence to complete this challenge.
         </div>
       </div>
 
-      <button id="ur-next" class="ur-next" disabled>
-        ${level===9 ? "FINISH ADVENTURE →" : "NEXT MISSION →"}
+      <button type="button" class="ex-next" id="ex-next" disabled>
+        ${level===9?"VIEW FINAL REPORT →":"NEXT CASE →"}
       </button>
-      <p class="ur-small" style="text-align:center">
-        Illustrations are simplified learning models, not medical tests.
+
+      <p class="ex-note" style="text-align:center">
+        Simplified science simulations — not clinical predictions.
       </p>
     `;
 
-    game.querySelector("#ur-next").onclick = () => {
+    $("#ex-next").onclick = () => {
       level++;
-      drawLevel();
+      render();
     };
 
     [
-      virusDetective, cityRepair, buildTissue, inflammation,
-      delivery, microscope, timeMachine, buildBody,
-      exposure, finalReport
+      caseOne,caseTwo,caseThree,caseFour,caseFive,
+      caseSix,caseSeven,caseEight,caseNine,caseTen
     ][level]();
   }
 
-  /* 1 — VIRUS DETECTIVE: FIND EVIDENCE OF INJURY */
+  /* =====================================================
+     1. VIRUS DETECTIVE — INTERPRET EVIDENCE
+     ===================================================== */
 
-  function virusDetective() {
-    game.querySelector("#ur-scene").innerHTML = `
-      <p>A tissue sample arrives in your science lab.
-      Find the <strong>three visibly injured cells</strong>
-      in this model.</p>
-      ${cellGrid(
-        Array.from({length:15},(_,i) =>
-          [2,8,12].includes(i) ? "injured" : "healthy"
-        ),15,true)}
-      <p class="ur-small">Pink = healthy-looking.
-      Orange X = injured. Purple dot = nucleus.
-      Appearance alone doesn't prove a cell is infected.</p>
-    `;
+  function caseOne() {
+    scene(`
+      <p>Three samples have arrived at your lab. Your microscope
+      shows cell appearance, but it cannot tell you everything
+      about a virus infection.</p>
 
-    const selected = new Set();
+      <div class="ex-grid three">
+        ${panel("Sample A","Pink cells with visible nuclei","🧫")}
+        ${panel("Sample B","Several injured-looking cells","🔬")}
+        ${panel("Sample C","Pink cells, but an HBV test is positive","🧪")}
+      </div>
 
-    game.querySelectorAll("[data-cell]").forEach(b => {
-      b.onclick = () => {
-        const i = Number(b.dataset.cell);
-        if ([2,8,12].includes(i)) {
-          selected.add(i);
-          b.classList.add("ur-selected");
-          b.disabled = true;
-          if (selected.size === 3) {
-            win("You identified all three injured cells!");
-          } else {
-            showFeedback(`🔬 Nice find! ${selected.size} of 3 clues discovered.`,true);
-          }
-        } else {
-          b.classList.add("ur-wrong");
-          wrong("That cell is pink and healthy-looking in our model. Try an orange cell with an X.");
-        }
-      };
-    });
+      <p><strong>Challenge:</strong> Select ALL statements
+      supported by the evidence.</p>
+    `);
 
-    game.querySelector("#ur-controls").innerHTML =
-      `<div class="ur-step">🔎 Injured cells to locate: 3</div>`;
-  }
-
-  /* 2 — CELL CITY REPAIR: RESTORE JOBS */
-
-  function cityRepair() {
-    const jobs = [
-      {name:"Power Station",emoji:"⚡",part:"Mitochondria",
-       choices:["Mitochondria","Lysosomes"]},
-      {name:"Shipping Centre",emoji:"📦",part:"Golgi apparatus",
-       choices:["Nucleus","Golgi apparatus"]},
-      {name:"Recycling Centre",emoji:"♻️",part:"Lysosomes",
-       choices:["Lysosomes","Cell membrane"]}
+    const items = [
+      "Sample B shows visible cell injury.",
+      "Sample A is definitely free of hepatitis B.",
+      "Sample C may look normal even though infection is present.",
+      "Every injured-looking cell must contain HBV."
     ];
-    let job = 0;
 
-    function render() {
-      game.querySelector("#ur-scene").innerHTML = `
-        <p>Three Cell City buildings need their workers.
-        Assign the right organelle to each building.</p>
-        <div class="ur-tiles">
-          ${jobs.map((j,i)=>sceneCard(
-            j.emoji,j.name,i<job?"✅ Working":"💤 Waiting"
-          )).join("")}
-        </div>
-        <div class="ur-step">Building ${job+1}: ${jobs[job].name}</div>
-      `;
-      options(jobs[job].choices,(i,b)=>{
-        if(jobs[job].choices[i] === jobs[job].part) {
-          job++;
-          if(job===3) {
-            game.querySelector("#ur-scene").innerHTML =
-              `<div class="ur-scene"><div class="ur-big">🏙️ ✨</div>
-              <h3>All three buildings are working!</h3></div>`;
-            disableAnswers();
-            win("Cell City has its power, shipping and recycling jobs back!");
-          } else {
-            showFeedback("✅ Building restored! Find the next worker.",true);
-            render();
-          }
-        } else {
-          b.classList.add("ur-wrong");
-          wrong("That worker has a different job. The building is still waiting.");
-        }
-      });
-    }
-    render();
-  }
+    let selected = new Set();
 
-  /* 3 — BUILD HEALTHY TISSUE */
-
-  function buildTissue() {
-    const types = ["healthy","injured","healthy",
-                   "immune","healthy","scar"];
-    const picked = new Set();
-
-    game.querySelector("#ur-scene").innerHTML = `
-      <p>Build a model of <strong>healthy-looking liver tissue</strong>.
-      Choose the three pink cells with purple nuclei.
-      Don't choose injured cells, immune cells or scar tissue.</p>
-      <div class="ur-scene">
-        ${cellGrid(types,6,true)}
+    $("#ex-controls").innerHTML = `
+      <div class="ex-grid">
+        ${items.map((t,i)=>`
+          <button class="ex-option" data-evidence="${i}">${t}</button>
+        `).join("")}
       </div>
-      <div id="ur-tissue-build" class="ur-slot">
-        Tissue model: 0 / 3 cells placed
-      </div>
+      <button class="ex-option" id="ex-submit">SUBMIT EVIDENCE</button>
     `;
 
-    game.querySelectorAll("[data-cell]").forEach(b=>{
+    $$("[data-evidence]").forEach(b=>{
       b.onclick=()=>{
-        const i=Number(b.dataset.cell);
-        if(types[i]==="healthy") {
-          picked.add(i);
-          b.classList.add("ur-selected");
-          b.disabled=true;
-          game.querySelector("#ur-tissue-build").textContent =
-            `Tissue model: ${picked.size} / 3 cells placed`;
-          if(picked.size===3) {
-            game.querySelector("#ur-tissue-build").innerHTML =
-              "🧫 🧫 🧫 — Healthy-looking tissue model completed!";
-            win("Many liver cells working together form liver tissue.");
-          } else {
-            showFeedback("✅ Cell added to your tissue model.",true);
-          }
+        const i=Number(b.dataset.evidence);
+        if(selected.has(i)){
+          selected.delete(i);
+          b.classList.remove("selected");
         } else {
-          b.classList.add("ur-wrong");
-          wrong("That isn't a healthy-looking liver cell in this model. The tissue builder rejected it.");
+          selected.add(i);
+          b.classList.add("selected");
         }
       };
     });
 
-    game.querySelector("#ur-controls").innerHTML =
-      `<p class="ur-small">Choose carefully: cell appearance provides clues, not a complete diagnosis.</p>`;
+    $("#ex-submit").onclick=()=>{
+      if(selected.size===2 && selected.has(0) && selected.has(2)){
+        success("An infected cell may look normal, and visible injury does not prove infection.");
+      } else {
+        wrong("Appearance alone cannot prove whether HBV is present. Check which claims are directly supported.");
+      }
+    };
   }
 
-  /* 4 — INFLAMMATION SIMULATION */
+  /* =====================================================
+     2. CELL CITY EMERGENCY — MULTIPLE ORGANELLES
+     ===================================================== */
 
-  function inflammation() {
-    let value=0;
+  function caseTwo() {
+    const problems=[
+      {
+        description:"A cell needs to produce and process a protein for export.",
+        answer:[1,3],
+        explanation:"Ribosomes build proteins, and the ER helps process many proteins for export."
+      },
+      {
+        description:"The cell needs usable energy and a way to recycle worn-out material.",
+        answer:[0,4],
+        explanation:"Mitochondria help provide energy, while lysosomes recycle materials."
+      }
+    ];
 
-    game.querySelector("#ur-scene").innerHTML = `
-      <p>Move the slider to explore how different
-      levels of immune activity are represented
-      in this simplified model.</p>
-      <div class="ur-scene">
-        <div id="ur-immune-picture"></div>
-        <strong id="ur-immune-caption"></strong>
+    const parts=[
+      "⚡ Mitochondria",
+      "🏗️ Ribosomes",
+      "📦 Golgi",
+      "🛣️ ER",
+      "♻️ Lysosomes"
+    ];
+
+    let stage=0;
+    let selected=new Set();
+
+    function draw(){
+      selected=new Set();
+      const p=problems[stage];
+
+      scene(`
+        <p>Two emergencies have hit Cell City.
+        Identify the <strong>TWO organelles</strong> most directly
+        needed to solve each problem.</p>
+
+        <div class="ex-scene">
+          <div style="font-size:55px;text-align:center">🏙️ 🚨</div>
+          <h3>Emergency ${stage+1} of 2</h3>
+          <p>${p.description}</p>
+        </div>
+      `);
+
+      $("#ex-controls").innerHTML=`
+        <div class="ex-grid">
+          ${parts.map((part,i)=>`
+            <button class="ex-option" data-part="${i}">${part}</button>
+          `).join("")}
+        </div>
+        <button class="ex-option" id="ex-repair">
+          ASSIGN MY TWO WORKERS
+        </button>
+      `;
+
+      $$("[data-part]").forEach(b=>{
+        b.onclick=()=>{
+          const i=Number(b.dataset.part);
+          if(selected.has(i)){
+            selected.delete(i);
+            b.classList.remove("selected");
+          } else if(selected.size<2){
+            selected.add(i);
+            b.classList.add("selected");
+          } else {
+            feedback("Choose only two organelles. Deselect one to change your answer.");
+          }
+        };
+      });
+
+      $("#ex-repair").onclick=()=>{
+        const correct=selected.size===2 &&
+          p.answer.every(i=>selected.has(i));
+
+        if(!correct){
+          wrong("The repair team can't solve both problems yet. Think about each worker's specific job.");
+          return;
+        }
+
+        if(stage===0){
+          stage++;
+          feedback("✅ Emergency 1 solved! "+p.explanation,true);
+          draw();
+        } else {
+          success("Both emergencies solved. "+p.explanation);
+        }
+      };
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     3. TISSUE RECONSTRUCTION — PROPORTIONS
+     ===================================================== */
+
+  function caseThree(){
+    let healthy=0,injured=0;
+    const total=10;
+    const targetHealthy=7;
+    const targetInjured=3;
+
+    scene(`
+      <p>Create a tissue model containing
+      <strong>70% healthy-looking cells</strong> and
+      <strong>30% injured cells</strong>.</p>
+
+      <div class="ex-scene">
+        <div id="ex-tissue-picture"></div>
+        <p id="ex-count"></p>
       </div>
-      <label for="ur-immune-range"><strong>Immune-response model</strong></label>
-      <input class="ur-slider" id="ur-immune-range"
-             type="range" min="0" max="4" value="0" step="1">
-      <p class="ur-small">
-        This slider is an illustration, not a medical measurement.
-      </p>
-    `;
 
-    const slider=game.querySelector("#ur-immune-range");
-    const picture=game.querySelector("#ur-immune-picture");
-    const caption=game.querySelector("#ur-immune-caption");
+      <p class="ex-note">
+        Each cell represents 10% of this ten-cell model.
+      </p>
+    `);
 
     function update(){
-      value=Number(slider.value);
-      const labels=[
-        "No immune activity shown",
-        "Some immune activity shown",
-        "Immune response with mild injury",
-        "Stronger inflammation and more injury",
-        "Extensive injury in this model"
+      const types=[
+        ...Array(healthy).fill("healthy"),
+        ...Array(injured).fill("injured")
       ];
-      const types=Array.from({length:15},(_,i)=>
-        i<Math.max(0,value-1)*3 ? "injured" :
-        [10,13].includes(i)&&value>0 ? "immune":"healthy"
-      );
-      picture.innerHTML=cellGrid(types,15);
-      caption.textContent=labels[value];
+      $("#ex-tissue-picture").innerHTML=cellMap(types);
+      $("#ex-count").textContent=
+        `Healthy-looking: ${healthy} | Injured: ${injured} | Total: ${healthy+injured}/10`;
     }
 
-    slider.oninput=update;
+    $("#ex-controls").innerHTML=`
+      <div class="ex-grid">
+        <button class="ex-option" id="ex-add-healthy">+ ADD PINK CELL</button>
+        <button class="ex-option" id="ex-add-injured">+ ADD INJURED CELL</button>
+        <button class="ex-option" id="ex-clear">RESET SAMPLE</button>
+        <button class="ex-option" id="ex-check">CHECK TISSUE</button>
+      </div>
+    `;
+
+    $("#ex-add-healthy").onclick=()=>{
+      if(healthy+injured<total)healthy++;
+      update();
+    };
+    $("#ex-add-injured").onclick=()=>{
+      if(healthy+injured<total)injured++;
+      update();
+    };
+    $("#ex-clear").onclick=()=>{
+      healthy=0;injured=0;update();
+    };
+    $("#ex-check").onclick=()=>{
+      if(healthy===targetHealthy && injured===targetInjured){
+        success("7 of 10 cells are healthy-looking. That is 70%, leaving 30% injured.");
+      } else {
+        wrong("The proportions don't match the target. Recalculate how many cells represent 70% of ten.");
+        $("#ex-tissue-picture").style.background="#fff0e6";
+      }
+    };
+    update();
+  }
+
+  /* =====================================================
+     4. IMMUNE RESPONSE LAB — TWO VARIABLES
+     ===================================================== */
+
+  function caseFour(){
+    scene(`
+      <p>Change <strong>two variables</strong> to reach the
+      target investigation result.</p>
+
+      <div class="ex-scene">
+        <label for="ex-infection"><strong>Infected-cell percentage:
+          <span id="ex-inf-value">40%</span></strong></label>
+        <input id="ex-infection" class="ex-slider"
+          type="range" min="0" max="100" step="10" value="40">
+
+        <label for="ex-immunity"><strong>Immune-response strength:
+          <span id="ex-imm-value">40%</span></strong></label>
+        <input id="ex-immunity" class="ex-slider"
+          type="range" min="0" max="100" step="10" value="40">
+
+        <h3>Modelled injury indicator: <span id="ex-injury">16</span></h3>
+        <div class="ex-track"><div id="ex-injury-bar"></div></div>
+        <div id="ex-immune-tissue"></div>
+      </div>
+
+      <p class="ex-note">
+        In this invented classroom model:
+        injury indicator = infected-cell percentage ×
+        immune-response strength ÷ 100.
+        These numbers are NOT medical predictions.
+      </p>
+
+      <p><strong>Target:</strong> Set infected cells to 60%
+      and produce an injury indicator of 30.
+      What immune-response strength is needed?</p>
+    `);
+
+    const inf=$("#ex-infection");
+    const imm=$("#ex-immunity");
+
+    function update(){
+      const a=Number(inf.value);
+      const b=Number(imm.value);
+      const injury=Math.round(a*b/100);
+
+      $("#ex-inf-value").textContent=a+"%";
+      $("#ex-imm-value").textContent=b+"%";
+      $("#ex-injury").textContent=injury;
+      $("#ex-injury-bar").style.width=injury+"%";
+
+      const injured=Math.round(injury/10);
+      const types=Array.from({length:10},(_,i)=>
+        i<injured?"injured":"healthy"
+      );
+      $("#ex-immune-tissue").innerHTML=cellMap(types);
+    }
+
+    inf.oninput=update;
+    imm.oninput=update;
     update();
 
-    game.querySelector("#ur-controls").innerHTML=`
-      <p><strong>Your task:</strong>
-      Make the model show several injured cells
-      and immune defenders by moving the slider.</p>
-      <button class="ur-choice" id="ur-immune-check">
-        CHECK MY SIMULATION
+    $("#ex-controls").innerHTML=`
+      <button class="ex-option" id="ex-test-model">
+        TEST MY SETTINGS
       </button>
     `;
 
-    game.querySelector("#ur-immune-check").onclick=()=>{
-      if(value>=3) {
-        win("You modelled how a stronger immune response can be linked with more tissue injury.");
+    $("#ex-test-model").onclick=()=>{
+      const a=Number(inf.value);
+      const b=Number(imm.value);
+
+      if(a===60 && b===50){
+        success("At 60% infected cells and 50% immune strength, the model's indicator is 30.");
       } else {
-        wrong("Your model shows less injury than the target scene. Move the slider farther to investigate.");
+        wrong("Your variables haven't reached the target. Hold infection at 60 and work out what multiplier produces 30.");
       }
     };
   }
 
-  /* 5 — CELL DELIVERY SERVICE */
+  /* =====================================================
+     5. PROTEIN PATHWAY PUZZLE — SEQUENCING
+     ===================================================== */
 
-  function delivery() {
-    const route=["Ribosomes","ER","Golgi apparatus","Destination"];
-    let step=0;
+  function caseFive(){
+    const steps=[
+      "Ribosomes",
+      "Rough ER",
+      "Golgi apparatus",
+      "Cell membrane"
+    ];
 
-    function render() {
-      game.querySelector("#ur-scene").innerHTML=`
-        <p>Guide a cell's <strong>newly made secreted protein</strong>
-        along a simplified delivery route.
-        Select its next stop.</p>
-        <div class="ur-scene">
-          <div class="ur-big">📦 ${step===0?"🏗️":step===1?"🛣️":step===2?"📮":"🚚"}</div>
-          <div class="ur-step">
-            ${route.slice(0,step).join(" → ") || "Start: new protein"}
-            ${step>0?" → ":""} 📦
+    const shuffled=[
+      "Golgi apparatus",
+      "Cell membrane",
+      "Ribosomes",
+      "Rough ER"
+    ];
+
+    let position=0;
+
+    function draw(){
+      scene(`
+        <p>Arrange a simplified pathway for a
+        <strong>protein that will be secreted</strong> from a cell.
+        Select the next correct station.</p>
+
+        <div class="ex-scene">
+          <div style="font-size:55px;text-align:center">📦 🚚</div>
+          <div class="ex-row">
+            ${steps.slice(0,position).map(x=>
+              `<span class="ex-chip">✅ ${x}</span>`
+            ).join("")}
+            <span class="ex-chip">📦 Next?</span>
           </div>
         </div>
-      `;
+      `);
 
-      const choices=["ER","Golgi apparatus","Destination","Ribosomes"];
-      options(choices,(i,b)=>{
-        if(choices[i]===route[step]) {
-          step++;
-          if(step===4){
-            game.querySelector("#ur-scene").innerHTML=`
-              <div class="ur-scene"><div class="ur-big">📦 ✅</div>
-              <h3>Package delivered!</h3>
-              <p>Ribosomes → ER → Golgi apparatus → Destination</p></div>`;
-            disableAnswers();
-            win("You followed a simplified route used by many proteins that leave cells.");
-          } else {
-            showFeedback("✅ Package reached the next station!",true);
-            render();
-          }
+      choices(shuffled,(i,b)=>{
+        const chosen=shuffled[i];
+
+        if(chosen!==steps[position]){
+          b.classList.add("bad");
+          wrong("The protein was sent to the wrong station! Review the jobs of the ER, Golgi and cell membrane.");
+          return;
+        }
+
+        position++;
+        if(position===4){
+          disableCurrent();
+          scene(`
+            <div class="ex-scene" style="text-align:center">
+              <div style="font-size:65px">📦 ✅</div>
+              <h3>Delivery complete!</h3>
+              <p>Ribosomes → Rough ER → Golgi → Cell membrane</p>
+            </div>
+          `);
+          success("You constructed a common route for proteins destined to leave the cell.");
         } else {
-          b.classList.add("ur-wrong");
-          game.querySelector(".ur-big").textContent="📦 ↩️";
-          wrong("Wrong delivery station! The package is sent back. Check the route and try again.");
+          feedback("✅ Correct station. Now choose the next one.",true);
+          draw();
         }
       });
     }
-    render();
-  }
 
-  /* 6 — MICROSCOPE SPOT-THE-DIFFERENCE */
-
-  function microscope() {
-    const changes=[2,7,10];
-    const found=new Set();
-
-    const left=Array(16).fill("healthy");
-    const right=left.slice();
-    right[2]="injured";
-    right[7]="immune";
-    right[10]="scar";
-
-    function grid(types,clickable){
-      return `<div class="ur-mini-grid">
-        ${types.map((t,i)=>
-          `<button class="ur-cell ${t}" data-spot="${i}"
-           ${clickable?"":"disabled"} aria-label="Tissue position ${i+1}">
-           ${t==="healthy"?"●":t==="injured"?"✕":t==="immune"?"+":""}
-          </button>`).join("")}
-        </div>`;
+    function disableCurrent(){
+      $$("[data-choice]").forEach(b=>b.disabled=true);
     }
 
-    game.querySelector("#ur-scene").innerHTML=`
-      <p>Compare two illustrated tissue samples.
-      Find <strong>three changed positions</strong>
-      in Sample B by clicking them.</p>
-      <div class="ur-comparison">
-        <div class="ur-tile">
-          <strong>Sample A</strong>
-          ${grid(left,false)}
+    draw();
+  }
+
+  /* =====================================================
+     6. MICROSCOPE INVESTIGATION — SPOT & INTERPRET
+     ===================================================== */
+
+  function caseSix(){
+    const a=Array(15).fill("healthy");
+    const b=a.slice();
+    b[1]="injured";
+    b[7]="immune";
+    b[13]="scar";
+
+    let found=new Set();
+
+    scene(`
+      <p>Compare Samples A and B. Find three changed
+      positions by clicking the changed cells in Sample B.</p>
+
+      <div class="ex-grid">
+        <div class="ex-scene">
+          <strong>SAMPLE A</strong>
+          ${cellMap(a)}
         </div>
-        <div class="ur-tile">
-          <strong>Sample B</strong>
-          ${grid(right,true)}
+        <div class="ex-scene">
+          <strong>SAMPLE B</strong>
+          ${cellMap(b,true)}
         </div>
       </div>
-      <div id="ur-found" class="ur-step">Differences found: 0 / 3</div>
+
+      <p id="ex-found">Changes found: 0/3</p>
+      <p class="ex-note">
+        Purple dot = nucleus; orange X = injured;
+        blue + = immune defender; striped = scar tissue.
+      </p>
+    `);
+
+    $("#ex-controls").innerHTML=`
+      <div id="ex-conclusion" style="display:none">
+        <h3>What can you conclude from the image alone?</h3>
+        <div class="ex-grid">
+          <button class="ex-option" data-infer="0">
+            Sample B definitely contains hepatitis B.
+          </button>
+          <button class="ex-option" data-infer="1">
+            Sample B shows modelled injury and immune activity,
+            but appearance doesn't prove the cause.
+          </button>
+        </div>
+      </div>
     `;
 
-    game.querySelectorAll(".ur-tile:last-child [data-spot]").forEach(b=>{
-      b.onclick=()=>{
-        const i=Number(b.dataset.spot);
-        if(changes.includes(i)){
+    $$(".ex-scene:last-child [data-cell]").forEach(btn=>{
+      btn.onclick=()=>{
+        const i=Number(btn.dataset.cell);
+
+        if([1,7,13].includes(i)){
           found.add(i);
-          b.classList.add("ur-selected");
-          b.disabled=true;
-          game.querySelector("#ur-found").textContent=
-            `Differences found: ${found.size} / 3`;
-          if(found.size===3) {
-            win("You spotted an injured cell, an immune cell and an area representing scar tissue!");
-          } else {
-            showFeedback("🔎 Difference found! Keep looking.",true);
+          btn.classList.add("selected");
+          btn.disabled=true;
+
+          $("#ex-found").textContent=`Changes found: ${found.size}/3`;
+
+          if(found.size===3){
+            $("#ex-conclusion").style.display="block";
+            feedback("🔬 All three changes found. Now interpret the evidence.",true);
           }
         } else {
-          b.classList.add("ur-wrong");
-          wrong("That position looks the same in both samples. Look for a different colour or pattern.");
+          btn.classList.add("bad");
+          wrong("That position is the same in both samples. Compare the colours and patterns again.");
         }
       };
     });
 
-    game.querySelector("#ur-controls").innerHTML=
-      `<p class="ur-small">Pink with purple dot = healthy-looking cell;
-      orange X = injured; blue + = immune cell; striped = scarring.</p>`;
-  }
-
-  /* 7 — TISSUE TIME MACHINE */
-
-  function timeMachine() {
-    let value=0;
-    const captions=[
-      "Healthy-looking tissue",
-      "Inflammation and some injury",
-      "Repeated injury with possible fibrosis",
-      "More extensive scarring in this model"
-    ];
-
-    game.querySelector("#ur-scene").innerHTML=`
-      <p>Travel through a simplified model showing
-      <strong>possible</strong> effects of continuing liver injury.</p>
-      <input id="ur-time" class="ur-slider"
-             type="range" min="0" max="3" value="0">
-      <div class="ur-scene">
-        <strong id="ur-time-caption"></strong>
-        <div id="ur-time-picture"></div>
-        <div class="ur-meter">
-          <div class="ur-meter-fill" id="ur-time-meter"></div>
-        </div>
-        <p id="ur-time-function" class="ur-small"></p>
-      </div>
-    `;
-
-    function update(){
-      value=Number(game.querySelector("#ur-time").value);
-      const types=Array.from({length:15},(_,i)=>{
-        if(value>=2 && i%5===0) return "scar";
-        if(value>=3 && i%3===0) return "injured";
-        if(value>=1 && [3,8].includes(i)) return "injured";
-        return "healthy";
-      });
-      game.querySelector("#ur-time-picture").innerHTML=cellGrid(types);
-      game.querySelector("#ur-time-caption").textContent=captions[value];
-      game.querySelector("#ur-time-meter").style.width=`${value*30}%`;
-      game.querySelector("#ur-time-function").textContent=
-        value===0?"Many healthy liver cells are shown.":
-        value===1?"Immune-related injury may occur.":
-        value===2?"Scar tissue cannot do all the jobs of healthy liver cells.":
-        "Extensive scarring may make normal liver function harder.";
-    }
-
-    game.querySelector("#ur-time").oninput=update;
-    update();
-
-    game.querySelector("#ur-controls").innerHTML=`
-      <p><strong>Your mission:</strong> Find the stage where
-      scar tissue first appears in this model.</p>
-      <button class="ur-choice" id="ur-time-check">LOCK IN STAGE</button>
-    `;
-
-    game.querySelector("#ur-time-check").onclick=()=>{
-      if(value===2) {
-        win("You found the first illustrated fibrosis stage! Real liver disease does not always follow this path.");
-      } else {
-        wrong("That's not the first scarring stage shown here. Watch for the striped areas.");
-      }
-    };
-  }
-
-  /* 8 — BUILD THE BODY */
-
-  function buildBody() {
-    const order=[
-      ["Cell","🧫"],["Tissue","🧩"],
-      ["Organ (liver)","🫀"],["Organ system","🧍"]
-    ];
-    let step=0;
-
-    function render(){
-      game.querySelector("#ur-scene").innerHTML=`
-        <p>Build the body from <strong>smallest to largest</strong>.
-        Choose what comes next!</p>
-        <div class="ur-slot">
-          ${order.slice(0,step).map(x=>x[1]+" "+x[0]).join(" → ") ||
-          "Choose the smallest level to begin."}
-        </div>
-        <div class="ur-scene">
-          <div class="ur-big">
-            ${step===0?"🧫":step===1?"🧩":step===2?"🫀":"🧍"}
-          </div>
-        </div>
-      `;
-
-      options(["Organ system","Tissue","Cell","Organ (liver)"],(i,b)=>{
-        const answer=["Organ system","Tissue","Cell","Organ (liver)"][i];
-        if(answer===order[step][0]){
-          step++;
-          if(step===4){
-            game.querySelector("#ur-scene").innerHTML=`
-              <div class="ur-scene">
-                <div class="ur-big">🧫 → 🧩 → 🫀 → 🧍</div>
-                <h3>Body organization complete!</h3>
-              </div>`;
-            disableAnswers();
-            win("Cells form tissues, tissues build organs, and organs work within organ systems.");
-          } else {
-            showFeedback("✅ Great! Add the next level.",true);
-            render();
-          }
+    $$("[data-infer]").forEach(btn=>{
+      btn.onclick=()=>{
+        if(Number(btn.dataset.infer)===1){
+          success("Excellent reasoning! Tissue appearance can show changes without identifying their exact cause.");
         } else {
-          b.classList.add("ur-wrong");
-          wrong("That level doesn't fit yet. Build from smaller structures to larger ones.");
+          btn.classList.add("bad");
+          wrong("Microscope appearance alone cannot prove hepatitis B. A specific laboratory test would be needed.");
         }
-      });
-    }
-    render();
+      };
+    });
   }
 
-  /* 9 — BLOOD EXPOSURE DETECTIVE */
+  /* =====================================================
+     7. FIBROSIS CASE FILES — COMPARE EVIDENCE
+     ===================================================== */
 
-  function exposure() {
-    game.querySelector("#ur-scene").innerHTML=`
-      <p>Review three illustrated situations.
-      Identify the one that could involve
-      <strong>infected blood entering someone's body</strong>.</p>
-      <div class="ur-tiles">
-        ${sceneCard("🤗","Friendly greeting","Two classmates hug.")}
-        ${sceneCard("🩹","First aid mix-up","Blood from another person reaches an open cut.")}
-        ${sceneCard("📚","Study time","Two classmates share a desk.")}
+  function caseSeven(){
+    scene(`
+      <p>Three fictional patients have different histories.
+      Which has the <strong>greatest concern for scarring</strong>
+      based on the information given?</p>
+
+      <div class="ex-grid three">
+        ${panel("Patient A",
+          "A short-lived liver inflammation episode followed by recovery.",
+          "📅")}
+        ${panel("Patient B",
+          "Ongoing liver inflammation and repeated injury for several years.",
+          "📆")}
+        ${panel("Patient C",
+          "No identified ongoing liver inflammation in this case.",
+          "🗓️")}
       </div>
-    `;
 
-    options([
-      "🤗 Friendly greeting",
-      "🩹 First aid mix-up",
-      "📚 Study time"
-    ],(i,b)=>{
-      if(i===1) {
-        disableAnswers();
-        b.classList.add("ur-good");
-        win("Exposure to infected blood can spread hepatitis B. Casual contact such as hugging or desk sharing does not.");
+      <p class="ex-note">
+        This is a simplified comparison of risk factors,
+        not a diagnosis of any patient.
+      </p>
+    `);
+
+    choices(["Patient A","Patient B","Patient C"],(i,b)=>{
+      if(i===1){
+        success("Repeated injury over time can raise concern for fibrosis, but testing is needed to assess actual scarring.");
       } else {
-        b.classList.add("ur-wrong");
-        wrong("That is casual contact. Look for a situation involving blood entering another person's body.");
+        b.classList.add("bad");
+        wrong("Think about how repeated injury, rather than a single short event, may affect tissue over time.");
       }
     });
   }
 
-  /* 10 — BUILD THE FINAL SCIENCE REPORT */
+  /* =====================================================
+     8. DOMINO EFFECT — CAUSE-AND-EFFECT CHAIN
+     ===================================================== */
 
-  function finalReport() {
-    const cases=[
-      {
-        title:"CELL EVIDENCE",
-        options:[
-          "The virus can use liver-cell machinery.",
-          "The virus turns cells into bones."
-        ],
-        correct:0,
-        icon:"🧫"
-      },
-      {
-        title:"TISSUE EVIDENCE",
-        options:[
-          "Infected cells always look orange.",
-          "The immune response may injure liver tissue."
-        ],
-        correct:1,
-        icon:"🔬"
-      },
-      {
-        title:"PROTECTION EVIDENCE",
-        options:[
-          "Vaccination helps prevent hepatitis B.",
-          "Staying away from classmates prevents hepatitis B."
-        ],
-        correct:0,
-        icon:"🛡️"
-      }
+  function caseEight(){
+    const correct=[
+      "Injury to some liver cells",
+      "Changes in liver tissue",
+      "Reduced ability to perform some liver jobs",
+      "Possible effects on digestion and other body processes"
     ];
 
-    let evidence=0;
+    const shuffled=[
+      correct[2],correct[0],correct[3],correct[1]
+    ];
 
-    function render() {
-      game.querySelector("#ur-scene").innerHTML=`
-        <p>Your science team needs <strong>three correct evidence cards</strong>
-        for its final report. Pick the statement supported by your journey.</p>
-        <div class="ur-scene">
-          <div class="ur-big">📋 ${cases[evidence].icon}</div>
-          <h3>${cases[evidence].title}</h3>
-          <div class="ur-step">Evidence collected: ${evidence} / 3</div>
+    let position=0;
+
+    function draw(){
+      scene(`
+        <p>Build a scientifically reasonable chain from
+        the <strong>cell level</strong> to the
+        <strong>body-system level</strong>.</p>
+
+        <div class="ex-scene">
+          ${correct.slice(0,position).map(x=>
+            `<div class="ex-chip" style="margin:7px">✅ ${x}</div>`
+          ).join("")}
+          <div class="ex-chip" style="margin:7px">❓ What happens next?</div>
         </div>
-      `;
+      `);
 
-      options(cases[evidence].options,(i,b)=>{
-        if(i===cases[evidence].correct) {
-          evidence++;
-          if(evidence===3) {
-            game.querySelector("#ur-scene").innerHTML=`
-              <div class="ur-scene">
-                <div class="ur-big">📋 ✅ 🏆</div>
-                <h3>Science report approved!</h3>
-                <p>Cell effects ✅ Tissue effects ✅ Protection ✅</p>
-              </div>`;
-            disableAnswers();
-            win("You connected what happens inside liver cells to tissue injury and ways to prevent hepatitis B.");
+      choices(shuffled,(i,b)=>{
+        if(shuffled[i]===correct[position]){
+          position++;
+          if(position===4){
+            scene(`
+              <div class="ex-scene" style="text-align:center">
+                <div style="font-size:55px">🧫 → 🧩 → 🫀 → 🧍</div>
+                <h3>Cause-and-effect chain complete!</h3>
+                <p>Cell → Tissue → Organ → Body systems</p>
+              </div>
+            `);
+            success("You connected cell injury to possible changes in tissue, organ function and body processes.");
           } else {
-            showFeedback("✅ Evidence added to the report!",true);
-            render();
+            feedback("✅ Good connection. What follows?",true);
+            draw();
           }
         } else {
-          b.classList.add("ur-wrong");
-          wrong("That statement is not supported by the science. The report needs better evidence.");
+          b.classList.add("bad");
+          wrong("That effect is at the wrong level of organization. Start small and follow the consequences outward.");
         }
       });
     }
-    render();
+
+    draw();
   }
 
-  /* COMPLETION SCREEN */
+  /* =====================================================
+     9. EXPOSURE INVESTIGATION — SAFETY DECISIONS
+     ===================================================== */
 
-  function finish() {
-    game.innerHTML=`
-      <div class="ur-complete">
-        <div class="ur-big">🏆 🧬 🛡️</div>
-        <h2>Ultimate Science Defender!</h2>
-        <p>You completed <strong>all 10 mini-games!</strong></p>
+  function caseNine(){
+    let step=0;
 
-        <div class="ur-scene">
-          <h3>⭐ ${stars} / 10 Stars Earned</h3>
-          <p>Challenges completed: 10 / 10</p>
+    const scenarios=[
+      {
+        story:"During a school activity, one student gets a cut and some blood reaches another student's open wound.",
+        choices:[
+          "Tell a responsible adult immediately and follow first-aid procedures.",
+          "Ignore the contact because both students feel fine.",
+          "Assume hepatitis B was definitely transmitted."
+        ],
+        correct:0,
+        why:"Blood exposure deserves prompt adult attention and proper first aid. It does not mean infection definitely occurred."
+      },
+      {
+        story:"Later, classmates worry about sitting beside the injured student.",
+        choices:[
+          "Avoid sharing a classroom with the student.",
+          "Explain that ordinary classroom contact does not spread hepatitis B.",
+          "Tell everyone the student has hepatitis B."
+        ],
+        correct:1,
+        why:"Casual contact is not a hepatitis B transmission route. Students should be treated respectfully."
+      }
+    ];
+
+    function draw(){
+      scene(`
+        <p>Investigate a realistic school situation.
+        Decide what the science team should recommend.</p>
+
+        <div class="ex-scene">
+          <div style="font-size:58px;text-align:center">
+            ${step===0?"🩹 🩸":"🏫 🤝"}
+          </div>
+          <h3>Investigation ${step+1} of 2</h3>
+          <p>${scenarios[step].story}</p>
+        </div>
+      `);
+
+      choices(scenarios[step].choices,(i,b)=>{
+        if(i!==scenarios[step].correct){
+          b.classList.add("bad");
+          wrong(step===0
+            ? "Ignoring blood contact can delay needed first aid, while assuming infection occurred goes beyond the evidence."
+            : "That could cause unnecessary fear or stigma. Think about how hepatitis B actually spreads.");
+          return;
+        }
+
+        if(step===0){
+          step++;
+          feedback("✅ Good safety decision. Now consider how classmates should respond.",true);
+          draw();
+        } else {
+          success("You handled the exposure concern and avoided spreading misinformation. "+scenarios[step].why);
+        }
+      });
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     10. FINAL CASE FILE — THREE-PART CONCLUSION
+     ===================================================== */
+
+  function caseTen(){
+    const sections=[
+      {
+        title:"CELL LEVEL",
+        evidence:"A laboratory test confirms HBV is present in some liver cells.",
+        choices:[
+          "The virus can use cell machinery to make viral components.",
+          "All the organelles must have stopped working completely.",
+          "The virus changes the liver cells into immune cells."
+        ],
+        correct:0,
+        why:"HBV uses cellular machinery, but infected cells may still perform many normal functions."
+      },
+      {
+        title:"TISSUE LEVEL",
+        evidence:"The model shows injured-looking cells and immune defenders.",
+        choices:[
+          "The image proves the patient already has cirrhosis.",
+          "An immune response may be contributing to cell injury.",
+          "Every healthy-looking cell must be free of infection."
+        ],
+        correct:1,
+        why:"Immune responses can contribute to liver-cell injury, but image appearance alone has limits."
+      },
+      {
+        title:"ORGAN LEVEL",
+        evidence:"The fictional case describes long-lasting injury and increasing scar tissue.",
+        choices:[
+          "Scarring improves every liver function.",
+          "The liver is no longer part of any body system.",
+          "Extensive scarring could interfere with normal liver function."
+        ],
+        correct:2,
+        why:"Scar tissue cannot perform all the same jobs as healthy liver tissue."
+      }
+    ];
+
+    let stage=0;
+
+    function draw(){
+      const item=sections[stage];
+
+      scene(`
+        <p><strong>Final investigation:</strong> Review the evidence
+        and select the most scientifically supported conclusion
+        at each level of organization.</p>
+
+        <div class="ex-scene">
+          <div style="font-size:55px;text-align:center">
+            ${stage===0?"🧬":stage===1?"🔬":"🫀"}
+          </div>
+          <h3>Report ${stage+1}/3 — ${item.title}</h3>
+          <p><strong>Evidence:</strong> ${item.evidence}</p>
+        </div>
+      `);
+
+      choices(item.choices,(i,b)=>{
+        if(i!==item.correct){
+          b.classList.add("bad");
+          wrong("Your conclusion makes a claim the evidence doesn't support. Choose the most careful scientific interpretation.");
+          return;
+        }
+
+        if(stage<2){
+          stage++;
+          feedback("✅ Conclusion accepted! "+item.why,true);
+          draw();
+        } else {
+          scene(`
+            <div class="ex-scene" style="text-align:center">
+              <div style="font-size:65px">🧬 🔬 🫀 🏆</div>
+              <h3>Final Science Report Approved!</h3>
+              <p>You connected HBV infection, tissue injury
+              and possible changes in liver function.</p>
+            </div>
+          `);
+          success("All three evidence-based conclusions are complete!");
+        }
+      });
+    }
+
+    draw();
+  }
+
+  /* =====================================================
+     FINAL RESULTS
+     ===================================================== */
+
+  function ending(){
+    root.innerHTML=`
+      <div class="ex-summary">
+        <div style="font-size:75px">🏆 🧬 🛡️</div>
+        <h2>Expert Science Defender!</h2>
+        <p>You completed all 10 investigations.</p>
+
+        <div class="ex-scene">
+          <div class="ex-number">⭐ ${stars}/10</div>
+          <p>Expert challenges solved</p>
           <p>Learning setbacks: ${mistakes}</p>
         </div>
 
-        <h3>What Have You Discovered?</h3>
-        <p>
-          🧫 Liver cells contain organelles that work together.
-        </p>
-        <p>
-          🔬 Hepatitis B and the immune response can affect liver tissue.
-        </p>
-        <p>
-          🫀 Healthy liver tissue helps the organ do important jobs.
-        </p>
-        <p>
-          🛡️ Vaccination helps prevent hepatitis B.
-        </p>
+        <h3>Your Final Discoveries</h3>
+        <p>🧫 HBV uses liver-cell machinery.</p>
+        <p>🔬 Immune responses can injure liver tissue.</p>
+        <p>🫀 Ongoing tissue injury may affect liver function.</p>
+        <p>🛡️ Prevention, testing and medical care matter.</p>
 
-        <button class="ur-next" id="ur-replay">
-          🔄 PLAY THE RESCUE ARCADE AGAIN
+        <button class="ex-next" id="ex-replay">
+          PLAY AGAIN ↺
         </button>
       </div>
     `;
 
-    game.querySelector("#ur-replay").onclick=()=>{
+    $("#ex-replay").onclick=()=>{
       level=0;
       stars=0;
       mistakes=0;
-      drawLevel();
+      render();
     };
   }
 
-  drawLevel();
+  render();
 })();
