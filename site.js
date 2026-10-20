@@ -5608,3 +5608,129 @@ if (location.pathname.endsWith("cells.html")) {
   function finish(){root.innerHTML=`<div class="fr-certificate"><div style="font-size:75px">🏆🫀✨</div><span class="fr-tag">LIVERQUEST COMPLETED</span><h2>SCIENCE DEFENDER</h2><p>You rescued Liver City by applying what you learned!</p><h3>⭐ ${stars}/10 missions finished</h3><p>Tries that taught you something: ${errors}</p><p>🧫 Cells → 🧩 Tissues → 🫀 Liver → 🧍 Body</p><button class="fr-main" id="fr-again">PLAY AGAIN ↺</button> <a class="fr-main" href="index.html" style="display:inline-block;text-decoration:none;margin-top:10px">MISSION MAP →</a></div>`;$('#fr-again').onclick=()=>{stage=0;stars=0;errors=0;render();};try{if(typeof saveMission==='function')saveMission('finale');}catch(e){}}
   render();
 })();
+
+/* =====================================================
+   CELL CITY — MOVE COMPLETE MISSION TO THE VERY BOTTOM
+   Paste at the END of site.js
+   ===================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "cells.html") return;
+
+  const completeButton = document.getElementById("cell-next");
+
+  if (!completeButton) return;
+
+  // Find the main page content.
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  // Remove a previous mission footer if this code was added twice.
+  document.getElementById("cell-city-mission-footer")?.remove();
+
+  // Create the new ending section.
+  const footer = document.createElement("section");
+  footer.id = "cell-city-mission-footer";
+
+  footer.innerHTML = `
+    <div class="cell-city-ending-icon">🏆 🧫 ✨</div>
+
+    <h2>Cell City Mission Complete!</h2>
+
+    <p>
+      You've explored the structures inside a liver cell
+      and learned how its different parts work together.
+    </p>
+
+    <p class="cell-city-ending-status" id="cell-city-ending-status">
+      Finish the required activity to unlock the next mission.
+    </p>
+
+    <div id="cell-city-button-home"></div>
+  `;
+
+  // Put the ending after all other Cell City content.
+  main.appendChild(footer);
+
+  // MOVE the original button, preserving its existing click handler.
+  document.getElementById("cell-city-button-home")
+    .appendChild(completeButton);
+
+  // Ensure it can be seen clearly.
+  completeButton.style.display = "inline-block";
+  completeButton.style.margin = "12px auto 0";
+
+  // Add styles.
+  document.getElementById("cell-city-ending-style")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "cell-city-ending-style";
+
+  style.textContent = `
+    #cell-city-mission-footer {
+      margin:32px 0 10px;
+      padding:30px 20px;
+      border:3px solid #d7b8ee;
+      border-radius:26px;
+      background:linear-gradient(135deg,#f8edff,#e7fbf3);
+      text-align:center;
+      color:#514167;
+    }
+
+    #cell-city-mission-footer h2 {
+      color:#6c43ac;
+      margin:12px 0;
+      font-size:clamp(1.5rem,4vw,2rem);
+    }
+
+    .cell-city-ending-icon {
+      font-size:52px;
+    }
+
+    #cell-city-mission-footer p {
+      max-width:620px;
+      margin:12px auto;
+      line-height:1.6;
+    }
+
+    .cell-city-ending-status {
+      color:#73518f;
+      font-weight:700;
+    }
+
+    #cell-city-mission-footer #cell-next {
+      padding:17px 28px;
+      font-size:1.05rem;
+      border-radius:15px;
+    }
+
+    #cell-city-mission-footer #cell-next:disabled {
+      opacity:.5;
+      cursor:not-allowed;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  // Update the text when the button unlocks.
+  const status = document.getElementById("cell-city-ending-status");
+
+  function updateStatus() {
+    if (completeButton.disabled) {
+      status.textContent =
+        "🔒 Finish the required activity to unlock Mission 2.";
+    } else {
+      status.textContent =
+        "✅ You're ready! Continue to Virus Invasion.";
+    }
+  }
+
+  const observer = new MutationObserver(updateStatus);
+  observer.observe(completeButton, {
+    attributes:true,
+    attributeFilter:["disabled"]
+  });
+
+  updateStatus();
+})();
