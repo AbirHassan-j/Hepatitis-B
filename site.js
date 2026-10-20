@@ -8442,3 +8442,936 @@ if (location.pathname.endsWith("cells.html")) {
     }
   });
 })();
+/* ============================================================
+   LIVERQUEST — THE SHRINKING SCIENTIST
+   Mission 3 replacement activity for Tissue Detective
+
+   Replaces: Spot the Tissue Clue / LiverQuest Newsroom
+   Page: microscope.html
+
+   PASTE AT THE VERY BOTTOM OF site.js
+   ============================================================ */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "microscope.html") return;
+
+  // Try to find the section to replace.
+  let target =
+    document.getElementById("lq-newsroom") ||
+    document.getElementById("lq-tissue-game");
+
+  if (!target) {
+    const heading = [...document.querySelectorAll("h2,h3")]
+      .find(h =>
+        /spot the tissue clue|liverquest newsroom/i.test(h.textContent)
+      );
+    if (heading) {
+      target = heading.closest("section, .panel, .lq-card, .challenge, article");
+    }
+  }
+
+  if (!target) return;
+
+  document.getElementById("lq-shrinking-scientist-style")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "lq-shrinking-scientist-style";
+  style.textContent = `
+    #lq-shrinking-scientist{
+      --ss-purple:#6d44b2;
+      --ss-purple-dark:#52328b;
+      --ss-pink:#f5b3d4;
+      --ss-pink-dark:#d57eaa;
+      --ss-mint:#49ba98;
+      --ss-blue:#9edcf7;
+      --ss-gold:#f3c56a;
+      --ss-bg:#f8efff;
+      --ss-ink:#473b5b;
+      margin:24px 0;
+      padding:clamp(14px,3vw,24px);
+      border:3px solid #d8c0f0;
+      border-radius:26px;
+      background:linear-gradient(145deg,#f7eeff,#eefaff);
+      color:var(--ss-ink);
+    }
+
+    #lq-shrinking-scientist *{
+      box-sizing:border-box;
+    }
+
+    .ss-top{
+      text-align:center;
+      margin-bottom:18px;
+    }
+
+    .ss-tag{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#e9dcff;
+      color:#5f3d9c;
+      font-weight:900;
+      font-size:.86rem;
+    }
+
+    .ss-top h2{
+      color:var(--ss-purple);
+      font-size:clamp(1.65rem,4vw,2.3rem);
+      margin:10px 0 8px;
+    }
+
+    .ss-top p{
+      max-width:760px;
+      margin:8px auto;
+      line-height:1.55;
+      font-size:1.02rem;
+    }
+
+    .ss-layout{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .ss-panel{
+      background:white;
+      border:2px solid #e0cef3;
+      border-radius:22px;
+      padding:16px;
+    }
+
+    .ss-panel h3{
+      margin:0 0 10px;
+      color:var(--ss-purple);
+      font-size:1.18rem;
+    }
+
+    .ss-statusbar{
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:12px;
+      font-weight:850;
+      color:#6340a3;
+      font-size:.95rem;
+    }
+
+    .ss-track{
+      display:flex;
+      gap:6px;
+      margin-bottom:14px;
+    }
+
+    .ss-track span{
+      height:10px;
+      flex:1;
+      border-radius:999px;
+      background:#e6d8f4;
+    }
+
+    .ss-track span.done{
+      background:#49ba98;
+    }
+
+    .ss-grid-wrap{
+      background:linear-gradient(145deg,#fff7fb,#f8efff);
+      border:2px solid #e3d3f3;
+      border-radius:20px;
+      padding:14px;
+    }
+
+    .ss-grid{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:8px;
+      max-width:500px;
+      margin:0 auto;
+      aspect-ratio:1/1;
+    }
+
+    .ss-tile{
+      border-radius:18px;
+      min-height:56px;
+      display:grid;
+      place-items:center;
+      position:relative;
+      font-size:1.25rem;
+      font-weight:900;
+      user-select:none;
+    }
+
+    .ss-wall{
+      background:linear-gradient(145deg,#f6b0d1,#ee9ec6);
+      border:3px solid var(--ss-pink-dark);
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.3);
+    }
+
+    .ss-wall::before{
+      content:"";
+      width:58%;
+      height:58%;
+      border-radius:50%;
+      background:#9862bf;
+      opacity:.85;
+    }
+
+    .ss-path{
+      background:#f9f4ff;
+      border:2px dashed #ceb6ea;
+    }
+
+    .ss-player{
+      background:#e9fbf4;
+      border:3px solid #71c7a7;
+    }
+
+    .ss-player::after{
+      content:"🧑‍🔬";
+      font-size:1.6rem;
+    }
+
+    .ss-station{
+      background:#fff7db;
+      border:3px solid #e3bf68;
+      cursor:pointer;
+    }
+
+    .ss-station::after{
+      content:"🔎";
+      font-size:1.35rem;
+    }
+
+    .ss-station.done{
+      background:#e4faef;
+      border-color:#6cc3a1;
+    }
+
+    .ss-station.done::after{
+      content:"✅";
+      font-size:1.2rem;
+    }
+
+    .ss-exit{
+      background:#e7e4ff;
+      border:3px solid #9d89d8;
+    }
+
+    .ss-exit::after{
+      content:"🚪";
+      font-size:1.35rem;
+    }
+
+    .ss-exit.ready{
+      background:#def9eb;
+      border-color:#57bc96;
+      animation:ss-pulse 1.7s infinite;
+    }
+
+    .ss-controls{
+      display:grid;
+      grid-template-columns:repeat(3,64px);
+      gap:8px;
+      justify-content:center;
+      margin:14px auto 8px;
+    }
+
+    .ss-btn{
+      border:0;
+      border-radius:14px;
+      padding:12px;
+      background:#7650c4;
+      color:white;
+      font:inherit;
+      font-size:1.15rem;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 4px 0 #603aa8;
+    }
+
+    .ss-btn:active{
+      transform:translateY(2px);
+      box-shadow:0 2px 0 #603aa8;
+    }
+
+    .ss-btn.blank{
+      visibility:hidden;
+    }
+
+    .ss-direction-note{
+      text-align:center;
+      font-size:.92rem;
+      color:#66597c;
+      margin-top:6px;
+    }
+
+    .ss-journal{
+      min-height:165px;
+      background:linear-gradient(145deg,#fff8ea,#fffef8);
+      border:2px dashed #d5bc84;
+      border-radius:18px;
+      padding:14px;
+      line-height:1.55;
+      margin-bottom:14px;
+    }
+
+    .ss-journal strong{
+      color:#7a5b1c;
+    }
+
+    .ss-badges{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .ss-badge{
+      background:#f8f3ff;
+      border:2px solid #dac7f1;
+      border-radius:16px;
+      padding:12px;
+      min-height:84px;
+      text-align:center;
+      font-size:.92rem;
+    }
+
+    .ss-badge span{
+      display:block;
+      font-size:1.8rem;
+      margin-bottom:6px;
+    }
+
+    .ss-badge.locked{
+      opacity:.55;
+    }
+
+    .ss-badge.unlocked{
+      background:#e4faee;
+      border-color:#83cfad;
+    }
+
+    .ss-mini-card{
+      background:#f4efff;
+      border:2px solid #ddd0f2;
+      border-radius:16px;
+      padding:12px;
+      margin-top:12px;
+    }
+
+    .ss-mini-visual{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .ss-cell{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:#f5b0d0;
+      border:3px solid #d57faa;
+      position:relative;
+    }
+
+    .ss-cell::after{
+      content:"";
+      position:absolute;
+      inset:11px;
+      border-radius:50%;
+      background:#9460bc;
+    }
+
+    .ss-window{
+      width:90px;
+      height:64px;
+      border:3px solid #6a45ab;
+      border-radius:10px;
+      background:
+        linear-gradient(90deg,transparent 0 28px,#ffffff77 28px 31px,transparent 31px 59px,#ffffff77 59px 62px,transparent 62px),
+        linear-gradient(transparent 0 18px,#ffffff77 18px 21px,transparent 21px 43px,#ffffff77 43px 46px,transparent 46px),
+        #fbeef6;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .ss-window::after{
+      content:"";
+      position:absolute;
+      inset:12px 24px;
+      border:3px solid #ffbf84;
+      border-radius:10px;
+    }
+
+    .ss-line{
+      width:34px;
+      height:4px;
+      background:#8b6fc6;
+      border-radius:99px;
+    }
+
+    .ss-liver{
+      width:85px;
+      height:52px;
+      background:#d88d84;
+      border:3px solid #a65568;
+      border-radius:55px 28px 40px 45px / 34px 28px 30px 24px;
+      position:relative;
+    }
+
+    .ss-liver::after{
+      content:"";
+      position:absolute;
+      left:38px;
+      top:6px;
+      width:4px;
+      height:36px;
+      background:#a65568;
+      border-radius:99px;
+      transform:rotate(15deg);
+    }
+
+    .ss-slide{
+      width:96px;
+      height:42px;
+      border-radius:12px;
+      background:#dff6ff;
+      border:3px solid #7bc0d8;
+      position:relative;
+    }
+
+    .ss-slide::after{
+      content:"";
+      position:absolute;
+      left:22px;
+      top:8px;
+      width:48px;
+      height:22px;
+      border-radius:10px;
+      background:#f6b0d0;
+      border:2px solid #d57faa;
+    }
+
+    .ss-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(37,29,59,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:18px;
+    }
+
+    .ss-overlay.show{
+      display:flex;
+    }
+
+    .ss-modal{
+      width:min(720px,100%);
+      background:white;
+      border:3px solid #d8c2ef;
+      border-radius:24px;
+      padding:clamp(16px,3vw,24px);
+      color:#483a5b;
+      box-shadow:0 18px 48px rgba(30,22,44,.18);
+    }
+
+    .ss-modal h3{
+      color:#6d44b2;
+      margin:0 0 8px;
+      font-size:1.4rem;
+    }
+
+    .ss-modal p{
+      line-height:1.6;
+      margin:8px 0;
+    }
+
+    .ss-fact{
+      background:#fff8df;
+      border:2px solid #eccd88;
+      border-radius:16px;
+      padding:14px;
+      margin-top:12px;
+    }
+
+    .ss-fact strong{
+      color:#7a5d1f;
+    }
+
+    .ss-modal-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .ss-close{
+      border:0;
+      background:#6e47b4;
+      color:#fff;
+      border-radius:14px;
+      padding:13px 18px;
+      font:inherit;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .ss-recap{
+      background:linear-gradient(145deg,#f7efff,#e7fbf2);
+      border:2px solid #d8c5ee;
+      border-radius:20px;
+      padding:16px;
+      margin-top:14px;
+    }
+
+    .ss-recap ul{
+      margin:10px 0 0 18px;
+      line-height:1.6;
+    }
+
+    .ss-end{
+      text-align:center;
+      padding:10px 4px 2px;
+    }
+
+    .ss-end-badge{
+      font-size:4rem;
+      margin:8px 0;
+    }
+
+    @keyframes ss-pulse{
+      50%{transform:scale(1.04)}
+    }
+
+    @media(max-width:800px){
+      .ss-layout{
+        grid-template-columns:1fr;
+      }
+
+      .ss-grid{
+        max-width:420px;
+      }
+    }
+
+    @media(max-width:560px){
+      .ss-grid{
+        gap:6px;
+      }
+
+      .ss-tile{
+        min-height:44px;
+        border-radius:14px;
+      }
+
+      .ss-controls{
+        grid-template-columns:repeat(3,56px);
+      }
+
+      .ss-badges{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      #lq-shrinking-scientist *{
+        animation:none !important;
+        transition:none !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  const game = document.createElement("section");
+  game.id = "lq-shrinking-scientist";
+  target.replaceWith(game);
+
+  const map = [
+    ["W","W","W","W","W","W","W"],
+    ["W","S","P","1","P","P","W"],
+    ["W","P","W","P","W","P","W"],
+    ["W","2","P","P","P","3","W"],
+    ["W","P","W","P","W","P","W"],
+    ["W","P","P","4","P","E","W"],
+    ["W","W","W","W","W","W","W"]
+  ];
+
+  const discoveries = {
+    "1": {
+      title: "🧩 Discovery 1: Tissue Teamwork",
+      badge: "🧩 Tissue Builder",
+      short: "A tissue is made of many similar cells working together.",
+      visual: `
+        <div class="ss-mini-visual">
+          <div class="ss-cell"></div>
+          <div class="ss-line"></div>
+          <div class="ss-cell"></div>
+          <div class="ss-cell"></div>
+          <div class="ss-cell"></div>
+        </div>
+      `,
+      fact: "One cell is not a tissue. A tissue is a group of similar cells working together.",
+      journal: "Badge collected: Tissue Builder! Many cells working together form a tissue."
+    },
+    "2": {
+      title: "🔍 Discovery 2: Tiny Microscope View",
+      badge: "🔍 Tiny View Expert",
+      short: "A microscope shows only a tiny part of a tissue at one time.",
+      visual: `
+        <div class="ss-mini-visual">
+          <div class="ss-window"></div>
+        </div>
+      `,
+      fact: "When scientists look through a microscope, they only see a small area at one time.",
+      journal: "Badge collected: Tiny View Expert! A microscope gives only a small window into tissue."
+    },
+    "3": {
+      title: "🗺️ Discovery 3: Check More Than One Spot",
+      badge: "🗺️ Careful Observer",
+      short: "Scientists look at more than one area before making conclusions.",
+      visual: `
+        <div class="ss-mini-visual">
+          <div class="ss-window"></div>
+          <div class="ss-window"></div>
+          <div class="ss-window"></div>
+        </div>
+      `,
+      fact: "One small view may not show the whole story. Scientists often examine several areas of a sample.",
+      journal: "Badge collected: Careful Observer! Scientists check several places, not just one tiny spot."
+    },
+    "4": {
+      title: "✂️ Discovery 4: Tissue Slide",
+      badge: "✂️ Slide Explorer",
+      short: "A tissue slide is a very thin slice used for close observation.",
+      visual: `
+        <div class="ss-mini-visual">
+          <div class="ss-liver"></div>
+          <div class="ss-line"></div>
+          <div class="ss-slide"></div>
+        </div>
+      `,
+      fact: "A microscope slide is not the whole organ. It is a very thin slice that helps scientists look closely.",
+      journal: "Badge collected: Slide Explorer! A tissue slide is only a thin slice of a much larger organ."
+    }
+  };
+
+  let player = { r: 1, c: 1 };
+  let found = new Set();
+  let finished = false;
+  let lastMessage =
+    "Help Dr. Mini explore the tissue. Find the 4 discovery stations and unlock the exit door.";
+
+  game.innerHTML = `
+    <div class="ss-top">
+      <span class="ss-tag">🕵️ MISSION 3 — EXPLORATION GAME</span>
+      <h2>The Shrinking Scientist</h2>
+      <p>
+        Dr. Mini has accidentally shrunk and landed inside a giant liver tissue sample!
+        Use the arrow buttons to explore, discover 4 new tissue facts, and unlock the exit.
+      </p>
+    </div>
+
+    <div class="ss-layout">
+      <div class="ss-panel">
+        <div class="ss-statusbar">
+          <span id="ss-progress-text">BADGES: 0 / 4</span>
+          <span id="ss-exit-text">🚪 EXIT LOCKED</span>
+        </div>
+
+        <div class="ss-track" id="ss-track">
+          <span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="ss-grid-wrap">
+          <div class="ss-grid" id="ss-grid" aria-label="Shrinking Scientist map"></div>
+
+          <div class="ss-controls" aria-label="Movement controls">
+            <button type="button" class="ss-btn blank" tabindex="-1">•</button>
+            <button type="button" class="ss-btn" id="ss-up" aria-label="Move up">⬆️</button>
+            <button type="button" class="ss-btn blank" tabindex="-1">•</button>
+
+            <button type="button" class="ss-btn" id="ss-left" aria-label="Move left">⬅️</button>
+            <button type="button" class="ss-btn" id="ss-down" aria-label="Move down">⬇️</button>
+            <button type="button" class="ss-btn" id="ss-right" aria-label="Move right">➡️</button>
+          </div>
+
+          <div class="ss-direction-note">
+            You can also use your keyboard arrow keys.
+          </div>
+        </div>
+      </div>
+
+      <div class="ss-panel">
+        <h3>📘 Dr. Mini's Discovery Journal</h3>
+
+        <div class="ss-journal" id="ss-journal" role="status" aria-live="polite">
+          <strong>Mission start:</strong><br>
+          ${lastMessage}
+        </div>
+
+        <h3>🏅 Discovery Badges</h3>
+        <div class="ss-badges" id="ss-badges">
+          <div class="ss-badge locked" data-badge="1">
+            <span>🧩</span>
+            Tissue Builder
+          </div>
+          <div class="ss-badge locked" data-badge="2">
+            <span>🔍</span>
+            Tiny View Expert
+          </div>
+          <div class="ss-badge locked" data-badge="3">
+            <span>🗺️</span>
+            Careful Observer
+          </div>
+          <div class="ss-badge locked" data-badge="4">
+            <span>✂️</span>
+            Slide Explorer
+          </div>
+        </div>
+
+        <div class="ss-recap">
+          <strong>What this game teaches:</strong>
+          <ul>
+            <li>How cells form tissues</li>
+            <li>Why microscope views are small</li>
+            <li>Why scientists check more than one spot</li>
+            <li>What a tissue slide really is</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ss-overlay" id="ss-overlay" aria-hidden="true">
+      <div class="ss-modal" id="ss-modal"></div>
+    </div>
+  `;
+
+  const gridEl = game.querySelector("#ss-grid");
+  const journalEl = game.querySelector("#ss-journal");
+  const progressText = game.querySelector("#ss-progress-text");
+  const exitText = game.querySelector("#ss-exit-text");
+  const trackEl = game.querySelector("#ss-track");
+  const overlay = game.querySelector("#ss-overlay");
+  const modal = game.querySelector("#ss-modal");
+
+  function setJournal(text) {
+    lastMessage = text;
+    journalEl.innerHTML = `<strong>Field note:</strong><br>${text}`;
+  }
+
+  function renderTrack() {
+    trackEl.innerHTML = "";
+    for (let i = 0; i < 4; i++) {
+      const dot = document.createElement("span");
+      if (i < found.size) dot.classList.add("done");
+      trackEl.appendChild(dot);
+    }
+  }
+
+  function renderBadges() {
+    game.querySelectorAll(".ss-badge").forEach((badge, index) => {
+      const id = String(index + 1);
+      badge.classList.toggle("locked", !found.has(id));
+      badge.classList.toggle("unlocked", found.has(id));
+    });
+  }
+
+  function renderMap() {
+    gridEl.innerHTML = "";
+
+    for (let r = 0; r < map.length; r++) {
+      for (let c = 0; c < map[r].length; c++) {
+        const code = map[r][c];
+        const tile = document.createElement("div");
+        tile.className = "ss-tile";
+
+        if (r === player.r && c === player.c) {
+          tile.classList.add("ss-player");
+        } else if (code === "W") {
+          tile.classList.add("ss-wall");
+        } else if (code === "P" || code === "S") {
+          tile.classList.add("ss-path");
+        } else if (["1", "2", "3", "4"].includes(code)) {
+          tile.classList.add("ss-station");
+          if (found.has(code)) tile.classList.add("done");
+        } else if (code === "E") {
+          tile.classList.add("ss-exit");
+          if (found.size === 4) tile.classList.add("ready");
+        }
+
+        gridEl.appendChild(tile);
+      }
+    }
+
+    progressText.textContent = `BADGES: ${found.size} / 4`;
+    exitText.textContent =
+      found.size === 4 ? "🚪 EXIT UNLOCKED" : "🚪 EXIT LOCKED";
+
+    renderTrack();
+    renderBadges();
+  }
+
+  function showModal(html) {
+    modal.innerHTML = html;
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeModal() {
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  function discover(id) {
+    const item = discoveries[id];
+    if (!item) return;
+
+    if (!found.has(id)) {
+      found.add(id);
+      setJournal(item.journal);
+      renderMap();
+    }
+
+    showModal(`
+      <h3>${item.title}</h3>
+      <p>${item.short}</p>
+      <div class="ss-mini-card">
+        <strong>Visual idea:</strong>
+        ${item.visual}
+      </div>
+      <div class="ss-fact">
+        <strong>Remember this:</strong><br>
+        ${item.fact}
+      </div>
+      <div class="ss-modal-actions">
+        <button type="button" class="ss-close" id="ss-close-modal">
+          COLLECT BADGE ✔
+        </button>
+      </div>
+    `);
+
+    modal.querySelector("#ss-close-modal").onclick = closeModal;
+  }
+
+  function finishGame() {
+    finished = true;
+    setJournal("Mission complete! Dr. Mini escaped the tissue sample.");
+
+    showModal(`
+      <div class="ss-end">
+        <div class="ss-end-badge">🏆🧑‍🔬✨</div>
+        <h3>You Escaped the Tissue!</h3>
+        <p>
+          Dr. Mini collected all 4 discovery badges and found the exit.
+        </p>
+
+        <div class="ss-fact" style="text-align:left">
+          <strong>What you discovered:</strong>
+          <ul style="margin:10px 0 0 18px;line-height:1.65">
+            <li>A tissue is made of many similar cells working together.</li>
+            <li>A microscope only shows a tiny part of a tissue at one time.</li>
+            <li>Scientists examine more than one area before making conclusions.</li>
+            <li>A slide is a thin slice of tissue, not the whole organ.</li>
+          </ul>
+        </div>
+
+        <div class="ss-modal-actions">
+          <button type="button" class="ss-close" id="ss-close-finish">
+            AWESOME! 🎉
+          </button>
+        </div>
+      </div>
+    `);
+
+    modal.querySelector("#ss-close-finish").onclick = closeModal;
+  }
+
+  function canMoveTo(r, c) {
+    if (r < 0 || c < 0 || r >= map.length || c >= map[0].length) return false;
+    return map[r][c] !== "W";
+  }
+
+  function tryMove(dr, dc) {
+    if (overlay.classList.contains("show")) return;
+    if (finished) return;
+
+    const nr = player.r + dr;
+    const nc = player.c + dc;
+
+    if (!canMoveTo(nr, nc)) {
+      setJournal("Bump! That path is blocked by giant liver cells. Try a different direction.");
+      return;
+    }
+
+    player = { r: nr, c: nc };
+    renderMap();
+
+    const code = map[nr][nc];
+
+    if (["1", "2", "3", "4"].includes(code)) {
+      discover(code);
+      return;
+    }
+
+    if (code === "E") {
+      if (found.size < 4) {
+        setJournal("The exit is still locked. Find all 4 discovery stations first.");
+      } else {
+        finishGame();
+      }
+      return;
+    }
+
+    setJournal("Dr. Mini is exploring the tissue pathways. Keep searching for discovery stations.");
+  }
+
+  game.querySelector("#ss-up").onclick = () => tryMove(-1, 0);
+  game.querySelector("#ss-down").onclick = () => tryMove(1, 0);
+  game.querySelector("#ss-left").onclick = () => tryMove(0, -1);
+  game.querySelector("#ss-right").onclick = () => tryMove(0, 1);
+
+  function keyHandler(e) {
+    if (!game.isConnected) {
+      window.removeEventListener("keydown", keyHandler);
+      return;
+    }
+
+    if (overlay.classList.contains("show")) {
+      if (e.key === "Escape") closeModal();
+      return;
+    }
+
+    if (page !== (location.pathname.split("/").pop() || "index.html")) return;
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      tryMove(-1, 0);
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      tryMove(1, 0);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      tryMove(0, -1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      tryMove(0, 1);
+    } else if (e.key === "Escape") {
+      closeModal();
+    }
+  }
+
+  window.addEventListener("keydown", keyHandler);
+
+  renderMap();
+})();
