@@ -9375,3 +9375,361 @@ if (location.pathname.endsWith("cells.html")) {
 
   renderMap();
 })();
+
+/* ==========================================================
+   SHRINKING SCIENTIST — INFOGRAPHIC VISUAL UPGRADE
+   Adds colourful science illustrations and unique map markers.
+   Paste at the VERY BOTTOM of site.js.
+   ========================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop();
+  if (page !== "microscope.html") return;
+
+  const game = document.getElementById("lq-shrinking-scientist");
+  if (!game) return;
+
+  const style = document.createElement("style");
+  style.textContent = `
+    /* Four different discovery icons on the maze */
+    #lq-shrinking-scientist .ss-grid .ss-station::after {
+      content: none !important;
+    }
+
+    #lq-shrinking-scientist .ss-grid .ss-station::before {
+      display: grid;
+      place-items: center;
+      width: 88%;
+      height: 88%;
+      border-radius: 12px;
+      background: #fff6d7;
+      box-shadow: 0 3px 7px #6a50804a;
+      font-size: clamp(17px,3vw,26px);
+    }
+
+    #lq-shrinking-scientist
+    .ss-grid .ss-station:nth-child(11)::before {
+      content: "🧩";
+    }
+
+    #lq-shrinking-scientist
+    .ss-grid .ss-station:nth-child(23)::before {
+      content: "🔬";
+    }
+
+    #lq-shrinking-scientist
+    .ss-grid .ss-station:nth-child(27)::before {
+      content: "🗺️";
+    }
+
+    #lq-shrinking-scientist
+    .ss-grid .ss-station:nth-child(39)::before {
+      content: "🧪";
+    }
+
+    #lq-shrinking-scientist .ss-grid .ss-station.done::before {
+      content: "✅" !important;
+      background: #d7f8e6;
+    }
+
+    #lq-shrinking-scientist .ss-grid .ss-station {
+      box-shadow:
+        0 0 0 3px #ffdf91aa,
+        0 0 18px #f8c75299;
+    }
+
+    /* Discovery pop-up illustrations */
+    #lq-shrinking-scientist .ss-exhibit {
+      background: linear-gradient(140deg,#f5efff,#eafcff);
+      border: 2px solid #cebee8;
+      border-radius: 16px;
+      padding: 8px;
+      margin: 12px 0;
+    }
+
+    #lq-shrinking-scientist .ss-exhibit svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 265px;
+    }
+
+    #lq-shrinking-scientist .ss-visual-caption {
+      text-align: center;
+      font-weight: 800;
+      color: #614294;
+      margin: 7px 0 2px;
+      font-size: .93rem;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  /* ---------- Illustration building blocks ---------- */
+
+  const svg = inside => `
+    <div class="ss-exhibit">
+      <svg viewBox="0 0 480 225"
+           role="img"
+           aria-label="Colourful science discovery infographic"
+           xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ss-grad-a"
+                          x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#fff7ff"/>
+            <stop offset="1" stop-color="#defaf6"/>
+          </linearGradient>
+        </defs>
+
+        <rect width="480" height="225" rx="16"
+              fill="url(#ss-grad-a)"/>
+
+        ${inside}
+      </svg>
+    </div>
+  `;
+
+  const cell = (x,y,scale=1) => `
+    <g transform="translate(${x} ${y}) scale(${scale})">
+      <rect x="-24" y="-21"
+            width="48" height="42" rx="17"
+            fill="#ffbddb"
+            stroke="#bc68a4" stroke-width="3"/>
+
+      <circle r="10" fill="#8651b6"/>
+      <circle cx="-5" cy="-5" r="3" fill="#d5b4ef"/>
+    </g>
+  `;
+
+  function group(x,y,columns,spacing,rows=columns) {
+    return Array.from({length:columns*rows},(_,i)=>
+      cell(
+        x+(i%columns)*spacing,
+        y+Math.floor(i/columns)*spacing,
+        .87
+      )
+    ).join("");
+  }
+
+  const label = (x,y,text,color="#573c8a",size=15) => `
+    <text x="${x}" y="${y}"
+          text-anchor="middle"
+          font-size="${size}"
+          fill="${color}"
+          font-family="Arial,sans-serif"
+          font-weight="700">
+      ${text}
+    </text>
+  `;
+
+  /* =====================================================
+     DISCOVERY 1 — ONE CELL VS MANY CELLS
+     ===================================================== */
+
+  const first = svg(`
+    ${label(110,30,"ONE CELL")}
+
+    ${cell(110,111,1.7)}
+
+    <path d="M179 108 L258 108"
+          stroke="#6b46ae" stroke-width="7"
+          stroke-linecap="round"/>
+
+    <path d="M245 94 L265 108 L245 122"
+          fill="none"
+          stroke="#6b46ae" stroke-width="7"
+          stroke-linecap="round"/>
+
+    ${label(359,30,"MANY CELLS")}
+
+    ${group(316,65,3,45)}
+
+    ${label(359,211,"WORKING TOGETHER")}
+  `) + `
+    <p class="ss-visual-caption">
+      One cell → many cells working together as tissue
+    </p>
+  `;
+
+  /* =====================================================
+     DISCOVERY 2 — SMALL MICROSCOPE VIEW
+     ===================================================== */
+
+  const second = svg(`
+    ${label(125,25,"LARGER TISSUE SAMPLE")}
+
+    ${group(40,52,5,42,4)}
+
+    <rect x="53" y="76" width="102" height="99"
+          rx="10"
+          fill="none"
+          stroke="#f18d32"
+          stroke-width="6"
+          stroke-dasharray="9 6"/>
+
+    <path d="M160 110 C224 110 220 113 267 113"
+          fill="none"
+          stroke="#f18d32"
+          stroke-width="5"/>
+
+    <circle cx="357" cy="113" r="79"
+            fill="#f5e8ff"
+            stroke="#8054ba"
+            stroke-width="10"/>
+
+    ${cell(328,90,1.2)}
+    ${cell(378,131,1.2)}
+
+    ${label(357,210,"SMALL VIEW")}
+  `) + `
+    <p class="ss-visual-caption">
+      A microscope reveals only part of the sample
+    </p>
+  `;
+
+  /* =====================================================
+     DISCOVERY 3 — OBSERVE MULTIPLE LOCATIONS
+     ===================================================== */
+
+  const locations = [
+    [76,57,"A","#f4a640"],
+    [176,107,"B","#4aafd3"],
+    [276,57,"C","#58b98e"]
+  ];
+
+  const third = svg(`
+    ${label(238,23,"SAME SAMPLE — THREE PLACES")}
+
+    ${group(68,49,6,50,3)}
+
+    ${locations.map(([x,y,text,color])=>`
+      <rect x="${x-20}" y="${y-21}"
+            width="90" height="89" rx="13"
+            fill="none"
+            stroke="${color}"
+            stroke-width="6"/>
+
+      <circle cx="${x-15}" cy="${y-18}"
+              r="14" fill="${color}"/>
+
+      ${label(x-15,y-12,text,"#ffffff",14)}
+    `).join("")}
+
+    ${label(238,215,"CHECK A + B + C, NOT JUST ONE SPOT")}
+  `) + `
+    <p class="ss-visual-caption">
+      Three observations give a broader picture
+    </p>
+  `;
+
+  /* =====================================================
+     DISCOVERY 4 — LIVER TO THIN SLICE TO SLIDE
+     ===================================================== */
+
+  const fourth = svg(`
+    <path d="M22 103
+             C41 30 149 30 181 78
+             C201 125 148 160 99 155
+             C58 155 27 147 22 103"
+          fill="#cc817d"
+          stroke="#a65267"
+          stroke-width="5"/>
+
+    <path d="M124 53 Q153 103 131 151"
+          fill="none"
+          stroke="#a65267"
+          stroke-width="4"/>
+
+    ${label(96,184,"LIVER")}
+
+    ${label(223,101,"→","#6c48ae",38)}
+
+    <g transform="translate(265 85) rotate(-15)">
+      <rect width="18" height="75" rx="5"
+            fill="#efabd0"
+            stroke="#bc6c9e"
+            stroke-width="3"/>
+
+      <path d="M3 8 L14 8
+               M3 22 L14 22
+               M3 36 L14 36
+               M3 50 L14 50"
+            stroke="#a24a8f"
+            stroke-width="2"/>
+    </g>
+
+    ${label(290,184,"THIN SLICE")}
+
+    ${label(333,101,"→","#6c48ae",38)}
+
+    <g transform="translate(355 80)">
+      <rect width="110" height="67" rx="9"
+            fill="#b9edf5"
+            stroke="#5aa7c1"
+            stroke-width="4"/>
+
+      <rect x="21" y="18"
+            width="69" height="31" rx="9"
+            fill="#efabd0"
+            stroke="#bd70a2"
+            stroke-width="3"/>
+
+      ${cell(55,34,.45)}
+    </g>
+
+    ${label(411,184,"SLIDE")}
+  `) + `
+    <p class="ss-visual-caption">
+      A tiny tissue slice goes onto a microscope slide
+    </p>
+  `;
+
+  const visuals = {
+    "1": first,
+    "2": second,
+    "3": third,
+    "4": fourth
+  };
+
+  /* =====================================================
+     UPGRADE THE EXISTING DISCOVERY POP-UPS
+
+     Keeps the original facts, badges, and collect buttons.
+     ===================================================== */
+
+  const modal = game.querySelector("#ss-modal");
+
+  if (!modal) return;
+
+  function enhanceDiscovery() {
+    const heading = modal.querySelector("h3")?.textContent || "";
+
+    const match = heading.match(/Discovery\s*([1-4])/i);
+
+    if (!match) return;
+
+    const id = match[1];
+
+    // Do not repeatedly replace the same illustration.
+    if (modal.dataset.ssIllustration === id) return;
+
+    const pictureBox = modal.querySelector(".ss-mini-card");
+
+    if (!pictureBox) return;
+
+    pictureBox.innerHTML = visuals[id];
+
+    modal.dataset.ssIllustration = id;
+  }
+
+  // Whenever the original game opens a discovery,
+  // replace only its simple picture with the infographic.
+  const observer = new MutationObserver(enhanceDiscovery);
+
+  observer.observe(modal,{
+    childList:true,
+    subtree:true
+  });
+
+  enhanceDiscovery();
+})();
