@@ -5346,3 +5346,139 @@ if (location.pathname.endsWith("cells.html")) {
 
   document.head.appendChild(style);
 })();
+
+/* ==================================================
+   MISSION 2 — SHOW REAL HEPATITIS B PHOTO IMMEDIATELY
+   Paste at the VERY BOTTOM of site.js
+   ================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "invasion.html") return;
+
+  const leftPanel = document.querySelector(".two-col > .panel");
+  if (!leftPanel) return;
+
+  // Remove any hidden bonus-photo sections.
+  leftPanel.querySelectorAll("details").forEach(details => {
+    if (
+      /bonus|real|microscope|photo/i.test(
+        details.querySelector("summary")?.textContent || ""
+      )
+    ) {
+      details.remove();
+    }
+  });
+
+  // Remove previous copies of this new display.
+  document.getElementById("hb-real-photo-display")?.remove();
+  document.getElementById("hb-real-photo-css")?.remove();
+
+  const photoBox = document.createElement("div");
+  photoBox.id = "hb-real-photo-display";
+
+  photoBox.innerHTML = `
+    <div class="hb-real-photo-heading">
+      <span>🔬</span>
+      <div>
+        <h3>Real Hepatitis B Virus</h3>
+        <p>This is a scientific image of hepatitis B virus particles.</p>
+      </div>
+    </div>
+
+    <div class="hb-real-photo-frame">
+      <img
+        src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Hepatitis%20B%20virus%2001.jpg"
+        alt="Scientific electron microscope image showing hepatitis B virus particles"
+        loading="eager"
+      >
+
+      <p class="hb-real-photo-error" hidden>
+        The real virus photograph could not load on this network.
+      </p>
+    </div>
+
+    <p class="hb-real-photo-caption">
+      🦠 Cartoon illustration vs. real scientific image.
+      The real virus does not have cartoon colours or a face.
+    </p>
+  `;
+
+  const image = photoBox.querySelector("img");
+  image.onerror = function () {
+    this.hidden = true;
+    photoBox.querySelector(".hb-real-photo-error").hidden = false;
+  };
+
+  leftPanel.appendChild(photoBox);
+
+  const css = document.createElement("style");
+  css.id = "hb-real-photo-css";
+
+  css.textContent = `
+    #hb-real-photo-display {
+      margin-top:20px;
+      padding:18px;
+      background:linear-gradient(135deg,#f2ecff,#e9f9ff);
+      border:2px solid #d5bcf2;
+      border-radius:22px;
+    }
+
+    .hb-real-photo-heading {
+      display:flex;
+      align-items:center;
+      gap:13px;
+      margin-bottom:14px;
+    }
+
+    .hb-real-photo-heading > span {
+      font-size:40px;
+    }
+
+    .hb-real-photo-heading h3 {
+      color:#6842ae;
+      margin:0 0 5px;
+      font-size:1.3rem;
+    }
+
+    .hb-real-photo-heading p {
+      margin:0;
+      line-height:1.5;
+      color:#55536c;
+    }
+
+    .hb-real-photo-frame {
+      overflow:hidden;
+      border-radius:17px;
+      background:white;
+      border:3px solid #d5bfef;
+      min-height:160px;
+      display:grid;
+      place-items:center;
+    }
+
+    .hb-real-photo-frame img {
+      width:100%;
+      max-height:340px;
+      object-fit:contain;
+      display:block;
+    }
+
+    .hb-real-photo-error {
+      padding:20px;
+      text-align:center;
+      color:#855d72;
+    }
+
+    .hb-real-photo-caption {
+      margin:13px 0 0;
+      color:#675a7e;
+      font-size:.94rem;
+      line-height:1.5;
+      text-align:center;
+    }
+  `;
+
+  document.head.appendChild(css);
+})();
+
