@@ -7046,3 +7046,1243 @@ if (location.pathname.endsWith("cells.html")) {
     });
   });
 })();
+
+/* ============================================================
+   LIVERQUEST NEWSROOM — BREAKING NEWS!
+   Mission 3: Replaces "Spot the Tissue Clue"
+
+   PASTE ONCE AT THE VERY BOTTOM OF site.js
+
+   No external images, videos, libraries, or internet needed.
+   Does not modify the existing tissue diagrams or scar scanner.
+   ============================================================ */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "microscope.html") return;
+
+  // Find the specific activity being replaced.
+  let oldGame = document.getElementById("lq-tissue-game");
+
+  if (!oldGame) {
+    const heading = [...document.querySelectorAll("h2,h3")]
+      .find(h => /spot the tissue clue/i.test(h.textContent));
+
+    if (heading) {
+      oldGame = heading.closest("section.lq-card, section, .lq-card");
+    }
+  }
+
+  // Do not accidentally replace any other activity.
+  if (!oldGame) return;
+
+  document.getElementById("lq-newsroom-style")?.remove();
+
+  const css = document.createElement("style");
+  css.id = "lq-newsroom-style";
+  css.textContent = `
+
+    /* ========== MAIN NEWSROOM ========== */
+
+    #lq-newsroom {
+      --nr-purple:#6b43b2;
+      --nr-dark:#282344;
+      --nr-pink:#f5b5d5;
+      --nr-green:#43bd91;
+      background:linear-gradient(145deg,#f6edff,#eafaff);
+      border:3px solid #d9c0f2;
+      border-radius:26px;
+      padding:clamp(13px,3vw,25px);
+      margin:24px 0;
+      color:#453858;
+      font-family:inherit;
+    }
+
+    #lq-newsroom * {
+      box-sizing:border-box;
+    }
+
+    #lq-newsroom button {
+      font:inherit;
+      cursor:pointer;
+    }
+
+    #lq-newsroom button:disabled {
+      cursor:default;
+    }
+
+    .nr-intro {
+      text-align:center;
+      margin-bottom:18px;
+    }
+
+    .nr-tag {
+      background:#e8d9ff;
+      color:#6240a1;
+      display:inline-block;
+      border-radius:99px;
+      padding:8px 14px;
+      font-size:.85rem;
+      font-weight:900;
+    }
+
+    .nr-intro h2 {
+      font-size:clamp(1.65rem,4vw,2.3rem);
+      color:#6844ad;
+      margin:12px 0 6px;
+    }
+
+    .nr-intro p {
+      line-height:1.5;
+      margin:8px auto;
+      max-width:650px;
+    }
+
+    /* ========== TELEVISION SCREEN ========== */
+
+    .nr-tv {
+      border:8px solid #333050;
+      background:#262341;
+      padding:10px;
+      border-radius:25px;
+      box-shadow:0 12px 0 #c7b5e2;
+      overflow:hidden;
+    }
+
+    .nr-tv-top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:7px 10px 13px;
+      color:#fff;
+      font-weight:900;
+      font-size:.85rem;
+    }
+
+    .nr-live {
+      background:#d84b67;
+      color:white;
+      padding:6px 11px;
+      border-radius:8px;
+      animation:nr-blink 1.4s infinite;
+    }
+
+    .nr-live.offline {
+      background:#786e91;
+      animation:none;
+    }
+
+    .nr-screen {
+      background:linear-gradient(140deg,#463465,#253755);
+      color:white;
+      border-radius:14px;
+      overflow:hidden;
+      min-height:285px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .nr-screen-top {
+      text-align:center;
+      padding:9px;
+      font-size:.8rem;
+      font-weight:900;
+      color:#efe6ff;
+      background:#2d2444;
+      letter-spacing:1px;
+    }
+
+    .nr-screen-picture {
+      flex:1;
+      display:grid;
+      place-items:center;
+      min-height:195px;
+      padding:8px;
+    }
+
+    .nr-screen-picture svg {
+      width:100%;
+      max-height:210px;
+      display:block;
+    }
+
+    .nr-screen-picture .nr-big {
+      font-size:clamp(55px,9vw,90px);
+    }
+
+    .nr-ticker {
+      background:#db4c6c;
+      color:white;
+      padding:10px 14px;
+      font-weight:850;
+      font-size:.94rem;
+      text-align:center;
+      min-height:42px;
+    }
+
+    /* ========== PROGRESS ========== */
+
+    .nr-progress {
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:9px;
+      margin:20px 0 9px;
+      color:#6240a0;
+      font-weight:850;
+    }
+
+    .nr-track {
+      display:flex;
+      gap:6px;
+      margin-bottom:18px;
+    }
+
+    .nr-track span {
+      height:11px;
+      flex:1;
+      border-radius:99px;
+      background:#dfd1f1;
+    }
+
+    .nr-track span.done {
+      background:#46ba94;
+    }
+
+    .nr-track span.active {
+      background:#966cde;
+    }
+
+    /* ========== PRODUCER DESK ========== */
+
+    .nr-desk {
+      background:white;
+      border:2px solid #dec8f3;
+      border-radius:22px;
+      padding:clamp(14px,3vw,22px);
+      margin:14px 0;
+    }
+
+    .nr-desk h3 {
+      color:#6842af;
+      font-size:1.3rem;
+      margin:0 0 10px;
+    }
+
+    .nr-instruction {
+      font-size:1.03rem;
+      line-height:1.55;
+      margin:10px 0 18px;
+    }
+
+    .nr-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .nr-card {
+      border:2px solid #d5beee;
+      background:#faf7ff;
+      color:#51378a;
+      border-radius:17px;
+      padding:14px 10px;
+      min-height:110px;
+      text-align:center;
+      font-weight:800;
+      transition:transform .15s,background .15s;
+    }
+
+    .nr-card:hover:not(:disabled) {
+      background:#eee5ff;
+      transform:translateY(-3px);
+    }
+
+    .nr-card.wrong {
+      border-color:#df7c89;
+      background:#ffe5e8;
+      animation:nr-shake .3s;
+    }
+
+    .nr-card.correct {
+      border-color:#48ba91;
+      background:#e2f8ec;
+    }
+
+    .nr-card .nr-emoji {
+      font-size:42px;
+      display:block;
+      margin-bottom:10px;
+    }
+
+    .nr-card svg {
+      max-width:100%;
+      height:98px;
+      margin-bottom:8px;
+    }
+
+    .nr-message {
+      background:#fff0d9;
+      border:2px solid #e8cd9b;
+      border-radius:14px;
+      padding:14px;
+      margin:16px 0;
+      line-height:1.55;
+      min-height:55px;
+    }
+
+    .nr-message.good {
+      background:#e0f9eb;
+      border-color:#82cfa8;
+    }
+
+    .nr-paper {
+      background:#fff9ea;
+      border:2px dashed #c9aa77;
+      border-radius:14px;
+      padding:17px;
+      margin:12px 0;
+      line-height:1.6;
+    }
+
+    .nr-primary {
+      display:block;
+      background:#754bc4;
+      border:0;
+      color:white;
+      border-radius:15px;
+      padding:15px 22px;
+      font-weight:900;
+      margin:18px auto 4px;
+      min-width:190px;
+      font-size:1rem;
+    }
+
+    .nr-primary:hover:not(:disabled) {
+      background:#603ba8;
+    }
+
+    .nr-primary:disabled {
+      opacity:.42;
+    }
+
+    .nr-meter {
+      background:#e7d8f3;
+      height:15px;
+      border-radius:99px;
+      overflow:hidden;
+      margin:10px 0;
+    }
+
+    .nr-meter div {
+      background:linear-gradient(90deg,#40b998,#8c66d7);
+      height:100%;
+      width:0;
+      transition:width .3s;
+    }
+
+    .nr-end {
+      text-align:center;
+    }
+
+    .nr-badge {
+      font-size:75px;
+      margin:16px 0;
+    }
+
+    .nr-report-row {
+      background:#f7f1ff;
+      border:2px solid #e2d2f2;
+      border-radius:13px;
+      padding:12px;
+      margin:9px 0;
+      line-height:1.45;
+      text-align:left;
+    }
+
+    .nr-broadcast-in {
+      animation:nr-entrance .45s both;
+    }
+
+    @keyframes nr-blink {
+      50% {opacity:.6}
+    }
+
+    @keyframes nr-shake {
+      25% {transform:translateX(-5px)}
+      75% {transform:translateX(5px)}
+    }
+
+    @keyframes nr-entrance {
+      from {opacity:0;transform:translateY(10px)}
+      to {opacity:1;transform:translateY(0)}
+    }
+
+    @media(max-width:650px) {
+      .nr-grid {
+        grid-template-columns:1fr;
+      }
+
+      .nr-card {
+        min-height:62px;
+      }
+
+      .nr-screen {
+        min-height:250px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      #lq-newsroom * {
+        animation:none!important;
+        transition:none!important;
+      }
+    }
+  `;
+
+  document.head.appendChild(css);
+
+  // Replace ONLY the old Spot the Tissue Clue activity.
+  const newsroom = document.createElement("section");
+  newsroom.id = "lq-newsroom";
+  oldGame.replaceWith(newsroom);
+
+  const $ = selector => newsroom.querySelector(selector);
+  const $$ = selector => [...newsroom.querySelectorAll(selector)];
+
+  let stage = 0;
+  let mistakes = 0;
+  let approved = false;
+
+  const segments = [];
+
+  const stageNames = [
+    "Breaking News Headline",
+    "Choose the News Footage",
+    "Message from Cell City",
+    "Live Tissue Report",
+    "Stop the Fake News",
+    "Public Safety Announcement"
+  ];
+
+  /* ====================================================
+     BUILT-IN ILLUSTRATIONS
+     ==================================================== */
+
+  function frame(content) {
+    return `
+      <svg viewBox="0 0 460 210"
+           role="img"
+           aria-label="Colourful LiverQuest science illustration">
+        <rect width="460" height="210" rx="18"
+              fill="#f1eaff"/>
+        <circle cx="45" cy="35" r="19"
+                fill="#e7d6ff"/>
+        <circle cx="419" cy="178" r="24"
+                fill="#d4f6ec"/>
+        ${content}
+      </svg>
+    `;
+  }
+
+  function cellIllustration(virus=false) {
+    return frame(`
+      <ellipse cx="246" cy="106" rx="110" ry="78"
+               fill="#f5b1d1" stroke="#d277aa"
+               stroke-width="7"/>
+
+      <circle cx="251" cy="104" r="35"
+              fill="#b38be0" stroke="#8556b6"
+              stroke-width="5"/>
+
+      <circle cx="251" cy="104" r="12"
+              fill="#7241a3"/>
+
+      <g fill="#ffbc7c" stroke="#ce894b" stroke-width="3">
+        <ellipse cx="189" cy="78" rx="23" ry="13"/>
+        <ellipse cx="301" cy="149" rx="23" ry="13"/>
+      </g>
+
+      <g fill="#7650ad">
+        <circle cx="186" cy="131" r="6"/>
+        <circle cx="210" cy="152" r="6"/>
+        <circle cx="304" cy="74" r="6"/>
+      </g>
+
+      ${virus ? `
+        <g transform="translate(78 105)">
+          <circle r="26" fill="#cba9f1"
+                  stroke="#7653b3" stroke-width="5"/>
+          <circle r="12" fill="#8053b2"/>
+          ${Array.from({length:8},(_,i)=>{
+            const a=i*Math.PI/4;
+            return `<circle
+              cx="${Math.cos(a)*34}"
+              cy="${Math.sin(a)*34}"
+              r="7" fill="#eab1d8"/>`;
+          }).join("")}
+        </g>
+
+        <path d="M119 105 L143 105"
+              fill="none"
+              stroke="#7751b4"
+              stroke-width="5"
+              stroke-dasharray="7 5"/>
+      ` : ""}
+
+      <text x="250" y="198" text-anchor="middle"
+            fill="#6440a2" font-size="17" font-weight="bold">
+        LIVER CELL
+      </text>
+    `);
+  }
+
+  function tissueIllustration() {
+    return frame(`
+      ${Array.from({length:18},(_,i)=>{
+        const x=95+(i%6)*52;
+        const y=49+Math.floor(i/6)*52;
+        const injured=[2,8,14].includes(i);
+
+        return `
+          <rect x="${x}" y="${y}"
+                width="45" height="45" rx="14"
+                fill="${injured?"#ffba84":"#f5b0d0"}"
+                stroke="${injured?"#d58d56":"#ce78a4"}"
+                stroke-width="3"/>
+
+          <circle cx="${x+22}" cy="${y+23}"
+                  r="8" fill="#9160bc"/>
+
+          ${injured ? `
+            <path d="M${x+10} ${y+10} l24 24
+                     m0 -24 l-24 24"
+                  fill="none" stroke="#c84b55"
+                  stroke-width="4"/>
+          ` : ""}
+        `;
+      }).join("")}
+
+      <circle cx="54" cy="108" r="21"
+              fill="#a7dff6" stroke="#559ccc"
+              stroke-width="4"/>
+      <text x="54" y="116" font-size="25"
+            font-weight="bold" text-anchor="middle"
+            fill="#3479ab">+</text>
+    `);
+  }
+
+  function liverIllustration() {
+    return frame(`
+      <path d="M93 83
+               C117 17 263 23 328 61
+               C372 79 391 104 374 132
+               C341 149 314 137 275 159
+               C211 202 114 181 94 135Z"
+            fill="#d78e84"
+            stroke="#a7556a"
+            stroke-width="7"/>
+
+      <path d="M261 51 Q290 105 264 161"
+            fill="none" stroke="#a95a68"
+            stroke-width="5"/>
+
+      <circle cx="171" cy="106" r="7" fill="#70445d"/>
+      <circle cx="207" cy="106" r="7" fill="#70445d"/>
+
+      <path d="M173 128 Q188 140 207 128"
+            fill="none" stroke="#70445d"
+            stroke-width="5" stroke-linecap="round"/>
+
+      <text x="231" y="201"
+            text-anchor="middle" fill="#6240a0"
+            font-size="17" font-weight="bold">
+        LIVER CITY
+      </text>
+    `);
+  }
+
+  function studioIllustration() {
+    return frame(`
+      <rect x="74" y="34" width="312" height="122"
+            rx="12" fill="#3e3267"/>
+
+      <rect x="95" y="52" width="270" height="86"
+            rx="8" fill="#7060a9"/>
+
+      <text x="230" y="90" text-anchor="middle"
+            font-size="27" font-weight="bold" fill="white">
+        LIVERQUEST
+      </text>
+
+      <text x="230" y="119" text-anchor="middle"
+            font-size="20" font-weight="bold"
+            fill="#ffe0ec">
+        NEWS
+      </text>
+
+      <rect x="65" y="165" width="330" height="25"
+            rx="9" fill="#d48bae"/>
+
+      <rect x="194" y="122" width="70" height="35"
+            rx="7" fill="#f4c7a1"/>
+
+      <circle cx="229" cy="115" r="25"
+              fill="#f4c7a1"/>
+
+      <path d="M202 106 Q229 69 254 107"
+            fill="#7a5580"/>
+
+      <rect x="216" y="147" width="25" height="37"
+            rx="8" fill="#7753b8"/>
+    `);
+  }
+
+  function illustration(type) {
+    if (type === "virus") return cellIllustration(true);
+    if (type === "cell") return cellIllustration(false);
+    if (type === "tissue") return tissueIllustration();
+    if (type === "liver") return liverIllustration();
+    return studioIllustration();
+  }
+
+  /* ====================================================
+     GAME ENGINE
+     ==================================================== */
+
+  function writeTV(type,caption) {
+    const screen = $("#nr-picture");
+    const ticker = $("#nr-ticker");
+
+    if (screen) {
+      screen.innerHTML = illustration(type);
+      screen.classList.remove("nr-broadcast-in");
+      void screen.offsetWidth;
+      screen.classList.add("nr-broadcast-in");
+    }
+
+    if (ticker) ticker.textContent = caption;
+  }
+
+  function message(text,good=false) {
+    const box=$("#nr-message");
+
+    if (!box) return;
+
+    box.className="nr-message"+(good?" good":"");
+    box.textContent=text;
+  }
+
+  function mistake(button,hint) {
+    mistakes++;
+
+    if (button) {
+      button.classList.add("wrong");
+    }
+
+    message("🔎 PRODUCER'S NOTE: "+hint);
+    writeTV("studio","⚠️ EDITORIAL REVIEW — CHECK YOUR CHOICE");
+  }
+
+  function approve(text,type,caption) {
+    if (approved) return;
+
+    approved=true;
+
+    writeTV(type,caption);
+    message("✅ APPROVED! "+text,true);
+
+    $$(".nr-card").forEach(button=>{
+      button.disabled=true;
+    });
+
+    $("#nr-next").disabled=false;
+    $("#nr-next").textContent =
+      stage===5 ? "🔴 GO TO BROADCAST STUDIO →" :
+                  "SEND TO THE NEXT DEPARTMENT →";
+  }
+
+  function cards(options,handler) {
+    $("#nr-controls").innerHTML=`
+      <div class="nr-grid">
+        ${options.map((item,i)=>`
+          <button type="button"
+                  class="nr-card"
+                  data-nr-choice="${i}">
+            ${item.art ? `
+              <span class="nr-emoji">${item.art}</span>
+            `:""}
+            ${item.visual || ""}
+            <span>${item.label}</span>
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    $$("[data-nr-choice]").forEach(button=>{
+      button.onclick=()=>{
+        if (!approved) {
+          handler(Number(button.dataset.nrChoice),button);
+        }
+      };
+    });
+  }
+
+  function correctSelection(items,right,successText,hint,type,caption) {
+    cards(items,(i,button)=>{
+      if (i!==right) {
+        mistake(button,hint);
+        return;
+      }
+
+      button.classList.add("correct");
+      approve(successText,type,caption);
+    });
+  }
+
+  function render() {
+    approved=false;
+
+    newsroom.innerHTML=`
+      <div class="nr-intro">
+        <span class="nr-tag">
+          🎬 MISSION 3 — CREATIVE SCIENCE CHALLENGE
+        </span>
+
+        <h2>📺 LiverQuest Newsroom</h2>
+
+        <p>
+          You're the news director! Create an accurate
+          broadcast about hepatitis B and the liver.
+        </p>
+      </div>
+
+      <div class="nr-tv">
+        <div class="nr-tv-top">
+          <span>📡 LIVERQUEST NEWS</span>
+          <span class="nr-live offline" id="nr-live">
+            PREPARING
+          </span>
+        </div>
+
+        <div class="nr-screen">
+          <div class="nr-screen-top">
+            SCIENCE NEWS • SPECIAL REPORT
+          </div>
+
+          <div class="nr-screen-picture" id="nr-picture"></div>
+
+          <div class="nr-ticker" id="nr-ticker">
+            BROADCAST PREPARATION IN PROGRESS
+          </div>
+        </div>
+      </div>
+
+      <div class="nr-progress">
+        <span>PRODUCTION STAGE ${stage+1} / 6</span>
+        <span>🎥 ${segments.length}/6 APPROVED</span>
+      </div>
+
+      <div class="nr-track">
+        ${stageNames.map((_,i)=>`
+          <span class="${
+            i<stage?"done":i===stage?"active":""
+          }"></span>
+        `).join("")}
+      </div>
+
+      <div class="nr-desk">
+        <h3 id="nr-title">${stageNames[stage]}</h3>
+
+        <div id="nr-instructions"
+             class="nr-instruction"></div>
+
+        <div id="nr-controls"></div>
+
+        <div id="nr-message" class="nr-message"
+             role="status" aria-live="polite">
+          🎙️ Your producer is waiting for your choice.
+        </div>
+
+        <button type="button"
+                id="nr-next"
+                class="nr-primary"
+                disabled>
+          NEXT DEPARTMENT →
+        </button>
+      </div>
+    `;
+
+    $("#nr-next").onclick=()=>{
+      stage++;
+
+      if(stage===6) {
+        startBroadcast();
+      } else {
+        render();
+      }
+    };
+
+    writeTV("studio","LIVERQUEST NEWS — BUILD YOUR REPORT");
+
+    [
+      stageHeadline,
+      stageFootage,
+      stageCellMessage,
+      stageTissueReport,
+      stageFactCheck,
+      stageSafety
+    ][stage]();
+  }
+
+  /* ====================================================
+     STAGE 1 — HEADLINE DESK
+     ==================================================== */
+
+  function stageHeadline() {
+    $("#nr-instructions").innerHTML=`
+      🚨 <strong>Breaking news!</strong>
+      A reporter has discovered hepatitis B in Liver City.
+      Choose a headline that tells the truth without
+      exaggerating.
+    `;
+
+    correctSelection([
+      {
+        art:"🦠",
+        label:"Hepatitis B can infect liver cells"
+      },
+      {
+        art:"🚨",
+        label:"Every liver cell has stopped working!"
+      },
+      {
+        art:"🫁",
+        label:"Hepatitis B mainly attacks the lungs"
+      }
+    ],0,
+      "Your headline is accurate without making the situation sound worse than it is.",
+      "Remember which organ HBV affects. Avoid claiming that every cell has stopped working.",
+      "liver",
+      "BREAKING: HEPATITIS B CAN INFECT LIVER CELLS"
+    );
+
+    // Store the broadcast segment after successful approval.
+    const next=$("#nr-next");
+    next.addEventListener("click",()=>{
+      segments.push({
+        title:"BREAKING NEWS",
+        type:"liver",
+        caption:"Hepatitis B can infect liver cells."
+      });
+    },{once:true});
+  }
+
+  /* ====================================================
+     STAGE 2 — FOOTAGE EDITOR
+     ==================================================== */
+
+  function stageFootage() {
+    $("#nr-instructions").innerHTML=`
+      🎥 <strong>Choose your footage.</strong>
+      The reporter is explaining how the virus
+      reaches a liver cell. Select the clip that
+      best matches the story.
+    `;
+
+    correctSelection([
+      {
+        label:"Clip A: Virus approaches a liver cell",
+        visual:illustration("virus")
+      },
+      {
+        label:"Clip B: Healthy liver without a virus",
+        visual:illustration("liver")
+      },
+      {
+        label:"Clip C: A television presenter",
+        visual:illustration("studio")
+      }
+    ],0,
+      "This footage shows the virus approaching the cell it can infect.",
+      "Look for the illustration showing both a virus and a liver cell.",
+      "virus",
+      "FOOTAGE: A VIRUS APPROACHES A LIVER CELL"
+    );
+
+    $("#nr-next").addEventListener("click",()=>{
+      segments.push({
+        title:"ON LOCATION",
+        type:"virus",
+        caption:"HBV attaches to liver cells before entering."
+      });
+    },{once:true});
+  }
+
+  /* ====================================================
+     STAGE 3 — MESSAGE FROM CELL CITY
+     ==================================================== */
+
+  function stageCellMessage() {
+    $("#nr-instructions").innerHTML=`
+      📩 <strong>New message!</strong>
+      A liver cell has contacted the newsroom.
+      Choose the best caption for its message.
+    `;
+
+    const paper=document.createElement("div");
+    paper.className="nr-paper";
+
+    paper.innerHTML=`
+      <strong>📨 INCOMING MESSAGE — CELL CITY</strong>
+      <p>
+        "A virus is using our protein-building workers
+        to make its own parts!"
+      </p>
+      <em>— A worried liver cell</em>
+    `;
+
+    $("#nr-instructions").after(paper);
+
+    correctSelection([
+      {
+        art:"🏭",
+        label:"HBV can use the cell's ribosomes to make viral proteins"
+      },
+      {
+        art:"⚡",
+        label:"HBV turns mitochondria into new livers"
+      },
+      {
+        art:"📦",
+        label:"The virus makes the Golgi apparatus disappear"
+      }
+    ],0,
+      "Ribosomes are protein builders. You used information from Cell City!",
+      "Think about the protein factories you learned about in Mission 1.",
+      "cell",
+      "CELL CITY REPORT: HBV USES CELL MACHINERY"
+    );
+
+    $("#nr-next").addEventListener("click",()=>{
+      segments.push({
+        title:"CELL CITY UPDATE",
+        type:"cell",
+        caption:"HBV uses liver-cell machinery to help make viral proteins."
+      });
+    },{once:true});
+  }
+
+  /* ====================================================
+     STAGE 4 — TISSUE LAB REPORT
+     ==================================================== */
+
+  function stageTissueReport() {
+    $("#nr-instructions").innerHTML=`
+      🔬 <strong>Live from the tissue laboratory!</strong>
+      The reporter has sent footage of injured cells
+      and immune defenders.
+
+      What caption should appear on television?
+    `;
+
+    writeTV("tissue","LIVE FOOTAGE FROM THE TISSUE LAB");
+
+    correctSelection([
+      {
+        art:"🛡️",
+        label:"Immune defenders respond to infected cells and may cause injury"
+      },
+      {
+        art:"💪",
+        label:"The orange cells have become stronger"
+      },
+      {
+        art:"🦠",
+        label:"Every pink cell must contain the virus"
+      }
+    ],0,
+      "Your caption explains the immune response without making unsupported claims.",
+      "The orange X represents injury. Pink cells do not automatically prove whether HBV is present.",
+      "tissue",
+      "TISSUE REPORT: IMMUNE RESPONSES MAY CAUSE INJURY"
+    );
+
+    $("#nr-next").addEventListener("click",()=>{
+      segments.push({
+        title:"TISSUE LAB LIVE",
+        type:"tissue",
+        caption:"The immune response can contribute to liver-cell injury."
+      });
+    },{once:true});
+  }
+
+  /* ====================================================
+     STAGE 5 — FACT-CHECK STUDIO
+     ==================================================== */
+
+  function stageFactCheck() {
+    $("#nr-instructions").innerHTML=`
+      🚨 <strong>False information alert!</strong>
+      A rumour is about to appear on television.
+
+      Choose the best corrected statement.
+    `;
+
+    const paper=document.createElement("div");
+    paper.className="nr-paper";
+
+    paper.innerHTML=`
+      <strong>❌ UNVERIFIED RUMOUR</strong>
+      <p>
+        "Everyone who gets hepatitis B will
+        develop serious liver damage."
+      </p>
+    `;
+
+    $("#nr-instructions").after(paper);
+
+    correctSelection([
+      {
+        art:"✅",
+        label:"Not everyone with hepatitis B develops serious liver damage"
+      },
+      {
+        art:"❌",
+        label:"Everyone with HBV will definitely become seriously ill"
+      },
+      {
+        art:"❓",
+        label:"Hepatitis B cannot affect the liver"
+      }
+    ],0,
+      "Rumour corrected! Your newsroom is reporting the science accurately.",
+      "Avoid words like 'everyone' and 'definitely' when the outcome can vary.",
+      "liver",
+      "FACT CHECK: SERIOUS DAMAGE DOES NOT HAPPEN TO EVERYONE"
+    );
+
+    $("#nr-next").addEventListener("click",()=>{
+      segments.push({
+        title:"FACT CHECK VERIFIED",
+        type:"liver",
+        caption:"Not everyone with hepatitis B develops serious liver damage."
+      });
+    },{once:true});
+  }
+
+  /* ====================================================
+     STAGE 6 — PUBLIC SAFETY ANNOUNCEMENT
+     ==================================================== */
+
+  function stageSafety() {
+    $("#nr-instructions").innerHTML=`
+      🛡️ <strong>One last job!</strong>
+      The newsroom needs a clear and helpful
+      public safety announcement.
+
+      Which message should your broadcast share?
+    `;
+
+    correctSelection([
+      {
+        art:"💉",
+        label:"Vaccination helps prevent hepatitis B"
+      },
+      {
+        art:"🤗",
+        label:"Avoid hugging anyone with hepatitis B"
+      },
+      {
+        art:"🎲",
+        label:"Wait for symptoms before thinking about prevention"
+      }
+    ],0,
+      "Excellent! Your broadcast ends with a useful prevention message.",
+      "Remember the Rescue Lab: vaccination helps prevent HBV, and hugging does not spread it.",
+      "studio",
+      "PUBLIC SAFETY: VACCINATION HELPS PREVENT HEPATITIS B"
+    );
+
+    $("#nr-next").addEventListener("click",()=>{
+      segments.push({
+        title:"PUBLIC SAFETY",
+        type:"studio",
+        caption:"Vaccination helps prevent hepatitis B."
+      });
+    },{once:true});
+  }
+
+  /* ====================================================
+     FINAL STAGE — GO LIVE!
+     ==================================================== */
+
+  function startBroadcast() {
+    let current=0;
+
+    newsroom.innerHTML=`
+      <div class="nr-intro">
+        <span class="nr-tag">
+          🎉 ALL SIX DEPARTMENTS APPROVED
+        </span>
+
+        <h2>🔴 You're Going LIVE!</h2>
+
+        <p>
+          Watch the science report you created.
+          Press Next Scene to play through your broadcast.
+        </p>
+      </div>
+
+      <div class="nr-tv">
+        <div class="nr-tv-top">
+          <span>📡 LIVERQUEST NEWS</span>
+          <span class="nr-live">● ON AIR</span>
+        </div>
+
+        <div class="nr-screen">
+          <div class="nr-screen-top" id="nr-broadcast-title">
+            BREAKING NEWS
+          </div>
+
+          <div class="nr-screen-picture nr-broadcast-in"
+               id="nr-broadcast-picture"></div>
+
+          <div class="nr-ticker" id="nr-broadcast-caption"></div>
+        </div>
+      </div>
+
+      <div class="nr-desk nr-end">
+        <h3 id="nr-broadcast-progress">
+          SCENE 1 OF 6
+        </h3>
+
+        <div class="nr-meter">
+          <div id="nr-broadcast-meter"></div>
+        </div>
+
+        <button type="button"
+                class="nr-primary"
+                id="nr-broadcast-next">
+          NEXT SCENE ▶
+        </button>
+      </div>
+    `;
+
+    function showSegment() {
+      const item=segments[current];
+      if (!item) return;
+
+      $("#nr-broadcast-title").textContent=item.title;
+
+      const picture=$("#nr-broadcast-picture");
+
+      picture.innerHTML=illustration(item.type);
+      picture.classList.remove("nr-broadcast-in");
+      void picture.offsetWidth;
+      picture.classList.add("nr-broadcast-in");
+
+      $("#nr-broadcast-caption").textContent=item.caption;
+
+      $("#nr-broadcast-progress").textContent=
+        `SCENE ${current+1} OF ${segments.length}`;
+
+      $("#nr-broadcast-meter").style.width=
+        `${((current+1)/segments.length)*100}%`;
+
+      $("#nr-broadcast-next").textContent =
+        current===segments.length-1
+          ? "🏆 FINISH BROADCAST →"
+          : "NEXT SCENE ▶";
+    }
+
+    $("#nr-broadcast-next").onclick=()=>{
+      current++;
+
+      if(current===segments.length) {
+        showReward();
+      } else {
+        showSegment();
+      }
+    };
+
+    showSegment();
+  }
+
+  /* ====================================================
+     REWARD SCREEN
+     ==================================================== */
+
+  function showReward() {
+    newsroom.innerHTML=`
+      <div class="nr-desk nr-end">
+        <span class="nr-tag">
+          ✅ BROADCAST COMPLETE
+        </span>
+
+        <div class="nr-badge">🎙️ 🏆 📺</div>
+
+        <h2>Junior Science Reporter!</h2>
+
+        <p>
+          Congratulations! You produced an accurate
+          science news broadcast for LiverQuest News.
+        </p>
+
+        <div class="nr-meter">
+          <div style="width:100%"></div>
+        </div>
+
+        <h3>📰 Your Finished News Report</h3>
+
+        <div id="nr-finished-report"></div>
+
+        <p>
+          <strong>Six news departments completed!</strong>
+        </p>
+
+        <p>
+          Editorial corrections: ${mistakes}
+        </p>
+
+        <p>
+          Remember: great reporters check their facts
+          before sharing information.
+        </p>
+
+        <button type="button"
+                id="nr-replay"
+                class="nr-primary">
+          🎬 PRODUCE ANOTHER BROADCAST ↺
+        </button>
+      </div>
+    `;
+
+    const report=$("#nr-finished-report");
+
+    segments.forEach((item,i)=>{
+      const row=document.createElement("div");
+      row.className="nr-report-row";
+
+      const strong=document.createElement("strong");
+      strong.textContent=`${i+1}. ${item.title}`;
+
+      const p=document.createElement("p");
+      p.textContent=item.caption;
+
+      row.append(strong,p);
+      report.appendChild(row);
+    });
+
+    $("#nr-replay").onclick=()=>{
+      stage=0;
+      mistakes=0;
+      segments.length=0;
+      render();
+    };
+  }
+
+  render();
+
+})();
