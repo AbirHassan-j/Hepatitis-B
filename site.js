@@ -5482,3 +5482,129 @@ if (location.pathname.endsWith("cells.html")) {
   document.head.appendChild(css);
 })();
 
+/* MISSION 3 — SCAR REVEAL REDESIGN (paste at bottom of site.js) */
+(() => {
+  if (!location.pathname.endsWith('microscope.html')) return;
+  const button = document.getElementById('show-scars');
+  const report = document.getElementById('tissue-report');
+  const injured = document.getElementById('injured-tissue');
+  if (!button || !report || !injured) return;
+  document.getElementById('lq-scar-upgrade')?.remove();
+  const css = document.createElement('style');
+  css.id = 'lq-scar-upgrade';
+  css.textContent = `
+    .lq-scar-area{margin:22px 0;padding:18px;border:2px solid #e2ccf5;border-radius:22px;background:linear-gradient(135deg,#f6eeff,#eafaff)}
+    .lq-scar-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .lq-scar-heading .lq-bubble{font-size:38px;background:#fff;border-radius:16px;padding:10px}
+    .lq-scar-heading h3{margin:0;color:#6b44b0}
+    .lq-scar-heading p{margin:4px 0 0}
+    #show-scars.lq-scar-toggle{display:block;width:100%;border-radius:15px;background:#7754c8;color:white;border:0;padding:15px;font:inherit;font-weight:800;cursor:pointer}
+    #show-scars.lq-scar-toggle:hover{background:#6440af}
+    .lq-scar-status{margin-top:12px;padding:13px;background:white;border-radius:14px;border:2px solid #e6d6f7;line-height:1.5}
+    .lq-scar-key{display:flex;gap:10px;align-items:center;margin-top:10px;font-size:.95rem}
+    .lq-scar-swatch{height:19px;width:38px;flex:none;border-radius:6px;border:2px solid #c69b63;background:repeating-linear-gradient(45deg,#e6b56f 0 7px,#fff3ce 7px 14px)}
+  `;
+  document.head.append(css);
+  const area = document.createElement('div');
+  area.className = 'lq-scar-area';
+  area.innerHTML = `<div class="lq-scar-heading"><div class="lq-bubble">🩹</div><div><h3>Scar Tissue Scanner</h3><p>What can repeated liver injury leave behind?</p></div></div><div class="lq-scar-status" id="lq-scar-status" role="status">🔍 Scanner ready. Reveal a <em>possible</em> change in affected tissue.</div><div class="lq-scar-key"><span class="lq-scar-swatch"></span><span>Yellow stripes = scar tissue (fibrosis)</span></div>`;
+  button.parentNode.insertBefore(area,button);
+  area.querySelector('.lq-scar-heading').after(button);
+  button.classList.add('lq-scar-toggle');
+  const marker = document.getElementById('scar-marker');
+  // Existing site.js already installed the original toggle. Replace it so the
+  // text and button state always match the actual tissue illustration.
+  button.onclick = () => {
+    if (!marker) return;
+    const showing = marker.classList.toggle('visible');
+    button.textContent = showing ? '🔄 HIDE SCAR TISSUE' : '🩹 REVEAL POSSIBLE SCAR TISSUE';
+    button.setAttribute('aria-pressed',String(showing));
+    document.getElementById('lq-scar-status').innerHTML = showing
+      ? '✅ <strong>Scanner result:</strong> Yellow bands show scar tissue that <em>may</em> develop after repeated injury over time. It does not happen to everyone with hepatitis B.'
+      : '🔍 Scanner ready. Reveal a <em>possible</em> change in affected tissue.';
+  };
+  button.setAttribute('aria-pressed',String(marker?.classList.contains('visible') || false));
+})();
+
+/* MISSION 5 — THE FINAL RESCUE: 10 DIFFERENT MINI-GAMES
+   Paste at bottom of site.js, AFTER the tissue scanner block. */
+(() => {
+  if (!location.pathname.endsWith('finale.html')) return;
+  const old = document.querySelector('.final-layout');
+  if (!old) return;
+  // Replace the original repeated five-question assessment and badge together.
+  old.style.display = 'none';
+  ['lq-final-rescue','liver-rescue-game','lq-rescue-10','lq-ultimate-rescue','lq-expert-arcade','lq-expert-2','lq-expert-3'].forEach(id => document.getElementById(id)?.remove());
+  document.getElementById('lq-final-css')?.remove();
+  const st = document.createElement('style');
+  st.id = 'lq-final-css';
+  st.textContent = `
+    #lq-final-rescue{--plum:#623a9e;--pink:#f6b4d5;--mint:#41b995;color:#42375c;background:linear-gradient(145deg,#fff2fa,#eaf9ff);border:3px solid #d6b7ed;border-radius:28px;padding:clamp(14px,3vw,26px);margin:20px auto;max-width:1050px}
+    #lq-final-rescue *{box-sizing:border-box}
+    #lq-final-rescue h2,#lq-final-rescue h3{color:var(--plum);margin:8px 0 12px}
+    .fr-header{text-align:center}.fr-tag{display:inline-block;background:#e8ddff;padding:7px 14px;border-radius:99px;font-weight:850;color:#5c3a99}
+    .fr-board{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:800;margin:20px 0 9px}
+    .fr-track{height:15px;background:#e6d6f4;border-radius:99px;overflow:hidden}.fr-track div{height:100%;background:linear-gradient(90deg,#3ebd9a,#9161d3);transition:width .3s}
+    .fr-hearts{letter-spacing:2px}.fr-panel{background:white;border:2px solid #e2ccef;border-radius:22px;padding:clamp(13px,3vw,22px);margin:17px 0}
+    .fr-scene{background:linear-gradient(140deg,#eefaff,#fff1f8);border:2px solid #d9c3ee;border-radius:20px;padding:17px;margin:14px 0;text-align:center;min-height:150px}
+    .fr-scene svg{display:block;width:100%;max-height:245px}
+    .fr-scene.alert{background:#ffede8;border-color:#e08b80;animation:fr-shake .25s}
+    .fr-scene.safe{background:#e3f9ed;border-color:#6ac69f}
+    .fr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+    .fr-option{background:#f8f3ff;border:2px solid #ccb3ea;border-radius:15px;padding:14px 9px;color:#56378e;font:inherit;font-weight:750;cursor:pointer;min-height:70px;overflow-wrap:anywhere}
+    .fr-option:hover:not(:disabled){background:#eee3ff;transform:translateY(-1px)}
+    .fr-option:disabled{cursor:default}.fr-option.correct{background:#dbf8e9;border-color:#38af87}.fr-option.wrong{background:#ffe0e2;border-color:#d97883}
+    .fr-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:13px 0}
+    .fr-main{background:#754ac0;color:white;border:0;border-radius:15px;font:inherit;font-weight:850;padding:15px 23px;cursor:pointer}.fr-main:disabled{opacity:.4;cursor:not-allowed}
+    .fr-note{padding:13px 15px;background:#fff2d9;border:2px solid #ebd09f;border-radius:14px;line-height:1.5;min-height:55px}
+    .fr-note.good{background:#e0faed;border-color:#7bcca8}
+    .fr-dots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-width:450px;margin:10px auto}
+    .fr-dot{background:#f4afd2;border:3px solid #d37cab;border-radius:35%;aspect-ratio:1;display:grid;place-items:center;color:#9d56b4;font-size:24px;font-weight:900}
+    .fr-dot.hurt{background:#ffc18b;border-color:#df8b55;color:#ba4751}.fr-dot.shield{background:#b8ecdc;border-color:#5bb69a}
+    .fr-paper{display:inline-block;background:#fff9e9;padding:15px;border:2px dashed #c5ac85;border-radius:12px;text-align:left;line-height:1.8}
+    .fr-code{font-weight:900;letter-spacing:2px;font-size:1.4rem;background:#f2e7ff;padding:12px;border-radius:12px}
+    .fr-steps{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.fr-steps span{padding:9px;border-radius:12px;background:#f2e7ff;border:2px solid #d6bdea;font-weight:800}
+    .fr-mission-label{font-size:.9rem;color:#655779}
+    .fr-certificate{background:linear-gradient(145deg,#f9efff,#e1fff1);padding:22px;border:5px double #a888d7;border-radius:20px;text-align:center}
+    @keyframes fr-shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-6px)}70%{transform:translateX(6px)}}
+    @media(max-width:640px){.fr-grid{grid-template-columns:1fr}.fr-option{min-height:52px}}
+    @media(prefers-reduced-motion:reduce){#lq-final-rescue *{animation:none!important;transition:none!important}}
+  `;
+  document.head.append(st);
+  const root=document.createElement('section');root.id='lq-final-rescue';old.after(root);
+  const $=s=>root.querySelector(s), $$=s=>[...root.querySelectorAll(s)];
+  let stage=0,stars=0,errors=0,solved=false;
+  const titles=['Emergency Alert','Find the Impostor','Repair the Cell','Decode the Message','Block the Chain Reaction','Mystery Evidence','Science Escape Room',"Save the Liver's Jobs",'Rescue Decision','Final Boss: Virus Headquarters'];
+  function scene(markup){$('#fr-scene').innerHTML=markup;}
+  function note(t,good=false){const el=$('#fr-note');el.className='fr-note'+(good?' good':'');el.textContent=t;}
+  function wrong(msg){if(solved)return;errors++;note('🔎 '+msg);$('#fr-scene').classList.remove('alert');void $('#fr-scene').offsetWidth;$('#fr-scene').classList.add('alert');}
+  function success(msg){if(solved)return;solved=true;stars++;$('#fr-score').textContent='⭐ '+stars+'/10';$('#fr-next').disabled=false;$('#fr-scene').classList.remove('alert');$('#fr-scene').classList.add('safe');note('✅ '+msg,true);$$('.fr-option').forEach(b=>b.disabled=true);}
+  function buttons(items,fn){$('#fr-controls').innerHTML='<div class="fr-grid">'+items.map((x,i)=>`<button type="button" class="fr-option" data-pick="${i}">${x}</button>`).join('')+'</div>';$$('[data-pick]').forEach(b=>b.onclick=()=>{if(!solved)fn(+b.dataset.pick,b);});}
+  function question(items,correct,yes,hint,after){buttons(items,(i,b)=>{if(i===correct){b.classList.add('correct');if(after)after();success(yes);}else{b.classList.add('wrong');wrong(hint);}});}
+  const tissue=(hurt=3)=>'<div class="fr-dots">'+Array.from({length:10},(_,i)=>`<div class="fr-dot ${i<hurt?'hurt':''}">${i<hurt?'×':'●'}</div>`).join('')+'</div>';
+  const liverSvg=`<svg viewBox="0 0 500 230" role="img" aria-label="Liver city rescue scene"><rect width="500" height="230" rx="20" fill="#edfaff"/><path d="M108 90 Q136 22 286 53 Q390 70 400 111 Q367 141 270 155 Q216 208 137 173 Q103 157 108 90Z" fill="#db8b7b" stroke="#a45465" stroke-width="7"/><path d="M257 57 Q287 104 263 160" stroke="#ac5268" stroke-width="5" fill="none"/><circle cx="196" cy="108" r="8" fill="#5b355f"/><circle cx="232" cy="108" r="8" fill="#5b355f"/><path d="M195 135 Q212 145 235 135" stroke="#6a3b60" stroke-width="5" fill="none" stroke-linecap="round"/><text x="250" y="215" text-anchor="middle" font-size="20" fill="#623a9e" font-weight="bold">LIVER CITY RESCUE HQ</text></svg>`;
+  function render(){solved=false;if(stage===10){finish();return;}root.innerHTML=`<div class="fr-header"><span class="fr-tag">🛡️ MISSION 5 · FINAL RESCUE</span><h2>🚨 Save Liver City!</h2><p>Ten different missions. Solve mysteries, repair problems, and unlock the Science Defender badge.</p></div><div class="fr-board"><span>LEVEL ${stage+1} / 10</span><span id="fr-score">⭐ ${stars}/10</span><span class="fr-hearts">🏙️ RESCUE ACTIVE</span></div><div class="fr-track"><div style="width:${stage*10}%"></div></div><div class="fr-panel"><p class="fr-mission-label">🗺️ NEW CHALLENGE UNLOCKED</p><h3>${titles[stage]}</h3><div id="fr-scene" class="fr-scene"></div><div id="fr-controls"></div><p id="fr-note" class="fr-note" role="status" aria-live="polite">🔍 Follow the mission instructions.</p></div><button id="fr-next" class="fr-main" disabled>${stage===9?'CLAIM MY BADGE 🏆':'UNLOCK NEXT LEVEL →'}</button><p class="fr-mission-label" style="text-align:center">You can retry any challenge. Incorrect answers only cost a try, not a life.</p>`;$('#fr-next').onclick=()=>{stage++;render();};games[stage]();}
+  // 1: a fresh detective task rather than another organelle or tissue quiz.
+  function emergency(){scene(`${liverSvg}<p><strong>Emergency:</strong> Liver City has received three reports. Which clue points most directly to hepatitis B?</p>`);question(['A laboratory test detects HBV','Someone has a headache','The person feels tired'],0,'Case identified! A test for HBV is the clearest clue.','Feeling tired or having a headache does not specifically identify hepatitis B.',()=>scene(`${liverSvg}<p>📁 CASE FILE: HBV DETECTED ✅</p>`));}
+  // 2: spot the one scientific error in a report.
+  function impostor(){scene(`<div class="fr-paper"><strong>SCIENTIST'S NOTES</strong><p>✅ Hepatitis B affects the liver.</p><p>✅ Some infected people feel completely fine.</p><p>❓ Hepatitis B always causes immediate symptoms.</p></div><p>Which statement must be corrected?</p>`);question(['The first statement','The second statement','The third statement'],2,'Report repaired! Infection can occur without symptoms.','One of these statements says “always,” but symptoms vary.',()=>scene('<div class="fr-paper">📋 REPORT CORRECTED ✅<p>Some infected people have no symptoms.</p></div>'));}
+  // 3: choose a plan based on symptoms and organ needs, not match definitions.
+  function repair(){scene('<div style="font-size:65px">🏭 ⚡ 📦</div><h3>Energy shortage!</h3><p>A liver cell needs energy to keep doing its jobs. Which repair plan makes sense?</p><div class="fr-track"><div style="width:18%;background:#e28977"></div></div>');question(['Help mitochondria supply usable energy','Replace the cell membrane with DNA','Tell ribosomes to store all the cell’s energy'],0,'The power is back! Mitochondria help provide usable energy.','The repair must address the energy shortage.',()=>scene('<div style="font-size:65px">⚡🏭✅</div><h3>Power restored</h3><div class="fr-track"><div style="width:100%"></div></div>'));}
+  // 4: decode a short cipher using visible key, not memorized biology.
+  function decode(){scene('<div style="font-size:52px">📡 🔐</div><p>A message from the cell is scrambled. Use the key to decode it.</p><div class="fr-code">3 - 1 - 2</div><p>KEY: 1 = CELL &nbsp; 2 = VIRUS &nbsp; 3 = LIVER</p><p>What is the decoded message?</p>');question(['LIVER · CELL · VIRUS','CELL · VIRUS · LIVER','VIRUS · LIVER · CELL'],0,'Signal decoded! HBV targets liver cells.','Read the numbered key one number at a time.',()=>scene('<div style="font-size:56px">📡 ✅</div><h3>MESSAGE: LIVER · CELL · VIRUS</h3>'));}
+  // 5: pick missing causal step; not replaying the invasion chronology.
+  function chain(){scene('<div class="fr-steps"><span>🦠 Infected cells</span><span>❓ Missing link</span><span>🩹 Possible tissue injury</span></div><p>What belongs in the middle of the chain?</p>');question(['The immune system responds to infected cells','The liver suddenly becomes a bone','All cells immediately turn into viruses'],0,'Chain repaired! The immune response may injure infected liver cells.','Remember what the body does when infected cells are detected.',()=>scene('<div class="fr-steps"><span>🦠 Infection</span><span>🛡️ Immune response</span><span>🩹 Possible injury</span></div>'));}
+  // 6: distinguish observation from assertion without calculus or multi-select.
+  function evidence(){scene(`${tissue(4)}<p><strong>Mystery file:</strong> An illustration shows four injured cells. A researcher says, “This proves hepatitis B caused it.”</p><p>What evidence is missing?</p>`);question(['A specific test for HBV','The number of pink cells','A brighter drawing'],0,'Good thinking! Appearance alone cannot confirm hepatitis B.','Cell injury has different possible causes.',()=>scene(`${tissue(4)}<p>🧪 Additional test required ✅</p>`));}
+  // 7: genuinely interactive combination lock: choose symbol sequence using hints.
+  function escape(){const pass=['🧫','🫀','🧍'];let pos=0;function draw(){scene(`<div style="font-size:57px">🔒 🚪</div><p><strong>Escape room:</strong> Unlock the door by selecting the order of the three clues.</p><p>Clue: Small cell → whole organ → whole person.</p><div class="fr-code">${pass.map((x,i)=>i<pos?x:'▢').join('  ')}</div>`);buttons(['🧍 Person','🧫 Cell','🫀 Liver'],(i,b)=>{const sym=['🧍','🧫','🫀'][i];if(sym===pass[pos]){pos++;if(pos===3){scene('<div style="font-size:65px">🚪🔓🎉</div><h3>Door unlocked!</h3><p>Cell → Organ → Person</p>');success('You found the correct scale, smallest to largest.');}else{draw();note('✅ Correct symbol. Keep going!',true);}}else{b.classList.add('wrong');wrong('Think about which is smaller: a cell, an organ, or a person.');}});}draw();}
+  // 8: function use-case, not generic liver-identity question.
+  function liverJob(){scene(`<div style="font-size:58px">🍕 → 🫀 → ?</div><p>The kitchen needs help understanding how the liver supports digestion. Which delivery belongs on the route?</p>`);question(['Bile, which helps digest fats','Oxygen, pumped by the heart','Nerve signals from the brain'],0,'Correct! The liver makes bile that helps digest fats.','Choose a substance the liver makes to help digestion.',()=>scene('<div style="font-size:65px">🫀 ➜ 💧 ➜ 🍕 ✅</div><p>Bile delivered!</p>'));}
+  // 9: reconcile two clues and prevent stigma.
+  function decision(){scene('<div class="fr-grid"><div class="fr-paper">🧪 TEST: HBV positive</div><div class="fr-paper">🙂 FEELING: fine</div><div class="fr-paper">🤔 CONFLICT?</div></div><p>A student feels fine, but a health professional confirms an HBV infection. What should the rescue team conclude?</p>');question(['The test must be wrong','Infection is possible without symptoms','The student is unsafe to sit beside'],1,'Mystery solved! Infection can exist without symptoms, and casual contact is safe.','You already learned that not everyone with HBV feels sick.',()=>scene('<div style="font-size:65px">🧪 ✅ 🤝</div><p>Two clues can both be true.</p>'));}
+  // 10: three decisions in a new final boss encounter.
+  function boss(){const rounds=[{t:'An alarm says the virus has reached liver cells. What can it use to make viral proteins?',a:['Ribosomes','Bones','Red blood cells'],c:0,h:'Think about protein factories inside a cell.'},{t:'An immune alarm sounds. What might happen to infected cells?',a:['They may be injured','They grow extra organs','All instantly disappear'],c:0,h:'Immune defenses can cause inflammation and injury.'},{t:'Repeated injury has affected tissue. What is one possible long-term result?',a:['Scar tissue','New brain cells','A second liver'],c:0,h:'Think about the scarring shown in the Tissue Time Machine.'}];let r=0;function draw(){const q=rounds[r];scene(`<div style="font-size:58px">🦠 ⚔️ 🛡️</div><h3>FINAL BOSS · ROUND ${r+1}/3</h3><p>${q.t}</p><div class="fr-steps">${rounds.map((_,i)=>`<span>${i<r?'✅':'🔒'} ${i+1}</span>`).join('')}</div>`);buttons(q.a,(i,b)=>{if(i!==q.c){b.classList.add('wrong');wrong(q.h);return;}r++;if(r===3){scene('<div style="font-size:75px">🏙️ 🛡️ 🏆</div><h3>LIVER CITY RESCUED!</h3><p>You connected infection, the immune response, and possible scarring.</p>');success('You defeated the final boss with science!');}else{draw();note('✅ Barrier cleared! One more science lock ahead.',true);}});}draw();}
+  const games=[emergency,impostor,repair,decode,chain,evidence,escape,liverJob,decision,boss];
+  function finish(){root.innerHTML=`<div class="fr-certificate"><div style="font-size:75px">🏆🫀✨</div><span class="fr-tag">LIVERQUEST COMPLETED</span><h2>SCIENCE DEFENDER</h2><p>You rescued Liver City by applying what you learned!</p><h3>⭐ ${stars}/10 missions finished</h3><p>Tries that taught you something: ${errors}</p><p>🧫 Cells → 🧩 Tissues → 🫀 Liver → 🧍 Body</p><button class="fr-main" id="fr-again">PLAY AGAIN ↺</button> <a class="fr-main" href="index.html" style="display:inline-block;text-decoration:none;margin-top:10px">MISSION MAP →</a></div>`;$('#fr-again').onclick=()=>{stage=0;stars=0;errors=0;render();};try{if(typeof saveMission==='function')saveMission('finale');}catch(e){}}
+  render();
+})();
