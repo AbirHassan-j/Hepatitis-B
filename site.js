@@ -6805,3 +6805,244 @@ if (location.pathname.endsWith("cells.html")) {
 
   upgradeLevel();
 })();
+
+/* ======================================================
+   LIVERQUEST — TISSUE DETECTIVE FINAL LAYOUT
+   Symmetrical diagrams + centered scar scanner
+   Removes the extra Detective Check
+   PASTE AT THE VERY BOTTOM OF site.js
+   ====================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "microscope.html") return;
+
+  const grid = document.querySelector(".kid-tissue-grid");
+  const healthy = document.getElementById("healthy-tissue");
+  const injured = document.getElementById("injured-tissue");
+  const scarButton = document.getElementById("show-scars");
+
+  if (!grid || !healthy || !injured || !scarButton) return;
+
+  // 1. Remove the original Detective Check,
+  // including its buttons and answer feedback.
+  document.querySelectorAll(".lq-detective-question").forEach(el => {
+    el.remove();
+  });
+
+  // Catch any older detective-question layout left behind.
+  document.querySelectorAll("h3").forEach(heading => {
+    if (/^🎯?\s*Detective Question$/i.test(heading.textContent.trim()) ||
+        /Detective Check: Compare the Two Diagrams/i.test(heading.textContent)) {
+      const parent = heading.parentElement;
+      let next = heading.nextElementSibling;
+
+      while (
+        next &&
+        (
+          next.id === "tissue-feedback" ||
+          next.classList.contains("answer-row") ||
+          (next.tagName === "P" &&
+           /which picture|look at the two tissue diagrams/i.test(next.textContent))
+        )
+      ) {
+        const remove = next;
+        next = next.nextElementSibling;
+        remove.remove();
+      }
+      heading.remove();
+    }
+  });
+
+  // 2. Find the original scanner wrapper.
+  let scanner = document.querySelector(".lq-scar-area");
+
+  // Fallback for older versions.
+  if (!scanner) {
+    scanner = document.createElement("div");
+    scanner.className = "lq-scar-area";
+    scarButton.before(scanner);
+    scanner.appendChild(scarButton);
+  }
+
+  // 3. Move the scanner below BOTH diagrams.
+  grid.insertAdjacentElement("afterend", scanner);
+
+  scanner.classList.add("lq-centered-scanner");
+
+  // Keep the existing actual button, which already
+  // has its reveal/hide behaviour.
+  if (!scanner.contains(scarButton)) {
+    scanner.appendChild(scarButton);
+  }
+
+  // Update scanner heading and instructions.
+  let heading = scanner.querySelector(".lq-scar-heading");
+
+  if (!heading) {
+    heading = document.createElement("div");
+    heading.className = "lq-scar-heading";
+    scanner.prepend(heading);
+  }
+
+  heading.innerHTML = `
+    <div class="lq-bubble">🩹</div>
+    <div>
+      <h3>Scar Tissue Scanner</h3>
+      <p>
+        Reveal possible scar tissue in the
+        <strong>Affected Tissue diagram above.</strong>
+      </p>
+    </div>
+  `;
+
+  // 4. Remove old duplicate explanatory sections
+  // that would make the page look cluttered.
+  const oldReport = document.getElementById("tissue-report");
+
+  if (oldReport) {
+    oldReport.style.display = "none";
+  }
+
+  // 5. Keep both cards the same height, even with
+  // slightly different amounts of feedback.
+  document.getElementById("lq-symmetric-tissue-css")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "lq-symmetric-tissue-css";
+
+  style.textContent = `
+    /* Keep both tissue cards equal in layout. */
+    .kid-tissue-grid {
+      display:grid !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:18px !important;
+      align-items:stretch !important;
+    }
+
+    .kid-tissue-grid .kid-tissue-card {
+      display:flex !important;
+      flex-direction:column !important;
+      height:100%;
+      min-width:0;
+      justify-content:flex-start;
+    }
+
+    .kid-tissue-grid .kid-tissue-card h3 {
+      text-align:center;
+      min-height:45px;
+    }
+
+    .kid-tissue-grid .kid-tissue-picture {
+      width:100%;
+      margin-bottom:12px;
+    }
+
+    .kid-tissue-grid .kid-tissue-card > button[data-examine] {
+      margin-top:auto;
+      width:100%;
+      min-height:50px;
+    }
+
+    .kid-tissue-grid .lq-local-feedback {
+      text-align:left;
+      margin-top:12px;
+      line-height:1.5;
+      font-size:.9rem;
+    }
+
+    /* Scanner is no longer inside one card. */
+    .lq-centered-scanner {
+      max-width:680px !important;
+      margin:20px auto 24px !important;
+      padding:19px !important;
+      border:2px solid #dcc4ef !important;
+      border-radius:21px !important;
+      background:linear-gradient(135deg,#f6ecff,#edfaff) !important;
+      text-align:center;
+    }
+
+    .lq-centered-scanner .lq-scar-heading {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .lq-centered-scanner .lq-scar-heading h3 {
+      margin:0 0 4px;
+      color:#6a42ab;
+      font-size:1.3rem;
+    }
+
+    .lq-centered-scanner .lq-scar-heading p {
+      margin:0;
+      line-height:1.45;
+    }
+
+    .lq-centered-scanner .lq-bubble {
+      font-size:39px;
+    }
+
+    .lq-centered-scanner #show-scars {
+      width:100%;
+      max-width:450px;
+      padding:14px 18px;
+      background:#7650c6;
+      color:white;
+      border:0;
+      border-radius:15px;
+      font-size:1rem;
+      font-weight:800;
+      cursor:pointer;
+      margin:10px auto;
+    }
+
+    .lq-centered-scanner #show-scars:hover {
+      background:#623eab;
+    }
+
+    .lq-centered-scanner .lq-scar-status {
+      max-width:520px;
+      margin:12px auto;
+      text-align:center;
+    }
+
+    .lq-centered-scanner .lq-scar-key {
+      justify-content:center;
+    }
+
+    @media(max-width:650px) {
+      .kid-tissue-grid {
+        grid-template-columns:1fr !important;
+      }
+
+      .lq-centered-scanner {
+        padding:15px !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
+
+/* TISSUE DETECTIVE — UNLOCK MISSION WITHOUT REMOVED QUIZ */
+(function () {
+  if (!location.pathname.endsWith("microscope.html")) return;
+
+  const next = document.getElementById("tissue-next");
+  if (!next) return;
+
+  const clicked = new Set();
+
+  document.querySelectorAll("[data-examine]").forEach(button => {
+    button.addEventListener("click", () => {
+      clicked.add(button.dataset.examine);
+
+      if (clicked.has("healthy") && clicked.has("injured")) {
+        next.disabled = false;
+      }
+    });
+  });
+})();
