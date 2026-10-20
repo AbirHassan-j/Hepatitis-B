@@ -6109,3 +6109,699 @@ if (location.pathname.endsWith("cells.html")) {
     }
   }
 })();
+
+/* ========================================================
+   LIVERQUEST — FINAL RESCUE + TISSUE DETECTIVE FIXES
+
+   1. Replace Final Rescue levels 2 and 4
+   2. Move colour guide above tissue diagrams
+   3. Move investigation results beside their buttons
+   4. Reposition scar scanner neatly
+
+   PASTE ONCE AT THE VERY BOTTOM OF site.js
+   ======================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+
+  const css = document.createElement("style");
+  css.id = "lq-oct-layout-fixes";
+  document.getElementById(css.id)?.remove();
+
+  css.textContent = `
+    /* ---------- TISSUE DETECTIVE ---------- */
+
+    .lq-top-guide {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+      gap:9px;
+      max-width:820px;
+      margin:14px auto 20px;
+      padding:12px;
+      background:#f5efff;
+      border:2px solid #ddc9f2;
+      border-radius:17px;
+    }
+
+    .lq-guide-label {
+      flex-basis:100%;
+      text-align:center;
+      color:#6745a6;
+      font-weight:850;
+      margin-bottom:3px;
+    }
+
+    .lq-guide-item {
+      display:flex;
+      align-items:center;
+      gap:7px;
+      padding:7px 10px;
+      border:1px solid #e4d8ef;
+      background:white;
+      border-radius:12px;
+      font-size:.88rem;
+      font-weight:700;
+    }
+
+    .lq-guide-swatch {
+      width:20px;
+      height:20px;
+      flex:none;
+      border-radius:7px;
+      border:2px solid #ca83a9;
+      background:#f6aece;
+    }
+
+    .lq-guide-swatch.nucleus {
+      background:#945bb9;
+      border-color:#7442a7;
+      border-radius:50%;
+    }
+
+    .lq-guide-swatch.injured {
+      background:#ffbf83;
+      border-color:#d78a50;
+      color:#ba384a;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+    }
+
+    .lq-guide-swatch.immune {
+      background:#a8dff8;
+      border-color:#529acb;
+      border-radius:50%;
+      color:#2476ab;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+    }
+
+    .lq-guide-swatch.scar {
+      background:repeating-linear-gradient(
+        45deg,#e5ba77 0 5px,#fff2cb 5px 10px
+      );
+      border-color:#c79f5d;
+    }
+
+    .lq-local-feedback {
+      margin:11px 0 0;
+      padding:12px 13px;
+      border:2px solid #95d2bd;
+      border-radius:13px;
+      background:#e7faf0;
+      color:#44566a;
+      line-height:1.5;
+      font-size:.94rem;
+    }
+
+    .kid-tissue-card .lq-scar-area {
+      margin:12px 0;
+      padding:12px;
+      background:linear-gradient(135deg,#f2eaff,#fff8e9);
+      border:2px solid #dcc5f0;
+      border-radius:16px;
+    }
+
+    .kid-tissue-card .lq-scar-heading {
+      margin:0 0 8px;
+    }
+
+    .kid-tissue-card .lq-scar-heading .lq-bubble {
+      font-size:25px;
+      padding:5px;
+    }
+
+    .kid-tissue-card .lq-scar-heading h3 {
+      font-size:1.02rem;
+      margin:0;
+    }
+
+    .kid-tissue-card .lq-scar-heading p {
+      font-size:.86rem;
+      margin:4px 0;
+    }
+
+    .kid-tissue-card #show-scars {
+      padding:11px 12px;
+      font-size:.9rem;
+      width:100%;
+    }
+
+    .kid-tissue-card .lq-scar-status {
+      margin-top:9px;
+      padding:9px;
+      font-size:.86rem;
+    }
+
+    .kid-tissue-card .lq-scar-key {
+      display:none;
+    }
+
+    /* ---------- NEW FINAL RESCUE PUZZLES ---------- */
+
+    .lq-puzzle-box {
+      background:#f8f3ff;
+      border:2px solid #d5bced;
+      border-radius:17px;
+      padding:17px;
+      margin:12px 0;
+    }
+
+    .lq-puzzle-line {
+      background:white;
+      padding:12px;
+      border:2px solid #e4d7f1;
+      border-radius:12px;
+      margin:9px 0;
+    }
+
+    .lq-puzzle-line strong {
+      color:#6540a5;
+    }
+
+    .lq-puzzle-key {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px;
+      margin:13px 0;
+    }
+
+    .lq-puzzle-key span {
+      padding:9px 13px;
+      background:#e8dfff;
+      border:2px solid #c9b2e9;
+      border-radius:12px;
+      font-weight:850;
+    }
+
+    .lq-puzzle-slots {
+      display:flex;
+      justify-content:center;
+      gap:9px;
+      flex-wrap:wrap;
+      margin:15px 0;
+    }
+
+    .lq-puzzle-slot {
+      min-width:75px;
+      padding:13px 10px;
+      background:white;
+      border:2px dashed #ae8dd3;
+      border-radius:12px;
+      font-weight:850;
+      text-align:center;
+    }
+
+    .lq-puzzle-actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:9px;
+      justify-content:center;
+      margin-top:14px;
+    }
+
+    .lq-puzzle-actions button {
+      border:2px solid #c6abea;
+      background:white;
+      color:#5d3998;
+      padding:12px 15px;
+      border-radius:12px;
+      cursor:pointer;
+      font:inherit;
+      font-weight:800;
+    }
+
+    .lq-puzzle-actions button:hover {
+      background:#f0e6ff;
+    }
+
+    .lq-puzzle-actions button:disabled {
+      opacity:.5;
+      cursor:default;
+    }
+
+    @media(max-width:570px) {
+      .lq-top-guide {
+        justify-content:flex-start;
+      }
+
+      .lq-guide-item {
+        font-size:.8rem;
+      }
+    }
+  `;
+
+  document.head.appendChild(css);
+
+  /* =====================================================
+     PART A — TISSUE DETECTIVE
+     ===================================================== */
+
+  if (page === "microscope.html") {
+    const grid = document.querySelector(".kid-tissue-grid");
+    const healthy = document.getElementById("healthy-tissue");
+    const injured = document.getElementById("injured-tissue");
+
+    if (!grid || !healthy || !injured) return;
+
+    // Remove the previous large colour legend.
+    document.querySelectorAll(".tissue-legend").forEach(el => el.remove());
+
+    // Put a slim colour key directly above the two diagrams.
+    document.getElementById("lq-top-guide")?.remove();
+
+    const guide = document.createElement("div");
+    guide.id = "lq-top-guide";
+    guide.className = "lq-top-guide";
+
+    guide.innerHTML = `
+      <div class="lq-guide-label">🎨 DIAGRAM COLOUR GUIDE</div>
+
+      <div class="lq-guide-item">
+        <span class="lq-guide-swatch"></span>
+        Pink = Liver cell
+      </div>
+
+      <div class="lq-guide-item">
+        <span class="lq-guide-swatch nucleus"></span>
+        Purple = Nucleus
+      </div>
+
+      <div class="lq-guide-item">
+        <span class="lq-guide-swatch injured">×</span>
+        Orange = Injured cell
+      </div>
+
+      <div class="lq-guide-item">
+        <span class="lq-guide-swatch immune">+</span>
+        Blue = Immune defender
+      </div>
+
+      <div class="lq-guide-item">
+        <span class="lq-guide-swatch scar"></span>
+        Yellow stripes = Scar tissue
+      </div>
+    `;
+
+    grid.before(guide);
+
+    // Each investigation button now displays its result locally,
+    // rather than in a box far down the page.
+    const originalReport = document.getElementById("tissue-report");
+
+    document.querySelectorAll("[data-examine]").forEach(button => {
+      const type = button.dataset.examine;
+
+      let feedbackBox = button.parentElement.querySelector(
+        ".lq-local-feedback"
+      );
+
+      if (!feedbackBox) {
+        feedbackBox = document.createElement("div");
+        feedbackBox.className = "lq-local-feedback";
+        feedbackBox.hidden = true;
+        feedbackBox.setAttribute("role", "status");
+        button.insertAdjacentElement("afterend",feedbackBox);
+      }
+
+      button.addEventListener("click", () => {
+        const message = type === "healthy"
+          ? "✅ Healthy-looking tissue: The pink shapes represent liver cells. The purple dots represent their nuclei."
+          : "🔬 Affected tissue: Orange cells represent injury. Blue immune defenders are responding nearby.";
+
+        feedbackBox.textContent = message;
+        feedbackBox.hidden = false;
+
+        // Hide the old distant message.
+        if (originalReport) {
+          originalReport.style.display = "none";
+        }
+      });
+    });
+
+    if (originalReport) {
+      originalReport.style.display = "none";
+    }
+
+    // Move the scar scanner ABOVE the affected tissue image.
+    // This makes it clear which diagram will change.
+    const affectedCard = injured.closest(".kid-tissue-card");
+    const button = document.getElementById("show-scars");
+    let scanner = document.querySelector(".lq-scar-area");
+
+    if (affectedCard && button) {
+      if (!scanner) {
+        scanner = document.createElement("div");
+        scanner.className = "lq-scar-area";
+
+        scanner.innerHTML = `
+          <div class="lq-scar-heading">
+            <div class="lq-bubble">🩹</div>
+            <div>
+              <h3>Scar Tissue Scanner</h3>
+              <p>Reveal possible scar tissue below.</p>
+            </div>
+          </div>
+        `;
+
+        scanner.appendChild(button);
+      }
+
+      const description = scanner.querySelector(
+        ".lq-scar-heading p"
+      );
+
+      if (description) {
+        description.textContent =
+          "Press the button to reveal possible scarring in the diagram directly below.";
+      }
+
+      injured.before(scanner);
+
+      // Keep the original scanner click action intact.
+      // If the original update adds a highlighted outline,
+      // the diagram will still update in place.
+    }
+
+    return;
+  }
+
+  /* =====================================================
+     PART B — FINAL RESCUE: LEVELS 2 AND 4
+
+     Replaces the visible controls for these two levels.
+     Uses the existing game's original success mechanism,
+     so stars and NEXT LEVEL still work.
+     ===================================================== */
+
+  if (page !== "finale.html") return;
+
+  const game = document.getElementById("lq-final-rescue");
+  if (!game) return;
+
+  let busy = false;
+
+  function upgradeLevel() {
+    if (busy) return;
+
+    const title = game.querySelector(".fr-panel h3");
+    const scene = game.querySelector("#fr-scene");
+    const controls = game.querySelector("#fr-controls");
+    const next = game.querySelector("#fr-next");
+
+    if (!title || !scene || !controls || !next) return;
+
+    const levelName = title.textContent.trim();
+
+    /* -----------------------------------------
+       LEVEL 2 — SCIENTIST'S REPORT
+       ----------------------------------------- */
+
+    if (
+      levelName === "Find the Impostor" &&
+      !controls.dataset.lqUpgraded
+    ) {
+      busy = true;
+
+      // Preserve original correct-answer action for scoring.
+      const originalCorrect = controls.querySelector(
+        '[data-pick="2"]'
+      );
+
+      controls.dataset.lqUpgraded = "2";
+
+      scene.innerHTML = `
+        <div class="lq-puzzle-box">
+          <div style="font-size:52px">🕵️ 📋</div>
+
+          <h3>Scientist's Report: Find the Mistake</h3>
+
+          <p>
+            A scientist wrote three notes about hepatitis B.
+            One note contains a mistake.
+          </p>
+
+          <div class="lq-puzzle-line">
+            <strong>Note A:</strong>
+            Hepatitis B mainly affects liver cells.
+          </div>
+
+          <div class="lq-puzzle-line">
+            <strong>Note B:</strong>
+            A person can have hepatitis B without feeling sick.
+          </div>
+
+          <div class="lq-puzzle-line">
+            <strong>Note C:</strong>
+            If someone feels healthy, they cannot have hepatitis B.
+          </div>
+
+          <p><strong>Step 1:</strong> Which note is incorrect?</p>
+        </div>
+      `;
+
+      controls.innerHTML = `
+        <div class="lq-puzzle-actions" id="lq-report-choices">
+          <button type="button" data-note="A">Note A</button>
+          <button type="button" data-note="B">Note B</button>
+          <button type="button" data-note="C">Note C</button>
+        </div>
+        <div id="lq-report-step2" hidden></div>
+      `;
+
+      const feedback = game.querySelector("#fr-note");
+
+      controls.querySelectorAll("[data-note]").forEach(button => {
+        button.onclick = () => {
+          const selected = button.dataset.note;
+
+          if (selected !== "C") {
+            feedback.textContent =
+              "🔎 That note is scientifically correct. Look for a statement that contradicts what you learned about symptoms.";
+            return;
+          }
+
+          controls.querySelector("#lq-report-choices").hidden = true;
+
+          const step2 = controls.querySelector(
+            "#lq-report-step2"
+          );
+
+          step2.hidden = false;
+          step2.innerHTML = `
+            <h3>Step 2: Correct the mistake</h3>
+
+            <p>Which replacement sentence should the scientist write?</p>
+
+            <div class="lq-puzzle-actions">
+              <button type="button" data-fix="0">
+                Everyone with hepatitis B feels sick immediately.
+              </button>
+
+              <button type="button" data-fix="1">
+                People may have hepatitis B even without symptoms.
+              </button>
+
+              <button type="button" data-fix="2">
+                The virus only affects people who feel tired.
+              </button>
+            </div>
+          `;
+
+          feedback.textContent =
+            "✅ You found the incorrect note. Now fix the report.";
+
+          step2.querySelectorAll("[data-fix]").forEach(fix => {
+            fix.onclick = () => {
+              if (fix.dataset.fix !== "1") {
+                feedback.textContent =
+                  "🔎 That replacement is still incorrect. Can infection happen without symptoms?";
+                return;
+              }
+
+              if (originalCorrect) {
+                originalCorrect.click();
+              }
+            };
+          });
+        };
+      });
+
+      busy = false;
+      return;
+    }
+
+    /* -----------------------------------------
+       LEVEL 4 — SECRET VIRUS CODE
+       ----------------------------------------- */
+
+    if (
+      levelName === "Decode the Message" &&
+      !controls.dataset.lqUpgraded
+    ) {
+      busy = true;
+
+      const originalCorrect = controls.querySelector(
+        '[data-pick="0"]'
+      );
+
+      controls.dataset.lqUpgraded = "4";
+
+      const code = [3,1,4,2];
+      const words = {
+        1:"LIVER",
+        2:"PROTEINS",
+        3:"VIRUS",
+        4:"USES"
+      };
+
+      let selected = [];
+
+      scene.innerHTML = `
+        <div class="lq-puzzle-box">
+          <div style="font-size:54px">📡 🔐 🧬</div>
+
+          <h3>Secret Transmission from Cell City!</h3>
+
+          <p>
+            Decode the message to discover what the
+            hepatitis B virus does inside a liver cell.
+          </p>
+
+          <div class="lq-puzzle-key">
+            <span>1 = LIVER</span>
+            <span>2 = PROTEINS</span>
+            <span>3 = VIRUS</span>
+            <span>4 = USES</span>
+          </div>
+
+          <p><strong>Secret code:</strong></p>
+          <div class="fr-code">3 — 1 — 4 — 2</div>
+
+          <p>
+            Tap the words in the correct order to decode
+            the transmission.
+          </p>
+
+          <div class="lq-puzzle-slots" id="lq-code-slots">
+            <span class="lq-puzzle-slot">?</span>
+            <span class="lq-puzzle-slot">?</span>
+            <span class="lq-puzzle-slot">?</span>
+            <span class="lq-puzzle-slot">?</span>
+          </div>
+        </div>
+      `;
+
+      controls.innerHTML = `
+        <div class="lq-puzzle-actions" id="lq-code-words">
+          <button type="button" data-word="1">LIVER</button>
+          <button type="button" data-word="2">PROTEINS</button>
+          <button type="button" data-word="3">VIRUS</button>
+          <button type="button" data-word="4">USES</button>
+        </div>
+
+        <div class="lq-puzzle-actions">
+          <button type="button" id="lq-code-reset">
+            ↺ RESET CODE
+          </button>
+        </div>
+
+        <div id="lq-code-meaning" hidden></div>
+      `;
+
+      const feedback = game.querySelector("#fr-note");
+
+      function drawSlots() {
+        scene.querySelector("#lq-code-slots").innerHTML =
+          Array.from({length:4},(_,i) => `
+            <span class="lq-puzzle-slot">
+              ${selected[i] ? words[selected[i]] : "?"}
+            </span>
+          `).join("");
+      }
+
+      controls.querySelectorAll("[data-word]").forEach(button => {
+        button.onclick = () => {
+          const n = Number(button.dataset.word);
+
+          if (selected.includes(n) || selected.length >= 4) return;
+
+          selected.push(n);
+          button.disabled = true;
+          drawSlots();
+
+          if (selected.length !== 4) return;
+
+          if (selected.every((n,i)=>n===code[i])) {
+            controls.querySelector("#lq-code-words").hidden = true;
+
+            const meaning = controls.querySelector(
+              "#lq-code-meaning"
+            );
+
+            meaning.hidden = false;
+            meaning.innerHTML = `
+              <h3>✅ Transmission decoded!</h3>
+              <p><strong>VIRUS LIVER USES PROTEINS</strong></p>
+              <p>
+                What is the science idea behind this message?
+              </p>
+
+              <div class="lq-puzzle-actions">
+                <button type="button" data-meaning="0">
+                  HBV uses liver-cell machinery to help make viral proteins.
+                </button>
+                <button type="button" data-meaning="1">
+                  HBV makes the liver produce bones.
+                </button>
+              </div>
+            `;
+
+            feedback.textContent =
+              "✅ Code cracked! Now explain what it means.";
+
+            meaning.querySelectorAll("[data-meaning]").forEach(b => {
+              b.onclick = () => {
+                if (b.dataset.meaning === "0") {
+                  if (originalCorrect) originalCorrect.click();
+                } else {
+                  feedback.textContent =
+                    "🔎 Think about the ribosomes and other cell workers from Cell City.";
+                }
+              };
+            });
+          } else {
+            feedback.textContent =
+              "🔎 The words are in the wrong order. Follow the code numbers carefully, then reset.";
+          }
+        };
+      });
+
+      controls.querySelector("#lq-code-reset").onclick = () => {
+        selected = [];
+        controls.querySelectorAll("[data-word]").forEach(b => {
+          b.disabled = false;
+        });
+        drawSlots();
+        feedback.textContent = "🔐 Code reset. Try decoding again.";
+      };
+
+      busy = false;
+    }
+  }
+
+  // The Final Rescue rebuilds its level HTML on every level.
+  // Watch for the level change and apply the custom puzzle.
+  const observer = new MutationObserver(upgradeLevel);
+
+  observer.observe(game, {
+    childList:true,
+    subtree:true
+  });
+
+  upgradeLevel();
+})();
