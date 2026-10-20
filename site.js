@@ -5163,3 +5163,186 @@ if (location.pathname.endsWith("cells.html")) {
 
   showChapter();
 })();
+
+/* MISSION 2 — MORE VISUAL HEPATITIS B INTRO */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "invasion.html") return;
+
+  const panels = document.querySelectorAll(".two-col > .panel");
+  if (panels.length < 2) return;
+
+  // LEFT PANEL: Remove repeated microscope explanation.
+  const intro = document.getElementById("lq-virus-intro");
+
+  if (intro) {
+    const paragraphs = intro.querySelectorAll("p");
+
+    paragraphs.forEach(p => {
+      if (
+        p.textContent.includes("powerful microscopes") ||
+        p.textContent.includes("ordinary classroom microscope")
+      ) {
+        p.remove();
+      }
+    });
+
+    intro.querySelectorAll(".lq-card").forEach(card => {
+      if (card.textContent.includes("How Small Is It")) {
+        card.remove();
+      }
+    });
+  }
+
+  // RIGHT PANEL: A colourful, visual introduction.
+  panels[1].innerHTML = `
+    <span class="pill">🦠 THE VIRUS FILE</span>
+
+    <h2>What Is Hepatitis B?</h2>
+
+    <p>
+      Hepatitis B is a virus infection that mainly
+      affects the liver.
+    </p>
+
+    <div class="hb-fact-grid">
+
+      <div class="hb-fact">
+        <div class="hb-fact-icon">🦠</div>
+        <strong>THE VIRUS</strong>
+        <p>HBV is the virus that causes hepatitis B.</p>
+      </div>
+
+      <div class="hb-fact">
+        <div class="hb-fact-icon">🫀</div>
+        <strong>THE TARGET</strong>
+        <p>It enters liver cells and uses their machinery.</p>
+      </div>
+
+      <div class="hb-fact">
+        <div class="hb-fact-icon">🛡️</div>
+        <strong>THE DEFENDERS</strong>
+        <p>Immune cells respond to infected liver cells.</p>
+      </div>
+
+      <div class="hb-fact">
+        <div class="hb-fact-icon">🩹</div>
+        <strong>THE EFFECT</strong>
+        <p>Inflammation can injure liver tissue.</p>
+      </div>
+
+    </div>
+
+    <div class="hb-inflammation">
+      <div class="hb-fact-icon">🔥</div>
+      <div>
+        <strong>What's inflammation?</strong>
+        <p>
+          It's part of your body's response to infection
+          or injury. Sometimes, this response can
+          also damage healthy tissue.
+        </p>
+      </div>
+    </div>
+
+    <div class="hb-bottom">
+      💡 <strong>Did you know?</strong> Many people with hepatitis B
+      do not feel sick, and not everyone develops serious
+      liver damage.
+    </div>
+  `;
+
+  document.getElementById("hb-intro-styles")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "hb-intro-styles";
+
+  style.textContent = `
+    .hb-fact-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:13px;
+      margin:18px 0;
+    }
+
+    .hb-fact {
+      background:linear-gradient(135deg,#f5efff,#effaff);
+      border:2px solid #d9c3f3;
+      border-radius:19px;
+      padding:18px 12px;
+      text-align:center;
+    }
+
+    .hb-fact-icon {
+      font-size:clamp(36px,5vw,54px);
+      margin-bottom:10px;
+    }
+
+    .hb-fact strong {
+      color:#6843ae;
+      font-size:1rem;
+      display:block;
+    }
+
+    .hb-fact p {
+      font-size:.98rem;
+      line-height:1.45;
+      margin:9px 0 0;
+      color:#50506a;
+    }
+
+    .hb-inflammation {
+      display:flex;
+      gap:18px;
+      align-items:center;
+      background:#fff2dd;
+      border:2px solid #f0c98c;
+      border-radius:18px;
+      padding:16px;
+      margin:15px 0;
+    }
+
+    .hb-inflammation strong {
+      color:#96612a;
+      font-size:1.15rem;
+    }
+
+    .hb-inflammation p {
+      margin:6px 0 0;
+      line-height:1.55;
+    }
+
+    .hb-inflammation .hb-fact-icon {
+      flex-shrink:0;
+      margin:0;
+    }
+
+    .hb-bottom {
+      padding:15px;
+      background:#e6f8f0;
+      border:2px solid #addfc7;
+      border-radius:16px;
+      line-height:1.5;
+      margin-top:15px;
+    }
+
+    @media(max-width:480px) {
+      .hb-fact-grid {
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      }
+
+      .hb-fact {
+        padding:12px 7px;
+      }
+
+      .hb-inflammation {
+        flex-direction:column;
+        text-align:center;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
