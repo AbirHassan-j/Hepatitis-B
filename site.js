@@ -4137,3 +4137,1029 @@ if (location.pathname.endsWith("cells.html")) {
     }
   }
 })();
+
+/* ===========================================================
+   LIVERQUEST — MISSION 2: INSIDE THE INVASION
+   Illustrated story mode, seven chapters, interactive choices
+   PASTE ONCE AT THE VERY BOTTOM OF site.js
+   =========================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "invasion.html") return;
+
+  const oldStory = document.querySelector(".story-stage");
+  if (!oldStory) return;
+
+  const section = oldStory.closest(".panel.challenge");
+  if (!section) return;
+
+  document.getElementById("virus-story-style")?.remove();
+
+  const style = document.createElement("style");
+  style.id = "virus-story-style";
+  style.textContent = `
+    #virus-adventure {
+      --purple:#7144bb;
+      --pink:#f5a6ce;
+      --blue:#a9e1f9;
+      --mint:#41bb9b;
+      color:#493c65;
+    }
+
+    #virus-adventure * {
+      box-sizing:border-box;
+    }
+
+    #virus-adventure h2 {
+      color:#6842aa;
+      font-size:clamp(1.6rem,4vw,2.2rem);
+      margin:10px 0;
+    }
+
+    #virus-adventure h3 {
+      color:#6842aa;
+      margin:8px 0;
+    }
+
+    .vs-intro {
+      text-align:center;
+      max-width:740px;
+      margin:auto;
+    }
+
+    .vs-pill {
+      display:inline-block;
+      padding:8px 15px;
+      background:#e8dbff;
+      color:#603c9f;
+      border-radius:999px;
+      font-weight:850;
+      font-size:.9rem;
+    }
+
+    .vs-progress-info {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:20px 0 9px;
+      font-weight:850;
+      color:#6041a3;
+    }
+
+    .vs-track {
+      display:flex;
+      gap:7px;
+      margin-bottom:20px;
+    }
+
+    .vs-track span {
+      height:10px;
+      flex:1;
+      background:#e5d5f5;
+      border-radius:999px;
+    }
+
+    .vs-track span.done {
+      background:#53bfa3;
+    }
+
+    .vs-track span.current {
+      background:#8e66de;
+    }
+
+    .vs-scene {
+      background:linear-gradient(135deg,#edfaff,#fff0f8);
+      border:3px solid #d8bef1;
+      border-radius:24px;
+      padding:9px;
+      overflow:hidden;
+    }
+
+    .vs-scene svg {
+      width:100%;
+      display:block;
+      height:auto;
+    }
+
+    .vs-scene.warning {
+      border-color:#e3a077;
+      background:#fff1e7;
+      animation:vs-shake .3s ease;
+    }
+
+    .vs-scene.success {
+      border-color:#52c49b;
+      background:#ebfff5;
+    }
+
+    .vs-dialogue {
+      display:grid;
+      grid-template-columns:58px 1fr;
+      align-items:start;
+      gap:12px;
+      padding:17px;
+      margin:16px 0;
+      border-radius:18px;
+      background:#f5eeff;
+    }
+
+    .vs-avatar {
+      font-size:35px;
+      text-align:center;
+    }
+
+    .vs-dialogue strong {
+      color:#6139a9;
+    }
+
+    .vs-dialogue p {
+      line-height:1.55;
+      margin:7px 0 0;
+      font-size:1.06rem;
+    }
+
+    .vs-question {
+      background:white;
+      border:2px solid #e2cdf2;
+      border-radius:20px;
+      padding:20px;
+      margin-top:16px;
+    }
+
+    .vs-question h3 {
+      font-size:1.25rem;
+      margin-bottom:15px;
+    }
+
+    .vs-choices {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:11px;
+    }
+
+    .vs-choice {
+      cursor:pointer;
+      background:#fbf7ff;
+      color:#51358d;
+      padding:15px 10px;
+      border:2px solid #cfb5ed;
+      border-radius:15px;
+      font:inherit;
+      font-weight:800;
+      min-height:78px;
+      transition:transform .15s,background .15s;
+    }
+
+    .vs-choice:hover:not(:disabled) {
+      transform:translateY(-2px);
+      background:#eee5ff;
+    }
+
+    .vs-choice.correct {
+      background:#dcf8e9;
+      border-color:#40b98d;
+    }
+
+    .vs-choice.wrong {
+      background:#ffe0e3;
+      border-color:#df7e88;
+    }
+
+    .vs-choice:disabled {
+      cursor:default;
+    }
+
+    .vs-result {
+      display:none;
+      border:2px solid #edd19f;
+      background:#fff1d5;
+      border-radius:17px;
+      padding:15px;
+      margin:16px 0;
+      line-height:1.6;
+    }
+
+    .vs-result.visible {
+      display:block;
+    }
+
+    .vs-result.good {
+      background:#e4f9ec;
+      border-color:#7ccba6;
+    }
+
+    .vs-next {
+      display:block;
+      margin:18px auto 5px;
+      background:#774dc6;
+      color:#fff;
+      border:0;
+      border-radius:15px;
+      padding:16px 26px;
+      font-size:1.05rem;
+      font-weight:850;
+      cursor:pointer;
+    }
+
+    .vs-next:disabled {
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    .vs-caption {
+      text-align:center;
+      font-size:.85rem;
+      color:#6d637e;
+      margin:10px 0;
+    }
+
+    .vs-finish {
+      text-align:center;
+      padding:24px;
+      border-radius:24px;
+      background:linear-gradient(145deg,#f4eaff,#e9fbf5);
+      border:2px solid #d9bcec;
+    }
+
+    .vs-recap {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin:20px 0;
+    }
+
+    .vs-recap div {
+      background:white;
+      border:2px solid #e2cff5;
+      padding:15px 9px;
+      border-radius:17px;
+    }
+
+    .vs-recap span {
+      display:block;
+      font-size:42px;
+      margin-bottom:8px;
+    }
+
+    .vs-recap strong {
+      display:block;
+      color:#6041a6;
+    }
+
+    @keyframes vs-shake {
+      0%,100% {transform:translateX(0)}
+      25% {transform:translateX(-6px)}
+      75% {transform:translateX(6px)}
+    }
+
+    @media(max-width:650px) {
+      .vs-choices,
+      .vs-recap {
+        grid-template-columns:1fr;
+      }
+
+      .vs-dialogue {
+        grid-template-columns:42px 1fr;
+        padding:13px;
+      }
+
+      .vs-avatar {
+        font-size:28px;
+      }
+
+      .vs-choice {
+        min-height:58px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      #virus-adventure * {
+        animation:none!important;
+        transition:none!important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Replace ONLY the old story section.
+  section.innerHTML = `
+    <div id="virus-adventure">
+      <div class="vs-intro">
+        <span class="vs-pill">🎮 MISSION 2 — STORY MODE</span>
+        <h2>🦠 Inside the Invasion</h2>
+        <p>
+          Follow a hepatitis B virus through a liver cell.
+          Investigate seven scenes and unlock the science story!
+        </p>
+      </div>
+
+      <div class="vs-progress-info">
+        <span id="vs-chapter">CHAPTER 1 / 7</span>
+        <span id="vs-score">⭐ 0 / 7 stars</span>
+      </div>
+
+      <div class="vs-track" id="vs-track"></div>
+
+      <div class="vs-scene" id="vs-scene"></div>
+
+      <p class="vs-caption">
+        Simplified, fictional illustrations — not to scale.
+      </p>
+
+      <div class="vs-dialogue">
+        <div class="vs-avatar">🤖</div>
+        <div>
+          <strong>MISSION GUIDE</strong>
+          <p id="vs-narration"></p>
+        </div>
+      </div>
+
+      <div class="vs-question">
+        <h3 id="vs-question"></h3>
+        <div class="vs-choices" id="vs-choices"></div>
+        <div class="vs-result" id="vs-result"
+             role="status" aria-live="polite"></div>
+      </div>
+
+      <button id="vs-next" class="vs-next" disabled>
+        NEXT CHAPTER →
+      </button>
+    </div>
+  `;
+
+  const root = document.getElementById("virus-adventure");
+  const $ = selector => root.querySelector(selector);
+
+  // ------------------------------
+  // ILLUSTRATION BUILDING BLOCKS
+  // ------------------------------
+
+  function virus(x,y,s=1) {
+    return `
+      <g transform="translate(${x} ${y}) scale(${s})">
+        <circle r="25" fill="#f7a0c8"
+                stroke="#bd6099" stroke-width="5"/>
+        <circle r="12" fill="#9360ce"/>
+        <path d="M-8 0 Q0 -13 8 0 Q0 13 -8 0"
+              fill="none" stroke="#e9d9ff" stroke-width="3"/>
+
+        ${Array.from({length:10},(_,i)=>{
+          const angle=i*Math.PI/5;
+          const x1=Math.cos(angle)*26;
+          const y1=Math.sin(angle)*26;
+          const x2=Math.cos(angle)*36;
+          const y2=Math.sin(angle)*36;
+
+          return `
+            <line x1="${x1}" y1="${y1}"
+                  x2="${x2}" y2="${y2}"
+                  stroke="#c66a9f" stroke-width="4"/>
+            <circle cx="${x2}" cy="${y2}" r="5"
+                    fill="#f49ec6"/>
+          `;
+        }).join("")}
+      </g>
+    `;
+  }
+
+  function liverCell(injured=false) {
+    return `
+      <g>
+        <circle cx="350" cy="165" r="111"
+                fill="${injured?"#ffd6b9":"#ffd3e9"}"
+                stroke="${injured?"#df8c60":"#df79b2"}"
+                stroke-width="8"/>
+
+        <circle cx="350" cy="165" r="40"
+                fill="#ae87df" stroke="#8050ba"
+                stroke-width="5"/>
+
+        <circle cx="350" cy="165" r="13"
+                fill="#7442ad"/>
+
+        <g fill="#7946b5">
+          <circle cx="294" cy="127" r="5"/>
+          <circle cx="284" cy="192" r="5"/>
+          <circle cx="408" cy="129" r="5"/>
+          <circle cx="398" cy="221" r="5"/>
+        </g>
+
+        <g fill="none" stroke="#8876d3"
+           stroke-width="8" stroke-linecap="round">
+          <path d="M303 113 Q247 104 267 147 Q281 156 307 149"/>
+          <path d="M309 206 Q260 201 277 234 Q291 240 315 224"/>
+        </g>
+
+        <ellipse cx="399" cy="236" rx="34" ry="17"
+                 fill="#ffc179" stroke="#d48847"
+                 stroke-width="4"/>
+
+        <ellipse cx="299" cy="241" rx="26" ry="15"
+                 fill="#ffc179" stroke="#d48847"
+                 stroke-width="4"/>
+
+        <g fill="none" stroke="#34bca5"
+           stroke-width="7" stroke-linecap="round">
+          <path d="M377 94 Q406 106 427 92"/>
+          <path d="M382 107 Q409 118 421 105"/>
+        </g>
+      </g>
+    `;
+  }
+
+  function immuneCell(x,y) {
+    return `
+      <g>
+        <circle cx="${x}" cy="${y}" r="45"
+                fill="#b4e7fb" stroke="#4b9bcf"
+                stroke-width="6"/>
+        <path d="M${x-17} ${y}
+                 Q${x-6} ${y-27} ${x+8} ${y-5}
+                 Q${x+27} ${y+20} ${x-8} ${y+18}Z"
+              fill="#668dcf"/>
+        <circle cx="${x+15}" cy="${y-18}" r="5"
+                fill="white"/>
+      </g>
+    `;
+  }
+
+  function tissuePicture(injury=0,scars=false) {
+    return `
+      <g>
+        <rect x="120" y="65" width="365" height="230"
+              rx="20" fill="#fff3f8"
+              stroke="#dfbdd2" stroke-width="5"/>
+
+        ${Array.from({length:24},(_,i)=>{
+          const x=157+(i%6)*59;
+          const y=102+Math.floor(i/6)*52;
+          const hurt=i<injury;
+
+          return `
+            <rect x="${x-23}" y="${y-21}"
+                  width="47" height="42" rx="14"
+                  fill="${hurt?"#ffbb82":"#f4a9ca"}"
+                  stroke="${hurt?"#d98b56":"#cc78a0"}"
+                  stroke-width="3"/>
+
+            <circle cx="${x}" cy="${y}" r="7"
+                    fill="#8f55b9"/>
+
+            ${hurt?`
+              <path d="M${x-12} ${y-13}
+                       L${x+12} ${y+13}
+                       M${x+12} ${y-13}
+                       L${x-12} ${y+13}"
+                    stroke="#cb4356" stroke-width="4"/>
+            `:""}
+          `;
+        }).join("")}
+
+        ${scars?`
+          <path d="M238 77 L261 282 M393 77 L372 282"
+                stroke="#e6bc79" stroke-width="16"
+                stroke-dasharray="12 7"
+                opacity=".88"/>
+        `:""}
+      </g>
+    `;
+  }
+
+  function svgFrame(content,warning=false) {
+    return `
+      <svg viewBox="0 0 600 335"
+           role="img"
+           aria-label="Illustrated hepatitis B story scene">
+
+        <rect width="600" height="335" rx="23"
+              fill="${warning?"#fff0e4":"#f1faff"}"/>
+
+        <circle cx="65" cy="46" r="24"
+                fill="#e3d5ff" opacity=".8"/>
+
+        <circle cx="538" cy="290" r="25"
+                fill="#d7f5ef" opacity=".9"/>
+
+        ${content}
+      </svg>
+    `;
+  }
+
+  // ------------------------------
+  // SEVEN STORY CHAPTERS
+  // ------------------------------
+
+  const chapters = [
+    {
+      title:"An Unexpected Visitor",
+      narration:
+        "A tiny hepatitis B virus travels through the blood " +
+        "and reaches the liver. It approaches a liver cell.",
+      question:
+        "Which part must the virus attach to before it can enter?",
+      answers:[
+        "🛡️ Cell membrane",
+        "⚡ Mitochondria",
+        "🧠 Nucleus"
+      ],
+      correct:0,
+      success:
+        "The virus attaches to a special protein on the cell membrane.",
+      failure:
+        "That structure is inside the cell. Look at the cell's outer boundary.",
+      scene:0
+    },
+    {
+      title:"Inside the Cell",
+      narration:
+        "The virus enters and releases its genetic instructions. " +
+        "These instructions travel toward the cell's control centre.",
+      question:
+        "Where do the virus's DNA instructions go?",
+      answers:[
+        "📦 Golgi apparatus",
+        "🧠 Nucleus",
+        "♻️ Lysosomes"
+      ],
+      correct:1,
+      success:
+        "The viral DNA reaches the nucleus, where it helps direct the production of new viral material.",
+      failure:
+        "Remember Cell City Hall. Which organelle is the control centre?",
+      scene:1
+    },
+    {
+      title:"The Cell Workers",
+      narration:
+        "The virus cannot make all its parts on its own. " +
+        "It uses some of the cell's protein-building machinery.",
+      question:
+        "Which cell workers help make the virus's proteins?",
+      answers:[
+        "🏗️ Ribosomes",
+        "⚡ Mitochondria",
+        "🛡️ Cell membrane"
+      ],
+      correct:0,
+      success:
+        "Ribosomes make proteins. Hepatitis B uses them to help produce viral proteins.",
+      failure:
+        "Think back to the Cell City construction workers.",
+      scene:2
+    },
+    {
+      title:"The Copying Factory",
+      narration:
+        "New viral parts are made and assembled. " +
+        "More hepatitis B virus particles can then leave the cell.",
+      question:
+        "What could happen after new viruses leave?",
+      answers:[
+        "The liver instantly stops working",
+        "They can reach other liver cells",
+        "They turn into immune cells"
+      ],
+      correct:1,
+      success:
+        "New virus particles can travel to other liver cells and continue the infection.",
+      failure:
+        "Think about why viruses need to make more copies of themselves.",
+      scene:3
+    },
+    {
+      title:"The Immune Defenders",
+      narration:
+        "Your body's immune system notices infected liver cells. " +
+        "Immune defenders arrive to respond to the infection.",
+      question:
+        "What can happen when immune cells attack infected liver cells?",
+      answers:[
+        "The cells may become injured",
+        "The cells turn into viruses",
+        "The liver grows a new nucleus"
+      ],
+      correct:0,
+      success:
+        "The immune response helps fight the infection, but it can injure liver cells.",
+      failure:
+        "Immune defenders fight infection, but their response can also affect nearby tissue.",
+      scene:4
+    },
+    {
+      title:"The Inflammation Alarm",
+      narration:
+        "Inflammation is part of your body's response to an " +
+        "infection or injury. Inside the liver, it may damage cells.",
+      question:
+        "Which statement best describes inflammation?",
+      answers:[
+        "The body's response to injury or infection",
+        "A new organelle made by the cell",
+        "A sign that every liver cell is infected"
+      ],
+      correct:0,
+      success:
+        "Exactly. Inflammation means your body's defenses are responding. It does not always mean serious damage.",
+      failure:
+        "Think about what your body's defenses do when something is injured or infected.",
+      scene:5
+    },
+    {
+      title:"From Cells to the Liver",
+      narration:
+        "When liver cells are injured repeatedly over a long time, " +
+        "scar tissue may form. Too much scarring can make it harder " +
+        "for the liver to do its jobs.",
+      question:
+        "What might happen if liver injury continues for years?",
+      answers:[
+        "The liver becomes a muscle",
+        "Scar tissue may develop",
+        "Every injured cell instantly recovers"
+      ],
+      correct:1,
+      success:
+        "Scar tissue, called fibrosis, can develop after repeated injury. This does not happen to everyone with hepatitis B.",
+      failure:
+        "Remember the Tissue Time Machine: what can repeated injury leave behind?",
+      scene:6
+    }
+  ];
+
+  // ------------------------------
+  // STORY ART FOR EACH CHAPTER
+  // ------------------------------
+
+  function drawScene(index,wrong=false) {
+    let picture="";
+
+    if(index===0) {
+      picture=`
+        ${liverCell()}
+
+        ${virus(116,167,1)}
+
+        <path d="M166 167 L219 167"
+              stroke="#7047b8" stroke-width="7"
+              stroke-dasharray="9 8"/>
+
+        <circle cx="240" cy="167" r="13"
+                fill="#4fc4a1" stroke="#289c7c"
+                stroke-width="4"/>
+
+        <text x="112" y="255" text-anchor="middle"
+              font-size="19" font-weight="bold" fill="#6540a0">
+          VIRUS
+        </text>
+
+        <text x="355" y="312" text-anchor="middle"
+              font-size="20" font-weight="bold" fill="#6540a0">
+          LIVER CELL
+        </text>
+      `;
+    }
+
+    if(index===1) {
+      picture=`
+        ${liverCell()}
+
+        ${virus(245,162,.55)}
+
+        <path d="M275 163 L305 163"
+              stroke="#754abc" stroke-width="6"
+              stroke-dasharray="8 6"/>
+
+        <circle cx="350" cy="165" r="50"
+                fill="none" stroke="#30b98c"
+                stroke-width="6" stroke-dasharray="10 7"/>
+
+        <text x="120" y="125" font-size="22"
+              font-weight="bold" fill="#6440a1">
+          INSTRUCTIONS
+        </text>
+
+        <path d="M176 138 L227 159"
+              fill="none" stroke="#754abc"
+              stroke-width="5"/>
+      `;
+    }
+
+    if(index===2) {
+      picture=`
+        ${liverCell()}
+
+        <g fill="#7541a9">
+          <circle cx="292" cy="125" r="10"/>
+          <circle cx="285" cy="190" r="10"/>
+          <circle cx="404" cy="129" r="10"/>
+          <circle cx="395" cy="221" r="10"/>
+        </g>
+
+        <rect x="38" y="92" width="160" height="90"
+              rx="16" fill="#fff" stroke="#b99ce9"
+              stroke-width="4"/>
+
+        <text x="118" y="123" text-anchor="middle"
+              font-size="19" fill="#6340a3"
+              font-weight="bold">
+          PROTEIN
+        </text>
+
+        <text x="118" y="149" text-anchor="middle"
+              font-size="19" fill="#6340a3"
+              font-weight="bold">
+          BUILDERS
+        </text>
+
+        <path d="M198 143 L273 141"
+              stroke="#754abc" stroke-width="5"
+              stroke-dasharray="8 6"/>
+      `;
+    }
+
+    if(index===3) {
+      picture=`
+        ${liverCell(true)}
+
+        ${virus(499,85,.75)}
+        ${virus(500,210,.65)}
+        ${virus(145,165,.8)}
+        ${virus(343,90,.3)}
+
+        <path d="M450 152 L478 122"
+              stroke="#754abc" stroke-width="6"
+              stroke-dasharray="8 5"/>
+
+        <path d="M444 193 L479 202"
+              stroke="#754abc" stroke-width="6"
+              stroke-dasharray="8 5"/>
+
+        <text x="300" y="312" text-anchor="middle"
+              font-size="20" fill="#6843a7"
+              font-weight="bold">
+          NEW VIRUS PARTICLES
+        </text>
+      `;
+    }
+
+    if(index===4) {
+      picture=`
+        ${liverCell(true)}
+
+        ${virus(348,163,.35)}
+
+        ${immuneCell(123,165)}
+
+        <path d="M180 165 L225 165"
+              stroke="#4c9ecb" stroke-width="7"
+              stroke-dasharray="8 6"/>
+
+        <path d="M438 128 L476 91 M441 182 L494 208"
+              stroke="#e6a05c" stroke-width="7"
+              stroke-linecap="round"/>
+
+        <text x="124" y="251" text-anchor="middle"
+              fill="#3779ae" font-size="20" font-weight="bold">
+          DEFENDER
+        </text>
+      `;
+    }
+
+    if(index===5) {
+      picture=`
+        ${tissuePicture(6)}
+
+        ${immuneCell(86,92)}
+        ${immuneCell(519,253)}
+
+        <path d="M154 86 L202 109
+                 M475 235 L448 214"
+              fill="none" stroke="#5b9dcb"
+              stroke-width="5" stroke-dasharray="8 6"/>
+
+        <text x="300" y="37" text-anchor="middle"
+              font-size="21" font-weight="bold" fill="#6844aa">
+          INFLAMMATION
+        </text>
+      `;
+    }
+
+    if(index===6) {
+      picture=`
+        ${tissuePicture(8,true)}
+
+        <rect x="407" y="10" width="165" height="44"
+              rx="14" fill="white" stroke="#e2bb76"
+              stroke-width="3"/>
+
+        <text x="490" y="37" text-anchor="middle"
+              font-size="19" font-weight="bold" fill="#936a31">
+          SCAR TISSUE
+        </text>
+
+        <path d="M464 55 L389 101"
+              fill="none" stroke="#c39c5c"
+              stroke-width="5"/>
+      `;
+    }
+
+    if(wrong) {
+      picture+=`
+        <g>
+          <rect x="14" y="14" width="160" height="44"
+                rx="13" fill="#fff2dc"
+                stroke="#e8a05c" stroke-width="3"/>
+
+          <text x="94" y="42" text-anchor="middle"
+                font-size="19" font-weight="bold" fill="#a86b34">
+            CHECK AGAIN!
+          </text>
+        </g>
+      `;
+    }
+
+    return svgFrame(picture,wrong);
+  }
+
+  // ------------------------------
+  // GAME STATE
+  // ------------------------------
+
+  let chapter=0;
+  let stars=0;
+  let firstTry=true;
+
+  function showChapter() {
+    if(chapter===chapters.length) {
+      showEnding();
+      return;
+    }
+
+    firstTry=true;
+
+    const item=chapters[chapter];
+
+    $("#vs-chapter").textContent=
+      `CHAPTER ${chapter+1} / ${chapters.length}`;
+
+    $("#vs-score").textContent=
+      `⭐ ${stars} / ${chapters.length} stars`;
+
+    $("#vs-track").innerHTML=
+      chapters.map((_,i)=>`
+        <span class="${
+          i<chapter?"done":i===chapter?"current":""
+        }"></span>
+      `).join("");
+
+    $("#vs-scene").className="vs-scene";
+    $("#vs-scene").innerHTML=drawScene(item.scene);
+
+    $("#vs-narration").textContent=item.narration;
+    $("#vs-question").textContent=item.question;
+
+    const choices=$("#vs-choices");
+    const result=$("#vs-result");
+    const next=$("#vs-next");
+
+    result.className="vs-result";
+    result.textContent="";
+
+    next.disabled=true;
+    next.textContent=
+      chapter===chapters.length-1
+        ?"COMPLETE THE STORY →"
+        :"NEXT CHAPTER →";
+
+    choices.innerHTML=item.answers.map((answer,i)=>`
+      <button type="button"
+              class="vs-choice"
+              data-story-choice="${i}">
+        ${answer}
+      </button>
+    `).join("");
+
+    choices.querySelectorAll("button").forEach(button=>{
+      button.onclick=()=>{
+        const selected=Number(button.dataset.storyChoice);
+        const correct=selected===item.correct;
+
+        if(!correct) {
+          firstTry=false;
+
+          $("#vs-scene").className="vs-scene warning";
+          $("#vs-scene").innerHTML=
+            drawScene(item.scene,true);
+
+          button.classList.add("wrong");
+
+          result.className="vs-result visible";
+          result.innerHTML=`
+            <strong>🔎 Investigation setback!</strong>
+            <p>${item.failure}</p>
+            <p>Try another answer to continue.</p>
+          `;
+
+          return;
+        }
+
+        if(firstTry) stars++;
+
+        $("#vs-scene").className="vs-scene success";
+        $("#vs-scene").innerHTML=drawScene(item.scene);
+
+        button.classList.add("correct");
+
+        choices.querySelectorAll("button").forEach(b=>{
+          b.disabled=true;
+        });
+
+        $("#vs-score").textContent=
+          `⭐ ${stars} / ${chapters.length} stars`;
+
+        result.className="vs-result visible good";
+        result.innerHTML=`
+          <strong>✅ Story unlocked!</strong>
+          <p>${item.success}</p>
+          <p>${firstTry?"⭐ You earned a star!":"Great recovery!"}</p>
+        `;
+
+        next.disabled=false;
+      };
+    });
+  }
+
+  function showEnding() {
+    root.innerHTML=`
+      <div class="vs-finish">
+        <div style="font-size:75px">🏆 🧬 🦠</div>
+
+        <h2>Virus Invasion: Story Complete!</h2>
+
+        <p>You followed hepatitis B from the
+        cell membrane to the immune response.</p>
+
+        <h3>⭐ ${stars} / 7 stars</h3>
+
+        <div class="vs-recap">
+          <div>
+            <span>🦠</span>
+            <strong>Virus enters</strong>
+            The virus uses a doorway on the liver cell.
+          </div>
+
+          <div>
+            <span>🏭</span>
+            <strong>Cell machinery</strong>
+            Cell workers help make more viruses.
+          </div>
+
+          <div>
+            <span>🛡️</span>
+            <strong>Immune response</strong>
+            Inflammation can injure liver cells.
+          </div>
+        </div>
+
+        <p>
+          <strong>Next up:</strong> Investigate
+          how these changes affect liver tissue!
+        </p>
+
+        <button type="button" id="vs-continue" class="vs-next">
+          🔬 CONTINUE TO TISSUE DETECTIVE →
+        </button>
+
+        <button type="button" id="vs-replay"
+                class="vs-choice"
+                style="min-height:45px">
+          PLAY STORY AGAIN ↺
+        </button>
+      </div>
+    `;
+
+    $("#vs-continue").onclick=()=>{
+      if(typeof nextPage==="function") {
+        nextPage("microscope.html","invasion");
+      } else {
+        location.href="microscope.html";
+      }
+    };
+
+    $("#vs-replay").onclick=()=>{
+      chapter=0;
+      stars=0;
+      location.reload();
+    };
+  }
+
+  $("#vs-next").onclick=()=>{
+    chapter++;
+    showChapter();
+  };
+
+  showChapter();
+})();
