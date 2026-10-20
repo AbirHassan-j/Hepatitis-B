@@ -8341,3 +8341,104 @@ if (location.pathname.endsWith("cells.html")) {
       .forEach(el => el.remove());
   }
 })();
+
+/* =========================================================
+   LIVERQUEST — REMOVE REPEATED HEPATITIS B REMINDERS
+   Keep two main reminders:
+   1. Virus Invasion
+   2. Rescue Lab
+
+   PASTE AT THE VERY BOTTOM OF site.js
+   ========================================================= */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  const main = document.querySelector("main");
+
+  if (!main) return;
+
+  // Keep the existing reminder in Virus Invasion.
+  const virusNote = page === "invasion.html"
+    ? document.querySelector(".hb-bottom")
+    : null;
+
+  // Keep the existing reminder in Rescue Lab.
+  const labNote = page === "lab.html"
+    ? document.querySelector("#damage")
+        ?.closest(".panel")
+        ?.querySelector(".tiny")
+    : null;
+
+  // Different versions of the same repeated message.
+  const repeats = [
+    /\bNot everyone with (?:hepatitis B|HBV) (?:will )?develop(?:s)?[^.!?]*[.!?]?/gi,
+
+    /\bNot everyone develops? (?:serious liver damage|significant liver injury|serious liver injury|scarring|fibrosis|it)[.!?]?/gi,
+
+    /\b(?:This|That|It) does not happen to everyone(?: with (?:hepatitis B|HBV))?[.!?]?/gi,
+
+    /\bNot all (?:people|patients) with (?:hepatitis B|HBV) develop[^.!?]*[.!?]?/gi
+  ];
+
+  // Don't modify interactive questions or game answers.
+  const interactive =
+    "button, a, option, label, script, style, " +
+    "#lq-final-rescue, #lq-newsroom, #lq-expert-arcade, " +
+    "#lq-expert-3, #lq-expert-2, #virus-adventure";
+
+  // Find the website's visible text.
+  const walker = document.createTreeWalker(
+    main,
+    NodeFilter.SHOW_TEXT
+  );
+
+  const textNodes = [];
+
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
+  }
+
+  textNodes.forEach(node => {
+    const parent = node.parentElement;
+
+    if (!parent || parent.closest(interactive)) return;
+
+    // Protect the two reminders we're keeping.
+    if (virusNote?.contains(node)) return;
+    if (labNote?.contains(node)) return;
+
+    let updated = node.textContent;
+    let found = false;
+
+    repeats.forEach(regex => {
+      regex.lastIndex = 0;
+
+      if (regex.test(updated)) {
+        found = true;
+        regex.lastIndex = 0;
+        updated = updated.replace(regex, "");
+      }
+    });
+
+    if (!found) return;
+
+    // Clean up leftover spacing.
+    updated = updated.replace(
+      /,?\s+and\s*([.!?]|$)/gi,
+      "$1"
+    );
+
+    updated = updated.replace(/\s+([,.!?])/g, "$1");
+    updated = updated.replace(/[ \t]{2,}/g, " ");
+
+    // Remove empty explanatory paragraphs.
+    if (
+      !updated.trim() &&
+      parent.matches("p, small, .tiny, .caption")
+    ) {
+      parent.remove();
+    } else {
+      node.textContent = updated;
+    }
+  });
+})();
