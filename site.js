@@ -5734,3 +5734,378 @@ if (location.pathname.endsWith("cells.html")) {
 
   updateStatus();
 })();
+
+/* ==========================================================
+   LIVERQUEST — MISSION 3 + 4 LAYOUT IMPROVEMENTS
+
+   1. Rescue Lab: Clear slider instruction
+   2. Tissue Detective: Compact legend
+   3. Scar Tissue Scanner: Move under affected diagram
+   4. Detective Question: Clarify and move near diagrams
+
+   PASTE ONCE AT THE VERY BOTTOM OF site.js
+   ========================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+
+  if (page !== "microscope.html" && page !== "lab.html") return;
+
+  const style = document.createElement("style");
+  style.id = "lq-layout-updates";
+
+  document.getElementById("lq-layout-updates")?.remove();
+
+  style.textContent = `
+
+    /* ===================================
+       MISSION 4: SLIDER INSTRUCTIONS
+       =================================== */
+
+    .lq-slide-instruction {
+      background:linear-gradient(135deg,#fff0d5,#fff8ea);
+      border:2px solid #efc477;
+      border-radius:17px;
+      padding:15px 18px;
+      margin:16px 0;
+      text-align:center;
+    }
+
+    .lq-slide-instruction strong {
+      display:block;
+      color:#8c5d26;
+      font-size:1.07rem;
+      line-height:1.5;
+    }
+
+    .lq-slide-arrow {
+      color:#915cc3;
+      font-size:27px;
+      font-weight:900;
+      letter-spacing:3px;
+      margin-top:6px;
+    }
+
+    #damage {
+      width:100%;
+      accent-color:#8754c8;
+      cursor:pointer;
+      margin:13px 0;
+    }
+
+    /* ===================================
+       MISSION 3: COMPACT LEGEND
+       =================================== */
+
+    .tissue-legend {
+      max-width:660px !important;
+      width:100%;
+      margin:18px auto !important;
+      padding:15px !important;
+      border-radius:19px !important;
+    }
+
+    .tissue-legend h3 {
+      margin:0 0 7px;
+      font-size:1.12rem;
+    }
+
+    .tissue-legend > p {
+      margin:0 0 12px;
+      font-size:.92rem;
+    }
+
+    .tissue-legend-grid {
+      display:grid !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:8px 12px !important;
+    }
+
+    .tissue-legend .legend-item {
+      display:flex;
+      gap:9px;
+      align-items:center;
+      padding:9px !important;
+      border-radius:12px;
+      min-width:0;
+    }
+
+    .tissue-legend .legend-item strong {
+      font-size:.91rem;
+      line-height:1.35;
+    }
+
+    .tissue-legend .legend-item p {
+      margin:3px 0 0;
+      font-size:.82rem;
+      line-height:1.35;
+    }
+
+    .tissue-legend .legend-symbol {
+      flex-shrink:0;
+    }
+
+    /* ===================================
+       MISSION 3: SCANNER UNDER DIAGRAM
+       =================================== */
+
+    .kid-tissue-card .lq-scar-area {
+      margin:13px 0 0;
+      padding:12px;
+      border-radius:16px;
+    }
+
+    .kid-tissue-card .lq-scar-heading {
+      margin-bottom:8px;
+      gap:8px;
+    }
+
+    .kid-tissue-card .lq-scar-heading h3 {
+      font-size:1.04rem;
+    }
+
+    .kid-tissue-card .lq-scar-heading p {
+      font-size:.86rem;
+      line-height:1.35;
+    }
+
+    .kid-tissue-card .lq-scar-heading .lq-bubble {
+      font-size:25px;
+      padding:6px;
+      border-radius:10px;
+    }
+
+    .kid-tissue-card #show-scars {
+      width:100%;
+      padding:12px;
+      font-size:.93rem;
+    }
+
+    .kid-tissue-card .lq-scar-status {
+      padding:10px;
+      font-size:.85rem;
+    }
+
+    .kid-tissue-card .lq-scar-key {
+      font-size:.82rem;
+      line-height:1.35;
+    }
+
+    .lq-diagram-highlight {
+      outline:4px solid #ebc16b;
+      outline-offset:4px;
+      border-radius:15px;
+    }
+
+    /* ===================================
+       MISSION 3: DETECTIVE QUESTION
+       =================================== */
+
+    .lq-detective-question {
+      max-width:750px;
+      margin:20px auto !important;
+      padding:20px;
+      border:2px solid #d5bdf0;
+      border-radius:20px;
+      background:linear-gradient(135deg,#f7eeff,#effaff);
+      text-align:center;
+    }
+
+    .lq-detective-question h3 {
+      color:#6843aa;
+      margin:0 0 10px;
+    }
+
+    .lq-detective-question .lq-question-description {
+      max-width:570px;
+      margin:0 auto 15px;
+      line-height:1.55;
+    }
+
+    .lq-detective-question .answer-row {
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .lq-detective-question #tissue-feedback {
+      margin:13px 0 0;
+      font-weight:700;
+    }
+
+    @media(max-width:540px) {
+      .tissue-legend-grid {
+        grid-template-columns:1fr !important;
+      }
+
+      .tissue-legend {
+        max-width:100% !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  /* ===============================================
+     MISSION 4 — THE RESCUE LAB
+     =============================================== */
+
+  if (page === "lab.html") {
+    const slider = document.getElementById("damage");
+
+    if (slider) {
+      const existing = document.getElementById("lq-slide-guide");
+
+      if (!existing) {
+        const guide = document.createElement("div");
+        guide.id = "lq-slide-guide";
+        guide.className = "lq-slide-instruction";
+
+        guide.innerHTML = `
+          <strong>
+            👆 Slide to the RIGHT to see how ongoing
+            hepatitis B-related liver injury may
+            change liver tissue!
+          </strong>
+          <div class="lq-slide-arrow" aria-hidden="true">
+            ━━━━━━━ ➜
+          </div>
+        `;
+
+        slider.insertAdjacentElement("beforebegin", guide);
+      }
+
+      slider.setAttribute(
+        "aria-label",
+        "Move right to explore increasing levels of liver injury"
+      );
+    }
+
+    return;
+  }
+
+  /* ===============================================
+     MISSION 3 — TISSUE DETECTIVE
+     =============================================== */
+
+  // Move the existing scanner directly under the
+  // AFFECTED TISSUE diagram.
+
+  const injuredDiagram = document.getElementById("injured-tissue");
+  const affectedCard = injuredDiagram?.closest(".kid-tissue-card");
+  const scanner = document.querySelector(".lq-scar-area");
+  const scarButton = document.getElementById("show-scars");
+
+  if (affectedCard && injuredDiagram && scarButton) {
+    let scannerToMove = scanner;
+
+    // If the previous scanner upgrade is missing,
+    // make a simple matching wrapper.
+    if (!scannerToMove) {
+      scannerToMove = document.createElement("div");
+      scannerToMove.className = "lq-scar-area";
+
+      scannerToMove.innerHTML = `
+        <div class="lq-scar-heading">
+          <div class="lq-bubble">🩹</div>
+          <div>
+            <h3>Scar Tissue Scanner</h3>
+            <p>Reveal possible scarring in the diagram above.</p>
+          </div>
+        </div>
+      `;
+
+      scannerToMove.appendChild(scarButton);
+    }
+
+    // If the scanner already exists, clarify its instruction.
+    const scannerDescription =
+      scannerToMove.querySelector(".lq-scar-heading p");
+
+    if (scannerDescription) {
+      scannerDescription.textContent =
+        "Tap below to show possible scar tissue in the Affected Tissue diagram above.";
+    }
+
+    // Move the ORIGINAL scanner, not a duplicate.
+    // This preserves the previous click handler.
+    injuredDiagram.insertAdjacentElement("afterend", scannerToMove);
+
+    // Add a visual highlight while scar tissue is visible.
+    scarButton.addEventListener("click", function () {
+      const marker = document.getElementById("scar-marker");
+      const visible = marker?.classList.contains("visible");
+
+      injuredDiagram.classList.toggle(
+        "lq-diagram-highlight",
+        Boolean(visible)
+      );
+    });
+  }
+
+  /* ===============================================
+     MOVE AND CLARIFY THE DETECTIVE QUESTION
+     =============================================== */
+
+  const choices = document.querySelector(
+    '.answer-row:has([data-tissue-choice])'
+  );
+
+  const tissueGrid = document.querySelector(".kid-tissue-grid");
+
+  if (choices && tissueGrid) {
+    // Find the existing heading and question.
+    const answerContainer = choices.parentElement;
+
+    const headings = [...answerContainer.querySelectorAll("h3")];
+
+    const detectiveHeading = headings.find(h =>
+      /detective question/i.test(h.textContent)
+    );
+
+    if (detectiveHeading) {
+      const questionParagraph = detectiveHeading.nextElementSibling;
+      const feedback = document.getElementById("tissue-feedback");
+
+      const box = document.createElement("div");
+      box.className = "lq-detective-question";
+
+      // Move existing elements. Their click handlers stay active.
+      box.appendChild(detectiveHeading);
+
+      if (questionParagraph?.tagName === "P") {
+        box.appendChild(questionParagraph);
+        questionParagraph.classList.add("lq-question-description");
+
+        questionParagraph.innerHTML = `
+          🔬 Look at the <strong>two tissue diagrams above</strong>.
+          Which one contains <strong>orange injured liver cells</strong>
+          AND <strong>blue immune defenders</strong>?
+        `;
+      }
+
+      box.appendChild(choices);
+
+      if (feedback) {
+        box.appendChild(feedback);
+      }
+
+      choices.querySelectorAll("[data-tissue-choice]").forEach(button => {
+        const kind = button.dataset.tissueChoice;
+
+        button.textContent =
+          kind === "healthy"
+            ? "😊 Healthy-Looking Tissue"
+            : "🩹 Affected Tissue";
+      });
+
+      // Place it immediately after the two diagrams,
+      // before the bonus activities farther down the page.
+      tissueGrid.insertAdjacentElement("afterend", box);
+
+      detectiveHeading.textContent =
+        "🎯 Detective Check: Compare the Two Diagrams";
+    }
+  }
+})();
