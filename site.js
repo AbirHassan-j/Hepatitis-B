@@ -8286,3 +8286,58 @@ if (location.pathname.endsWith("cells.html")) {
   render();
 
 })();
+
+/* =====================================================
+   TISSUE DETECTIVE — REMOVE REPEATED COLOUR EXPLANATIONS
+   Keeps the compact legend above the diagrams.
+   Paste at the VERY BOTTOM of site.js.
+   ===================================================== */
+
+(function () {
+  const page = location.pathname.split("/").pop() || "index.html";
+  if (page !== "microscope.html") return;
+
+  // 1. Remove the repeated colour explanation
+  // from the Tissue Detective Guide.
+  const guide = document.getElementById("lq-tissue-guide");
+
+  if (guide) {
+    guide.querySelectorAll("p").forEach(p => {
+      const text = p.textContent.toLowerCase();
+
+      if (
+        text.includes("pink cells represent") ||
+        text.includes("orange cells with an x")
+      ) {
+        p.remove();
+      }
+    });
+  }
+
+  // 2. Remove the repeated colour explanation directly
+  // under "Healthy vs. Affected Liver Tissue".
+  const title = [...document.querySelectorAll("h2")]
+    .find(h =>
+      /healthy vs\.? affected liver tissue/i.test(h.textContent)
+    );
+
+  if (title) {
+    const next = title.nextElementSibling;
+
+    if (
+      next &&
+      next.tagName === "P" &&
+      /pink shapes represent|purple dots|orange cells/i
+        .test(next.textContent)
+    ) {
+      next.remove();
+    }
+  }
+
+  // 3. If the compact guide is already above the diagrams,
+  // remove any leftover duplicate older legend.
+  if (document.querySelector(".lq-top-guide")) {
+    document.querySelectorAll(".tissue-legend")
+      .forEach(el => el.remove());
+  }
+})();
