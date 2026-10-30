@@ -1,0 +1,1 @@
+Upload index.html, cells.html, invasion.html, credits.html, site.js, and style.css to your repository. Keep cell-city-Video1.mp4 in the same folder. Delete old microscope.html, lab.html, and finale.html if you want only the 3-page structure.
