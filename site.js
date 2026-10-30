@@ -9733,3 +9733,892 @@ if (location.pathname.endsWith("cells.html")) {
 
   enhanceDiscovery();
 })();
+
+/* ===========================================================
+   LIVERQUEST: THE HBV INVASION GAME
+   ADD TO THE VERY BOTTOM OF site.js
+   Runs ONLY on invasion.html.
+   Keeps your original website and science content.
+   =========================================================== */
+
+(function () {
+  "use strict";
+
+  const page = location.pathname.split("/").pop();
+  if (page !== "invasion.html") return;
+
+  const main = document.querySelector(".site main");
+  if (!main || document.getElementById("hbv-adventure")) return;
+
+  const game = document.createElement("section");
+  game.id = "hbv-adventure";
+
+  const W = 1100;
+  const H = 580;
+
+  const characters = [
+    { name: "Tiny Scientist", color: "#57d9d4", type: "scientist" },
+    { name: "Cell Explorer", color: "#ffca65", type: "explorer" },
+    { name: "Micro-Creature", color: "#bd91ff", type: "creature" }
+  ];
+
+  let selectedCharacter = 0;
+  let mode = "select";
+  let canvas, ctx;
+  let lastTime = 0;
+  let elapsed = 0;
+  let raceTime = 0;
+  let virusX = 75;
+  let virusY = 315;
+  let player = { x: 100, y: 420, r: 19 };
+  let health = 3;
+  let boost = 100;
+  let obstacleHit = 0;
+  let quizOpen = false;
+  let gameWon = false;
+  let keys = {};
+  let frameId = null;
+
+  const obstaclePositions = [
+    {x: 245, y: 400, r: 39},
+    {x: 385, y: 295, r: 47},
+    {x: 550, y: 430, r: 38},
+    {x: 700, y: 245, r: 45},
+    {x: 835, y: 415, r: 36}
+  ];
+
+  const particles = Array.from({length: 34}, (_, i) => ({
+    x: (i * 173) % W,
+    y: (i * 97) % H,
+    r: 2 + i % 4,
+    speed: 5 + i % 7
+  }));
+
+  const science = {
+    membrane: {
+      title: "The Cell Membrane",
+      text: "The cell membrane protects the cell and controls what enters and leaves. Hepatitis B can attach to a special protein on the surface of a liver cell before entering."
+    },
+    nucleus: {
+      title: "The Nucleus",
+      text: "The nucleus stores DNA, the instructions that help a cell work. During hepatitis B infection, viral genetic material reaches the nucleus, where a viral DNA template can form."
+    },
+    mitochondria: {
+      title: "Mitochondria",
+      text: "Mitochondria help provide usable energy for liver cells. Your liver needs energy to carry out its important jobs."
+    },
+    cytoplasm: {
+      title: "Cytoplasm",
+      text: "Cytoplasm is the jelly-like substance inside a cell. Many cell activities happen here, including some of the steps hepatitis B uses to produce new viral material."
+    }
+  };
+
+  game.innerHTML = `
+    <div class="hbv-game-header">
+      <div>
+        <span class="hbv-eyebrow">LIVERQUEST · INTERACTIVE ADVENTURE</span>
+        <h2>THE HBV INVASION</h2>
+        <p>Choose your character, witness the infection, and race to the nucleus.</p>
+      </div>
+      <div class="hbv-level-tag">LEVEL 01</div>
+    </div>
+
+    <div id="hbv-character-screen" class="hbv-menu">
+      <div class="hbv-menu-heading">
+        <span class="hbv-eyebrow">CHARACTER SELECT</span>
+        <h3>WHO WILL EXPLORE THE CELL?</h3>
+        <p>Choose your explorer before entering the microscopic world.</p>
+      </div>
+
+      <div class="hbv-characters" id="hbv-character-list"></div>
+
+      <button class="hbv-main-button" id="hbv-begin">
+        BEGIN ADVENTURE
+      </button>
+    </div>
+
+    <div id="hbv-play-screen" hidden>
+      <div class="hbv-hud">
+        <div id="hbv-status">THE CELL IS IN DANGER</div>
+        <div id="hbv-hearts">♥ ♥ ♥</div>
+        <div id="hbv-boost">BOOST 100%</div>
+      </div>
+
+      <div class="hbv-canvas-container">
+        <canvas id="hbv-canvas"
+                width="1100"
+                height="580"
+                aria-label="Interactive hepatitis B adventure game"></canvas>
+
+        <div id="hbv-story-box" class="hbv-story-box" hidden>
+          <span id="hbv-story-label">INCOMING MESSAGE</span>
+          <h3 id="hbv-story-title"></h3>
+          <p id="hbv-story-text"></p>
+          <button id="hbv-story-next" class="hbv-main-button">
+            CONTINUE
+          </button>
+        </div>
+      </div>
+
+      <div class="hbv-game-controls">
+        <span>MOVE: WASD / ARROWS</span>
+        <span>BOOST: HOLD SHIFT</span>
+        <span>PAUSE: P</span>
+      </div>
+
+      <div class="hbv-touch-controls">
+        <button data-hbv-key="ArrowLeft">◀</button>
+        <button data-hbv-key="ArrowUp">▲</button>
+        <button data-hbv-key="ArrowDown">▼</button>
+        <button data-hbv-key="ArrowRight">▶</button>
+        <button data-hbv-key="Shift">BOOST</button>
+      </div>
+    </div>
+
+    <div id="hbv-popup" class="hbv-popup" hidden>
+      <div class="hbv-popup-card" id="hbv-popup-content"></div>
+    </div>
+
+    <div class="hbv-lesson-note">
+      <strong>Science note:</strong>
+      HBV does not actually chase people or race through cells.
+      The chase is a fictional game mechanic representing the
+      virus entering a liver cell and travelling toward its nucleus.
+    </div>
+  `;
+
+  const pageHead = main.querySelector(".pagehead");
+  if (pageHead) pageHead.insertAdjacentElement("afterend", game);
+  else main.prepend(game);
+
+  const $ = id => document.getElementById(id);
+
+  canvas = $("hbv-canvas");
+  ctx = canvas.getContext("2d");
+
+  // -------------------------------------------------------
+  // DRAWING HELPERS
+  // -------------------------------------------------------
+
+  function circle(x, y, r, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function ellipse(x, y, rx, ry, fill, stroke, line = 3) {
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = line;
+      ctx.stroke();
+    }
+  }
+
+  function text(t, x, y, size = 18, color = "#fff") {
+    ctx.fillStyle = color;
+    ctx.font = `800 ${size}px Arial`;
+    ctx.textAlign = "center";
+    ctx.fillText(t, x, y);
+  }
+
+  function roundedBox(x, y, w, h, color, radius = 15) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, radius);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function drawCharacter(x, y, size = 1) {
+    const ch = characters[selectedCharacter];
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size, size);
+
+    // Ground shadow
+    ellipse(0, 22, 22, 7, "#43204a55");
+
+    if (ch.type === "creature") {
+      // An original friendly microscopic creature
+      ellipse(0, 0, 23, 25, ch.color, "#6841a1", 4);
+      ellipse(-15, -19, 7, 12, ch.color, "#6841a1");
+      ellipse(15, -19, 7, 12, ch.color, "#6841a1");
+    } else {
+      // Suit and arms
+      roundedBox(-17, -1, 34, 32, ch.color, 12);
+      circle(-22, 7, 8, ch.color);
+      circle(22, 7, 8, ch.color);
+
+      // Helmet
+      circle(0, -18, 23, "#d7faff");
+      circle(0, -18, 18, "#ffe0c0");
+
+      if (ch.type === "explorer") {
+        roundedBox(-21, -39, 42, 10, "#ffb74f", 5);
+      }
+    }
+
+    // Face
+    circle(-7, -14, 3, "#34264c");
+    circle(7, -14, 3, "#34264c");
+
+    ctx.strokeStyle = "#673b61";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, -8, 6, 0.1, Math.PI - 0.1);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawVirus(x, y, size = 1, time = 0) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size, size);
+
+    const wiggle = Math.sin(time / 170) * 3;
+
+    // Spike proteins on the cartoon virus
+    for (let i = 0; i < 12; i++) {
+      const a = i * Math.PI / 6 + time * 0.0004;
+      const px = Math.cos(a);
+      const py = Math.sin(a);
+
+      ctx.strokeStyle = "#e4b6ff";
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(px * 22, py * 22);
+      ctx.lineTo(px * 35, py * 35);
+      ctx.stroke();
+
+      circle(px * 37, py * 37, 6, "#ff9ed4");
+    }
+
+    circle(0, wiggle, 29, "#7541a8");
+    circle(0, wiggle, 22, "#af79e1");
+
+    circle(-10, -6 + wiggle, 6, "white");
+    circle(10, -6 + wiggle, 6, "white");
+    circle(-9, -5 + wiggle, 3, "#2c193b");
+    circle(9, -5 + wiggle, 3, "#2c193b");
+
+    ctx.strokeStyle = "#43205f";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, 10 + wiggle, 10, Math.PI, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawCell(time) {
+    // Fullscreen microscopic background
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, "#382455");
+    bg.addColorStop(1, "#151c42");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Giant cell membrane boundary
+    ellipse(550, 290, 535, 270, "#e6a0c8", "#ffdfec", 14);
+    ellipse(550, 290, 520, 255, "#f5bbd9", "#d77cae", 4);
+
+    // Cytoplasm shimmer
+    for (const p of particles) {
+      const py = p.y + Math.sin(time / 600 + p.x) * 10;
+      circle(p.x, py, p.r, "#fff0fa88");
+    }
+
+    // Background mitochondria
+    const positions = [
+      [215, 170, -0.3],
+      [450, 470, 0.4],
+      [745, 125, -0.5],
+      [900, 460, 0.35]
+    ];
+
+    for (const [x, y, angle] of positions) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ellipse(0, 0, 53, 27, "#f8a75d", "#bc7249", 5);
+
+      ctx.strokeStyle = "#bd7449";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-30, 0);
+      ctx.lineTo(-18, -10);
+      ctx.lineTo(-4, 10);
+      ctx.lineTo(10, -10);
+      ctx.lineTo(25, 8);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Nucleus
+    ellipse(935, 285, 112, 105, "#8b58bc", "#e5c7ff", 9);
+    ellipse(935, 285, 82, 77, "#aa77cf", "#7441a0", 5);
+    circle(935, 285, 23, "#7540ad");
+
+    text("NUCLEUS", 935, 155, 20, "#4e2865");
+
+    // Race finish gate
+    if (mode === "race") {
+      const pulse = 5 + Math.sin(time / 250) * 4;
+
+      ctx.strokeStyle = "#5cfff0";
+      ctx.lineWidth = pulse;
+      ctx.beginPath();
+      ctx.arc(935, 285, 118, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  function drawObstacles(time) {
+    obstaclePositions.forEach((o, i) => {
+      const bob = Math.sin(time / 350 + i) * 4;
+
+      ellipse(o.x, o.y + bob, o.r + 5, o.r * .7,
+        "#ba6398", "#f9d2e9", 5);
+
+      ellipse(o.x, o.y + bob, o.r * .7, o.r * .5,
+        "#db87b0", "#a14c85", 3);
+    });
+  }
+
+  // -------------------------------------------------------
+  // CHARACTER SELECT
+  // -------------------------------------------------------
+
+  function showCharacters() {
+    $("hbv-character-list").innerHTML = characters.map((ch, i) => `
+      <button class="hbv-character ${i === selectedCharacter ? "selected" : ""}"
+              data-character="${i}">
+        <span class="hbv-character-icon"
+              style="--char-color:${ch.color}">
+          ${ch.type === "scientist" ? "●" :
+            ch.type === "explorer" ? "◆" : "✦"}
+        </span>
+        <strong>${ch.name}</strong>
+        <small>${i === 0 ? "Brave science researcher" :
+                 i === 1 ? "Curious cell adventurer" :
+                 "Friendly microscopic life-form"}</small>
+        <span class="hbv-select-text">
+          ${i === selectedCharacter ? "✓ SELECTED" : "SELECT"}
+        </span>
+      </button>
+    `).join("");
+
+    game.querySelectorAll("[data-character]").forEach(b => {
+      b.onclick = () => {
+        selectedCharacter = Number(b.dataset.character);
+        showCharacters();
+      };
+    });
+  }
+
+  showCharacters();
+
+  $("hbv-begin").onclick = () => {
+    $("hbv-character-screen").hidden = true;
+    $("hbv-play-screen").hidden = false;
+
+    mode = "cinematic";
+    elapsed = 0;
+    virusX = 30;
+
+    startLoop();
+
+    story(
+      "MISSION BRIEFING",
+      "WELCOME TO LIVER CITY",
+      `You are ${characters[selectedCharacter].name}. You're exploring a liver cell when an unexpected warning appears. Something is approaching the cell membrane!`,
+      startCinematic
+    );
+  };
+
+  // -------------------------------------------------------
+  // STORY BOX
+  // -------------------------------------------------------
+
+  function story(label, title, message, callback) {
+    quizOpen = true;
+
+    $("hbv-story-label").textContent = label;
+    $("hbv-story-title").textContent = title;
+    $("hbv-story-text").textContent = message;
+    $("hbv-story-box").hidden = false;
+
+    $("hbv-story-next").onclick = () => {
+      $("hbv-story-box").hidden = true;
+      quizOpen = false;
+      if (callback) callback();
+    };
+  }
+
+  function startCinematic() {
+    mode = "cinematic";
+    elapsed = 0;
+  }
+
+  function startRace() {
+    player = { x: 115, y: 425, r: 19 };
+    virusX = 70;
+    virusY = 315;
+    health = 3;
+    boost = 100;
+    raceTime = 0;
+    obstacleHit = 0;
+    gameWon = false;
+    mode = "race";
+    updateHUD();
+  }
+
+  // -------------------------------------------------------
+  // GAMEPLAY
+  // -------------------------------------------------------
+
+  function updateHUD() {
+    $("hbv-hearts").textContent =
+      "♥ ".repeat(health) + "♡ ".repeat(3 - health);
+
+    $("hbv-boost").textContent =
+      "BOOST " + Math.round(boost) + "%";
+
+    if (mode === "race") {
+      $("hbv-status").textContent = "REACH THE NUCLEUS!";
+    }
+  }
+
+  function hitObstacle(x, y) {
+    return obstaclePositions.some(o =>
+      Math.hypot(x - o.x, y - o.y) < o.r + player.r - 6
+    );
+  }
+
+  function updateRace(dt, time) {
+    raceTime += dt;
+
+    let dx = 0;
+    let dy = 0;
+
+    if (keys.ArrowLeft || keys.a) dx--;
+    if (keys.ArrowRight || keys.d) dx++;
+    if (keys.ArrowUp || keys.w) dy--;
+    if (keys.ArrowDown || keys.s) dy++;
+
+    const moving = dx !== 0 || dy !== 0;
+
+    if (moving) {
+      const length = Math.hypot(dx, dy);
+      dx /= length;
+      dy /= length;
+    }
+
+    let speed = 0.26;
+
+    if (keys.Shift && moving && boost > 0) {
+      speed = 0.43;
+      boost = Math.max(0, boost - dt * .045);
+    } else {
+      boost = Math.min(100, boost + dt * .018);
+    }
+
+    const newX = Math.max(65, Math.min(1030,
+      player.x + dx * speed * dt));
+
+    const newY = Math.max(80, Math.min(500,
+      player.y + dy * speed * dt));
+
+    // Collision with cell obstacles
+    if (!hitObstacle(newX, player.y)) player.x = newX;
+    if (!hitObstacle(player.x, newY)) player.y = newY;
+
+    // HBV follows the player
+    const vx = player.x - virusX;
+    const vy = player.y - virusY;
+    const dist = Math.hypot(vx, vy);
+
+    if (dist > 0) {
+      const chaseSpeed = 0.135 + Math.min(raceTime / 90000, .035);
+      virusX += (vx / dist) * chaseSpeed * dt;
+      virusY += (vy / dist) * chaseSpeed * dt;
+    }
+
+    if (dist < 46 && time > obstacleHit) {
+      health--;
+      obstacleHit = time + 2300;
+      virusX = Math.max(65, player.x - 220);
+      virusY = 315;
+      updateHUD();
+
+      if (health <= 0) {
+        mode = "paused";
+
+        story(
+          "MISSION FAILED",
+          "THE VIRUS CAUGHT UP!",
+          "You were caught three times. Try a different route around the obstacles, and use your boost when you need extra speed.",
+          startRace
+        );
+      }
+    }
+
+    // Reaching the nucleus triggers a science puzzle.
+    if (Math.hypot(player.x - 935, player.y - 285) < 113) {
+      mode = "paused";
+      gameWon = true;
+      openNucleusChallenge();
+    }
+
+    updateHUD();
+  }
+
+  // -------------------------------------------------------
+  // QUIZ AND PUZZLE
+  // -------------------------------------------------------
+
+  function openQuiz(title, explanation, question, options, answer, done) {
+    quizOpen = true;
+
+    const popup = $("hbv-popup");
+    const content = $("hbv-popup-content");
+
+    popup.hidden = false;
+
+    content.innerHTML = `
+      <span class="hbv-eyebrow">SCIENCE CHECKPOINT</span>
+      <h2>${title}</h2>
+      <div class="hbv-science-info">${explanation}</div>
+      <h3>${question}</h3>
+      <div class="hbv-answer-grid">
+        ${options.map((option, i) => `
+          <button data-answer-index="${i}">${option}</button>
+        `).join("")}
+      </div>
+      <p id="hbv-answer-feedback" role="status"></p>
+    `;
+
+    content.querySelectorAll("[data-answer-index]").forEach(b => {
+      b.onclick = () => {
+        const chosen = Number(b.dataset.answerIndex);
+
+        if (chosen === answer) {
+          b.classList.add("correct");
+          $("hbv-answer-feedback").textContent =
+            "Correct! Science key unlocked.";
+
+          content.querySelectorAll("[data-answer-index]")
+            .forEach(button => button.disabled = true);
+
+          const nextButton = document.createElement("button");
+          nextButton.className = "hbv-main-button";
+          nextButton.textContent = "CONTINUE THE MISSION →";
+          content.appendChild(nextButton);
+
+          nextButton.onclick = () => {
+            popup.hidden = true;
+            quizOpen = false;
+            done();
+          };
+        } else {
+          b.classList.add("wrong");
+          $("hbv-answer-feedback").textContent =
+            "Not quite! Look back at the science explanation and try again.";
+        }
+      };
+    });
+  }
+
+  function openNucleusChallenge() {
+    openQuiz(
+      "YOU REACHED THE NUCLEUS!",
+      science.nucleus.text,
+      "What is the main job of the nucleus in a liver cell?",
+      [
+        "To store the cell's DNA instructions",
+        "To control everything entering the cell",
+        "To provide the cell's usable energy",
+        "To form the outer boundary of the cell"
+      ],
+      0,
+      () => {
+        mode = "puzzle";
+        openVirusPuzzle();
+      }
+    );
+  }
+
+  function openVirusPuzzle() {
+    quizOpen = true;
+
+    const popup = $("hbv-popup");
+    const content = $("hbv-popup-content");
+
+    popup.hidden = false;
+
+    const steps = [
+      {
+        name: "HBV attaches to the cell membrane",
+        explanation: science.membrane.text
+      },
+      {
+        name: "HBV enters the liver cell",
+        explanation: "After attaching to the cell surface, hepatitis B can enter the liver cell."
+      },
+      {
+        name: "Viral genetic material reaches the nucleus",
+        explanation: science.nucleus.text
+      },
+      {
+        name: "The cell's machinery helps make virus parts",
+        explanation: science.cytoplasm.text
+      },
+      {
+        name: "New virus particles can be assembled",
+        explanation: "New hepatitis B virus particles can be assembled and released from infected cells."
+      }
+    ];
+
+    let position = 0;
+
+    function renderPuzzle() {
+      if (position === steps.length) {
+        popup.hidden = true;
+        quizOpen = false;
+        finishMission();
+        return;
+      }
+
+      const current = steps[position];
+
+      const choices = [
+        position,
+        (position + 2) % steps.length,
+        (position + 3) % steps.length
+      ];
+
+      // Put choices in different positions each round.
+      const rotation = position % choices.length;
+      const shuffled = [
+        ...choices.slice(rotation),
+        ...choices.slice(0, rotation)
+      ];
+
+      content.innerHTML = `
+        <span class="hbv-eyebrow">VIRUS MYSTERY</span>
+        <h2>REBUILD THE INFECTION TIMELINE</h2>
+        <p>Choose what happens next in the HBV infection sequence.</p>
+
+        <div class="hbv-science-info">
+          STEP ${position + 1} OF ${steps.length}
+          <p>${current.explanation}</p>
+        </div>
+
+        <div class="hbv-timeline">
+          ${steps.map((s, i) => `
+            <span class="${i < position ? "complete" : ""}">
+              ${i < position ? "✓" : i + 1}
+            </span>
+          `).join("")}
+        </div>
+
+        <div class="hbv-answer-grid">
+          ${shuffled.map(i => `
+            <button data-sequence="${i}">${steps[i].name}</button>
+          `).join("")}
+        </div>
+
+        <p id="hbv-puzzle-feedback" role="status"></p>
+      `;
+
+      content.querySelectorAll("[data-sequence]").forEach(b => {
+        b.onclick = () => {
+          const chosen = Number(b.dataset.sequence);
+
+          if (chosen === position) {
+            position++;
+            renderPuzzle();
+          } else {
+            $("hbv-puzzle-feedback").textContent =
+              "That's not the next stage. Read the science clue and try again!";
+            b.classList.add("wrong");
+          }
+        };
+      });
+    }
+
+    renderPuzzle();
+  }
+
+  function finishMission() {
+    mode = "complete";
+    gameWon = true;
+
+    try {
+      const progress =
+        JSON.parse(localStorage.getItem("liverquest") || "{}");
+      progress.invasion = true;
+      localStorage.setItem("liverquest", JSON.stringify(progress));
+    } catch (e) {}
+
+    story(
+      "MISSION COMPLETE",
+      "YOU BEAT THE HBV CHALLENGE!",
+      "You reached the nucleus and discovered how HBV enters a liver cell, uses the cell's machinery, and can trigger an immune response that may injure liver cells. Your next mission is to investigate liver tissue!",
+      () => {
+        mode = "complete";
+        $("hbv-story-box").hidden = true;
+
+        const panel = document.createElement("div");
+        panel.className = "hbv-completion";
+
+        panel.innerHTML = `
+          <h3>MISSION COMPLETE</h3>
+          <p>You've completed the Virus Invasion game.</p>
+          <a href="microscope.html" class="hbv-main-button">
+            CONTINUE TO TISSUE DETECTIVE →
+          </a>
+          <button id="hbv-replay" class="hbv-secondary-button">
+            PLAY AGAIN
+          </button>
+        `;
+
+        game.appendChild(panel);
+
+        $("hbv-replay").onclick = () => {
+          panel.remove();
+          startRace();
+        };
+      }
+    );
+  }
+
+  // -------------------------------------------------------
+  // CUTSCENE AND RENDER LOOP
+  // -------------------------------------------------------
+
+  function drawCinematic(time, dt) {
+    drawCell(time);
+
+    // Scientist is initially inside the cell.
+    drawCharacter(215, 420, 1.25);
+
+    // HBV approaches from outside the cell.
+    const t = elapsed;
+
+    if (t < 2000) {
+      const x = -70 + (t / 2000) * 120;
+      drawVirus(x, 280, 1.25, time);
+      text("WARNING: HBV DETECTED", 550, 85, 28, "#693c74");
+    } else if (t < 4000) {
+      const x = 50 + ((t - 2000) / 2000) * 80;
+      drawVirus(x, 280, 1.25, time);
+      text("HBV ATTACHES TO THE MEMBRANE", 550, 85, 25, "#693c74");
+    } else if (t < 6000) {
+      const x = 130 + ((t - 4000) / 2000) * 120;
+      drawVirus(x, 280, 1.25, time);
+      text("HBV ENTERS THE CELL", 550, 85, 26, "#693c74");
+    } else {
+      mode = "paused";
+
+      story(
+        "EMERGENCY ALERT",
+        "RACE TO THE NUCLEUS!",
+        "HBV has entered the liver cell! In this fictional adventure, you must reach the nucleus before the virus catches you. Use WASD or arrow keys to move. Hold SHIFT to sprint. Avoid the large cell structures blocking your path!",
+        startRace
+      );
+    }
+  }
+
+  function render(time) {
+    const dt = Math.min(time - lastTime || 16, 40);
+    lastTime = time;
+
+    ctx.clearRect(0, 0, W, H);
+
+    if (mode === "cinematic" && !quizOpen) {
+      elapsed += dt;
+      drawCinematic(time, dt);
+    } else {
+      drawCell(time);
+
+      if (mode === "race" && !quizOpen) {
+        updateRace(dt, time);
+      }
+
+      if (mode === "race" || mode === "paused" ||
+          mode === "puzzle" || mode === "complete") {
+        drawObstacles(time);
+        drawCharacter(player.x, player.y, 1.15);
+
+        if (!gameWon) drawVirus(virusX, virusY, 1.1, time);
+      }
+    }
+
+    frameId = requestAnimationFrame(render);
+  }
+
+  function startLoop() {
+    if (frameId !== null) return;
+    lastTime = performance.now();
+    frameId = requestAnimationFrame(render);
+  }
+
+  // -------------------------------------------------------
+  // KEYBOARD + TOUCH CONTROLS
+  // -------------------------------------------------------
+
+  window.addEventListener("keydown", e => {
+    if (mode !== "race" || quizOpen) return;
+
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+         "Shift", " "].includes(key)) {
+      e.preventDefault();
+    }
+
+    keys[key] = true;
+
+    if (key === "p" && !e.repeat) {
+      mode = "paused";
+      story(
+        "GAME PAUSED",
+        "TAKE A BREAK",
+        "Your character and HBV are paused. Press Continue to resume the chase.",
+        () => { mode = "race"; }
+      );
+    }
+  });
+
+  window.addEventListener("keyup", e => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    keys[key] = false;
+  });
+
+  window.addEventListener("blur", () => {
+    keys = {};
+  });
+
+  game.querySelectorAll("[data-hbv-key]").forEach(button => {
+    const key = button.dataset.hbvKey;
+
+    button.addEventListener("pointerdown", e => {
+      e.preventDefault();
+      keys[key] = true;
+      button.setPointerCapture(e.pointerId);
+    });
+
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach(type => {
+      button.addEventListener(type, () => {
+        keys[key] = false;
+      });
+    });
+  });
+})();
