@@ -1486,3 +1486,483 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* ======================================================
+   LIVERQUEST HBV INVASION GAME
+   PASTE AT THE VERY BOTTOM OF style.css
+   ====================================================== */
+
+#hbv-adventure {
+  width: 100%;
+  margin: 20px auto 45px;
+  padding: 22px;
+  background: linear-gradient(145deg, #24183d, #111c39);
+  border: 3px solid #b08be9;
+  border-radius: 25px;
+  box-shadow: 0 15px 45px #3c235555;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+#hbv-adventure * {
+  box-sizing: border-box;
+}
+
+#hbv-adventure [hidden] {
+  display: none !important;
+}
+
+#hbv-adventure h2,
+#hbv-adventure h3,
+#hbv-adventure strong {
+  color: #fff;
+}
+
+#hbv-adventure p {
+  color: #ddd1ee;
+  line-height: 1.6;
+}
+
+.hbv-game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.hbv-game-header h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  letter-spacing: -1px;
+  margin: 8px 0;
+}
+
+.hbv-game-header p {
+  margin: 0;
+}
+
+.hbv-eyebrow {
+  color: #83f2db;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.hbv-level-tag {
+  flex-shrink: 0;
+  background: #83f2db;
+  color: #1c2941;
+  border-radius: 14px;
+  padding: 13px 18px;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.hbv-menu {
+  padding: 35px 24px;
+  border: 2px solid #655282;
+  border-radius: 20px;
+  background: linear-gradient(130deg, #372651, #24274c);
+  text-align: center;
+}
+
+.hbv-menu-heading h3 {
+  font-size: 29px;
+  margin: 13px 0;
+}
+
+.hbv-characters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 26px 0;
+}
+
+.hbv-character {
+  border: 3px solid #6e588c;
+  border-radius: 20px;
+  min-height: 230px;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  background: #42335e;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.hbv-character:hover,
+.hbv-character.selected {
+  border-color: #86f7dd;
+  background: #514071;
+  transform: translateY(-4px);
+}
+
+.hbv-character-icon {
+  display: grid;
+  place-items: center;
+  width: 86px;
+  height: 86px;
+  background: var(--char-color);
+  border: 5px solid #ffffff99;
+  border-radius: 50%;
+  color: #3b245b;
+  font-size: 40px;
+  box-shadow: 0 8px 25px #0004;
+}
+
+.hbv-character strong {
+  font-size: 18px;
+}
+
+.hbv-character small {
+  color: #dfd4f3;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.hbv-select-text {
+  margin-top: auto;
+  font-size: 12px;
+  font-weight: 900;
+  color: #91f4db;
+}
+
+.hbv-main-button {
+  display: inline-block;
+  border: 0;
+  background: linear-gradient(120deg, #77f3dc, #a3f5cf);
+  color: #1b2840 !important;
+  padding: 16px 28px;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.hbv-main-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.hbv-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #272341;
+  border: 2px solid #5b4b7c;
+  border-radius: 14px 14px 0 0;
+  padding: 13px 20px;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+#hbv-status {
+  color: #9cf9e6;
+}
+
+#hbv-hearts {
+  color: #ff8eb1;
+  font-size: 23px;
+}
+
+#hbv-boost {
+  color: #ffd46a;
+}
+
+.hbv-canvas-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #171d37;
+  border: 3px solid #6b568a;
+  border-top: 0;
+  border-radius: 0 0 20px 20px;
+}
+
+#hbv-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1100 / 580;
+}
+
+.hbv-story-box {
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  width: min(90%, 760px);
+  padding: 22px 28px;
+  border-radius: 17px;
+  border: 3px solid #8dddcf;
+  background: #1c203cf0;
+  color: #fff;
+  box-shadow: 0 15px 45px #0008;
+  text-align: center;
+}
+
+#hbv-story-label {
+  color: #95f4de;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.hbv-story-box h3 {
+  font-size: clamp(20px, 3vw, 32px);
+  margin: 10px 0;
+}
+
+.hbv-story-box p {
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.hbv-game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 5px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 900;
+  color: #d4c8e7;
+}
+
+.hbv-touch-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px auto 18px;
+}
+
+.hbv-touch-controls button {
+  background: #483767;
+  border: 2px solid #8b72ac;
+  color: #fff;
+  border-radius: 12px;
+  min-width: 55px;
+  min-height: 50px;
+  padding: 10px 16px;
+  font-weight: 900;
+  touch-action: none;
+  cursor: pointer;
+}
+
+.hbv-touch-controls button:last-child {
+  background: #7af0d4;
+  color: #192c35;
+}
+
+.hbv-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background: #0e1025dc;
+  backdrop-filter: blur(8px);
+}
+
+.hbv-popup-card {
+  width: min(650px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 32px;
+  background: linear-gradient(145deg, #34264e, #1d2440);
+  border: 3px solid #9a79d9;
+  border-radius: 23px;
+  box-shadow: 0 20px 70px #0009;
+}
+
+.hbv-popup-card h2 {
+  margin: 12px 0 18px;
+  font-size: clamp(25px, 3vw, 35px);
+}
+
+.hbv-popup-card h3 {
+  margin: 18px 0;
+}
+
+.hbv-science-info {
+  background: #43325d;
+  border-left: 5px solid #85f3da;
+  border-radius: 10px;
+  padding: 17px 19px;
+  color: #f6edff;
+  line-height: 1.7;
+}
+
+.hbv-science-info p {
+  margin: 8px 0 0;
+}
+
+.hbv-answer-grid {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.hbv-answer-grid button {
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+  background: #494064;
+  color: white;
+  border: 2px solid #7b6b99;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.hbv-answer-grid button:hover {
+  border-color: #a3f5cf;
+  background: #574977;
+}
+
+.hbv-answer-grid button.correct {
+  border-color: #8af6bf;
+  background: #285b4f;
+}
+
+.hbv-answer-grid button.wrong {
+  border-color: #ff8baa;
+  background: #69394d;
+}
+
+#hbv-answer-feedback,
+#hbv-puzzle-feedback {
+  min-height: 26px;
+  color: #ffdaa0;
+  font-weight: 800;
+}
+
+.hbv-timeline {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 22px 0;
+}
+
+.hbv-timeline span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: #605275;
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.hbv-timeline span.complete {
+  background: #81efc2;
+  color: #1a3142;
+}
+
+.hbv-completion {
+  margin: 20px auto;
+  padding: 30px;
+  background: linear-gradient(120deg, #284f4a, #293756);
+  border: 3px solid #81efc2;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.hbv-secondary-button {
+  display: inline-block;
+  padding: 16px 24px;
+  margin: 10px;
+  border-radius: 12px;
+  border: 2px solid #8d77b7;
+  background: #46355f;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.hbv-lesson-note {
+  padding: 12px 18px;
+  margin-top: 15px;
+  color: #c7bfd5;
+  background: #28253f;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  #hbv-adventure {
+    padding: 10px;
+  }
+
+  .hbv-game-header {
+    padding: 10px;
+  }
+
+  .hbv-characters {
+    grid-template-columns: 1fr;
+  }
+
+  .hbv-character {
+    min-height: 150px;
+  }
+
+  .hbv-menu {
+    padding: 20px 12px;
+  }
+
+  .hbv-hud {
+    padding: 10px;
+    font-size: 11px;
+  }
+
+  .hbv-story-box {
+    width: 95%;
+    padding: 10px;
+    bottom: 2%;
+  }
+
+  .hbv-story-box p {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .hbv-story-box h3 {
+    font-size: 17px;
+  }
+
+  .hbv-story-box .hbv-main-button {
+    padding: 8px 13px;
+    font-size: 11px;
+  }
+
+  .hbv-popup-card {
+    padding: 20px;
+  }
+}
+
+/* Give the HBV game more room without changing Cell City */
+body:has(#hbv-adventure) .site {
+  max-width: none;
+}
+
+body:has(#hbv-adventure) main {
+  max-width: none;
+  padding-left: clamp(10px, 2vw, 30px);
+  padding-right: clamp(10px, 2vw, 30px);
+}
+
+#hbv-adventure {
+  max-width: 1650px;
+}
