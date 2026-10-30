@@ -1,27 +1,10 @@
-LIVERQUEST: HEPATITIS B - WEBSITE SOURCE CODE
-================================================
-HOW TO OPEN
-Double-click index.html in a browser. Click through the missions. For publishing, upload ALL the HTML pages, style.css, and site.js together to a static host. Do not change your course-approved URL.
+LIVERQUEST GAME REPLACEMENT
 
-WHAT IS INCLUDED
-index.html - Adventure map / landing page
-cells.html - Clickable cell organelles and matching game
-invasion.html - Viral invasion story / 5-step exploration
-microscope.html - Actual liver tissue micrograph comparison / tissue clues
-lab.html - Tissue scarring teaching model / 5 mythbusters / vaccine defence
-finale.html - Five-question final quiz and reward
-credits.html - Image creators, licenses, science sources
-site.js - Entire game engine, real-image URLs, browser-based progress
-style.css - Responsive design
+1. Back up your current site.js, style.css and HTML files.
+2. Upload all files in this package to your GitHub Pages site folder.
+3. This version uses game.js and game.css; leave your original site.js and style.css untouched as backups.
+4. Start at index.html. Movement: arrow keys or WASD, E/space to interact. Mobile: on-screen controls.
+5. Use ☰ Episodes to select any chapter.
+6. credits.html is not included: keep your current credits.html file.
 
-IMAGES IMPORTANT
-Images are loaded directly from Wikimedia Commons URLs. The building environment could NOT download their bytes locally. To make the final experience reliable on school networks, check all images on the school's network. Best solution: download each image from the source links on credits.html, save locally, then replace each corresponding 'pic' URL in site.js with a relative local path, for example assets/healthy.jpg. Observe their licenses and keep credit links. Wikimedia may block hotlinking or school restrictions may block its host. Never assume these remote images are verified accessible to LDCSB.
-
-OTHER NOTES
-No embedded YouTube, Google tools, social media, AI chatbot, analytics, or external JavaScript. Fonts have an optional external Google Fonts reference in style.css: REMOVE the first @import line before LDCSB testing if Google services are blocked. System fallback fonts work without it.
-
-Accessibility: buttons are real keyboard-selectable controls, photos have alt text, pages adapt to mobile. Have classmates test via keyboard, screen reader, and school Wi-Fi.
-
-Medical accuracy: simulations teach concepts only, not diagnosis or real scarring times. Sources: CDC, NIDDK. Not every infected liver cell looks ground-glass and long-term liver scarring is not inevitable.
-
-Publication: GitHub Pages or other non-Google static hosting is possible, if accepted by your instructor/school. October 9 URL check deadline already listed in the assignment; keep any approved URL unchanged and publish updates at the same address.
+Important: This is a new playable prototype with hand-drawn Canvas visuals, dialogue, pickups, level progression and local saves; the art is procedural rather than illustrated character sprites. Science facts have been simplified for Grade 7–8. Test each mission on your live site before submission.
