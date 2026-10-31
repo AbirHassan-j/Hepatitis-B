@@ -9727,3 +9727,106 @@ if (location.pathname.endsWith("cells.html")) {
 
   enhanceDiscovery();
 })();
+
+/* ==========================================
+   CELL CITY — REMOVE REPEATED ACTIVITIES
+   ========================================== */
+
+(function () {
+  if (!location.pathname.endsWith("cells.html")) return;
+
+  function simplifyCellCity() {
+
+    // 1. Remove the hepatitis B explanation
+    // (Students learn this in the maze game.)
+    document.getElementById("lq-cell-connection")?.remove();
+
+    // 2. Find the Build-a-Cell Challenge
+    const challenge = document.getElementById("match-game")
+      ?.closest("section");
+
+    // 3. Keep the Complete Mission button
+    const button = document.getElementById("cell-next");
+
+    if (button) {
+      // Create a footer if one does not already exist
+      let footer = document.getElementById(
+        "cell-city-mission-footer"
+      );
+
+      if (!footer) {
+        footer = document.createElement("section");
+        footer.id = "cell-city-mission-footer";
+
+        footer.innerHTML = `
+          <h2>🧫 Cell City Mission Complete!</h2>
+          <p>
+            Great job exploring the parts of a liver cell!
+            You're ready for the next adventure.
+          </p>
+        `;
+
+        document.querySelector("main")?.appendChild(footer);
+      }
+
+      // Move the button outside the challenge
+      footer.appendChild(button);
+
+      // No matching challenge needed
+      button.disabled = false;
+      button.style.display = "inline-block";
+      button.style.margin = "15px auto";
+    }
+
+    // 4. Remove Build-a-Cell Challenge
+    challenge?.remove();
+
+    // 5. Update any old challenge instructions
+    const status = document.getElementById(
+      "cell-city-ending-status"
+    );
+
+    if (status) {
+      status.textContent =
+        "Explore the cell parts, then continue when ready!";
+    }
+
+    // 6. Add styling for the ending section
+    if (!document.getElementById("cell-city-simple-style")) {
+      const style = document.createElement("style");
+      style.id = "cell-city-simple-style";
+
+      style.textContent = `
+        #cell-city-mission-footer {
+          margin: 30px 0;
+          padding: 30px 20px;
+          text-align: center;
+          border: 3px solid #d7b8ee;
+          border-radius: 24px;
+          background: linear-gradient(
+            135deg, #f8edff, #e7fbf3
+          );
+        }
+
+        #cell-city-mission-footer h2 {
+          color: #6942aa;
+        }
+
+        #cell-city-mission-footer #cell-next {
+          cursor: pointer;
+        }
+      `;
+
+      document.head.appendChild(style);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      simplifyCellCity
+    );
+  } else {
+    simplifyCellCity();
+  }
+})();
