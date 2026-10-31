@@ -1,35 +1,28 @@
-LIVERQUEST — VIRUS OUTBREAK (three-page website)
+LIVERQUEST: HBV MAZE QUEST (4 ARCADE LEVELS)
 
-Upload all EIGHT of these files to the ROOT of your GitHub Pages repository:
-index.html
-cells.html
-invasion.html
-credits.html
-site.js
-style.css
-game.js
-game.css
+UPLOAD TO GITHUB PAGES
+1. Download your current repository as a backup.
+2. Extract the ZIP.
+3. Open the LiverQuest_PacMaze folder and upload the files INSIDE it to the ROOT of your GitHub repository (where index.html belongs).
+4. KEEP your existing cell-city-Video1.mp4 in the repository root. The video is NOT in the ZIP.
+5. Commit changes, then refresh GitHub Pages with Ctrl+Shift+R.
+6. The main pages are: index.html (Mission Control), cells.html (Cell City), invasion.html (the four-level maze game), credits.html.
+7. Remove older game.js and game.css if desired; they are not used by this package. Old microscope.html, lab.html, finale.html are also no longer in navigation.
 
-KEEP your existing cell-city-Video1.mp4 in the root folder. The video is not included in the ZIP.
+INSIDE THE ZIP:
+- index.html, cells.html, credits.html, site.js, style.css: preserve original website and Cell City activities.
+- invasion.html: standalone fullscreen HBV Maze Quest page.
+- pacmaze.js: new maze gameplay and science discovery content.
+- pacmaze.css: visuals/layout for the game.
 
-The old microscope.html, lab.html and finale.html are not linked from the three-page website and can be removed after you have tested the replacement.
+GAME:
+Level 1 - Tissue Detective: healthy tissue, immune response/inflammation, possible scarring.
+Level 2 - Virus Invasion: attachment and entry, virus instructions toward nucleus, new particles made and released.
+Level 3 - Rescue Lab: transmission, vaccine, blood tests and medical care.
+Level 4 - Save Liver City: cells/tissues/organs, why HBV matters, prevention and care.
 
-Controls:
-A / D or ← / → = walk
-Space or ↑ = jump; press again in air for a double jump
-Shift = sprint using energy
-E = activate a glowing discovery station
-P = pause
-Touch controls display on mobile/touchscreen devices.
+Controls: arrow keys or WASD, or touch direction buttons. Reach 3 glowing stations per level, read and view their visual, then take the exit gate. HBV viruses chase the player. Getting caught only resets the position, not the discoveries.
 
-Game chapters:
-1. HBV attaches to the membrane and enters; chase toward nucleus
-2. HBV uses the cell to make more viruses; interact with three stations
-3. Explore liver tissue and the immune response; three scanning stations
-4. Vaccines, blood testing, and medical care; three activation stations
+NOTE: The science is simplified for Grade 7/8; the maze/virus characters are fictional representations. The game is not an exact simulation of HBV inside a cell. It does not remove an existing hepatitis B infection.
 
-This is an original fictional platform game intended to illustrate actual HBV science at a Grade 7–8 level. The chase, characters, and power-ups are playful representations, not literal biological events.
-
-The JavaScript was syntax-checked. Full browser gameplay could not be verified in this environment; please test all four stages on the deployed website before submitting.
-
-If the old website appears after your upload, hard-refresh with Ctrl + Shift + R.
+VALIDATION: JavaScript syntax checked with node --check, all maze objective cells checked reachable. Full in-browser playthrough could not be completed in this environment.
