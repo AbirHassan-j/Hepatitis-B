@@ -921,3 +921,87 @@
     opacity: 1;
   }
 }
+
+/* LIVERQUEST - SPOT THE SCIENCE */
+
+.lq-spot-game {
+  background: #fff5fc;
+  border: 2px solid #e9c9f3;
+  border-radius: 18px;
+  padding: 16px;
+  color: #583579;
+  text-align: center;
+}
+
+.lq-spot-game h3 {
+  color: #7842ac;
+  font-size: 17px;
+  margin-bottom: 15px;
+}
+
+.lq-spot-choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.lq-spot-option {
+  background: white;
+  color: #654184;
+  border: 2px solid #dec0f0;
+  border-radius: 15px;
+  padding: 12px 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform .2s, background .2s;
+}
+
+.lq-spot-option:hover {
+  transform: translateY(-3px);
+  background: #faedff;
+}
+
+.lq-spot-icon {
+  display: block;
+  font-size: 38px;
+  margin-bottom: 9px;
+}
+
+.lq-spot-option.lq-spot-correct {
+  background: #e4f8e8;
+  border-color: #69bc87;
+}
+
+.lq-spot-option.is-error {
+  border-color: #e996ad;
+  background: #fff0f3;
+}
+
+.lq-spot-feedback {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f1e4fc;
+  color: #573579;
+  line-height: 1.5;
+}
+
+.lq-spot-feedback button {
+  margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+  .lq-spot-choices {
+    gap: 5px;
+  }
+
+  .lq-spot-icon {
+    font-size: 29px;
+  }
+
+  .lq-spot-option {
+    font-size: 11px;
+    padding: 9px 4px;
+  }
+}
