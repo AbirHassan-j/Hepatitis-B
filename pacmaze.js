@@ -56,6 +56,151 @@ const scienceActivities=[
 function shuffleIndices(n){const arr=Array.from({length:n},(_,i)=>i);for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 function makeScienceChallenge(i,onComplete){
  const activity=scienceActivities[level][Math.floor(i/2)];
+ 
+/* SPOT THE SCIENCE - REPLACES MATCHING CHECKPOINTS */
+
+if (activity.type === "match") {
+
+  const spotQuestions = {
+    "0-2": {
+      question: "What does an infected liver cell help make?",
+      choices: [
+        ["🦠", "New HBV particles"],
+        ["🌳", "Plant cells"],
+        ["🦴", "Bones"]
+      ],
+      answer: 0,
+      fact: "HBV uses cell machinery to make more viruses."
+    },
+
+    "1-0": {
+      question: "Which shows possible liver tissue damage?",
+      choices: [
+        ["🩷", "Healthy cells"],
+        ["🟠", "Affected tissue"],
+        ["✨", "Healthy liver"]
+      ],
+      answer: 1,
+      fact: "Infection and the immune response can damage liver tissue."
+    },
+
+    "1-2": {
+      question: "Can hepatitis B affect everyone differently?",
+      choices: [
+        ["✅", "Yes, some infections clear"],
+        ["❌", "Everyone gets very sick"],
+        ["❌", "Everyone gets scars"]
+      ],
+      answer: 0,
+      fact: "Some infections clear. Others become long-term."
+    },
+
+    "2-2": {
+      question: "Someone feels healthy but may have HBV. What helps?",
+      choices: [
+        ["🧪", "A blood test"],
+        ["🤗", "Avoiding friends"],
+        ["🍬", "Eating candy"]
+      ],
+      answer: 0,
+      fact: "A person can have HBV without symptoms."
+    },
+
+    "3-1": {
+      question: "What does HBV need to make copies?",
+      choices: [
+        ["🧫", "A living host cell"],
+        ["🪨", "A rock"],
+        ["💧", "Only water"]
+      ],
+      answer: 0,
+      fact: "HBV needs a living cell to make more viruses."
+    }
+  };
+
+  const key = `${level}-${Math.floor(i / 2)}`;
+  const q = spotQuestions[key];
+
+  if (q) {
+    const options = q.choices.map((item, n) => `
+      <button type="button"
+              class="lq-spot-option"
+              data-spot="${n}">
+        <span class="lq-spot-icon">${item[0]}</span>
+        <span>${item[1]}</span>
+      </button>
+    `).join("");
+
+    showModal(`
+      <div class="challenge-titleline">
+        <span class="challenge-icon">🔍</span>
+        <div>
+          <span class="modal-eyebrow">SCIENCE CHECKPOINT</span>
+          <h2>Spot the Science!</h2>
+          <p class="subnote">Tap the correct picture.</p>
+        </div>
+      </div>
+
+      <div class="lq-spot-game">
+        <h3>${q.question}</h3>
+
+        <div class="lq-spot-choices">
+          ${options}
+        </div>
+
+        <div id="science-feedback"
+             class="lq-spot-feedback"
+             aria-live="polite">
+          Choose one picture!
+        </div>
+      </div>
+    `);
+
+    react("quiz");
+
+    document.querySelectorAll("[data-spot]")
+      .forEach(button => {
+
+        button.onclick = () => {
+          const choice = Number(button.dataset.spot);
+          const feedback =
+            document.getElementById("science-feedback");
+
+          if (choice !== q.answer) {
+            button.classList.add("is-error");
+            feedback.textContent =
+              "Not quite! Try another picture.";
+            return;
+          }
+
+          button.classList.add("lq-spot-correct");
+
+          document.querySelectorAll("[data-spot]")
+            .forEach(b => b.disabled = true);
+
+          challengeSolved++;
+          score += 25;
+          updateHud();
+          react("correct");
+
+          feedback.innerHTML = `
+            <strong>✅ Great job!</strong>
+            <p>${q.fact}</p>
+            <button id="lq-spot-continue"
+                    class="primary">
+              CONTINUE THE ADVENTURE →
+            </button>
+          `;
+
+          document.getElementById("lq-spot-continue")
+            .onclick = onComplete;
+        };
+      });
+
+    return;
+  }
+}
+
  const title=`<div class="challenge-titleline"><span class="challenge-icon">🧩</span><div><span class="modal-eyebrow">SCIENCE CHECKPOINT ${Math.floor(i/2)+1} / 3</span><h2>${activity.type==='match'?'Match the Science!':'Build the Sequence!'}</h2><p class="subnote">${activity.prompt} You can retry without losing progress.</p></div></div>`;
  const feedback='<div id="science-feedback" class="catch-feedback" aria-live="polite">Choose an item to begin.</div>';
  let finished=false;
