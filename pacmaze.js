@@ -57,66 +57,63 @@ function shuffleIndices(n){const arr=Array.from({length:n},(_,i)=>i);for(let i=n
 function makeScienceChallenge(i,onComplete){
  const activity=scienceActivities[level][Math.floor(i/2)];
  
-/* SPOT THE SCIENCE - REPLACES MATCHING CHECKPOINTS */
 
-if (activity.type === "match") {
+const spotQuestions = {
+  "0-2": {
+    question: "Which cell structure makes proteins that HBV needs?",
+    choices: [
+      ["🧬", "Nucleus"],
+      ["⚙️", "Ribosomes"],
+      ["🫧", "Cell membrane"]
+    ],
+    answer: 1,
+    fact: "Ribosomes build proteins. HBV uses the cell's ribosomes to make virus proteins."
+  },
 
-  const spotQuestions = {
-    "0-2": {
-      question: "What does an infected liver cell help make?",
-      choices: [
-        ["🦠", "New HBV particles"],
-        ["🌳", "Plant cells"],
-        ["🦴", "Bones"]
-      ],
-      answer: 0,
-      fact: "HBV uses cell machinery to make more viruses."
-    },
+  "1-0": {
+    question: "What can happen when the immune system responds to infected liver cells?",
+    choices: [
+      ["🛡️", "The liver becomes immune to every virus"],
+      ["🔬", "Inflammation can damage liver tissue"],
+      ["🩷", "All liver cells stop working immediately"]
+    ],
+    answer: 1,
+    fact: "The immune response can cause inflammation and damage liver tissue."
+  },
 
-    "1-0": {
-      question: "Which shows possible liver tissue damage?",
-      choices: [
-        ["🩷", "Healthy cells"],
-        ["🟠", "Affected tissue"],
-        ["✨", "Healthy liver"]
-      ],
-      answer: 1,
-      fact: "Infection and the immune response can damage liver tissue."
-    },
+  "1-2": {
+    question: "How can hepatitis B affect different people?",
+    choices: [
+      ["⏳", "Every infection becomes long-term"],
+      ["😷", "Only people with symptoms can have HBV"],
+      ["🩺", "Some infections clear, while others continue"]
+    ],
+    answer: 2,
+    fact: "Some people clear HBV. Others develop a long-term infection."
+  },
 
-    "1-2": {
-      question: "Can hepatitis B affect everyone differently?",
-      choices: [
-        ["✅", "Yes, some infections clear"],
-        ["❌", "Everyone gets very sick"],
-        ["❌", "Everyone gets scars"]
-      ],
-      answer: 0,
-      fact: "Some infections clear. Others become long-term."
-    },
+  "2-2": {
+    question: "Why might someone need an HBV blood test even if they feel healthy?",
+    choices: [
+      ["🧪", "HBV can be present without symptoms"],
+      ["💉", "A blood test prevents HBV infection"],
+      ["👀", "Everyone with HBV develops yellow eyes"]
+    ],
+    answer: 0,
+    fact: "A person can have hepatitis B without noticeable symptoms. A blood test can detect infection."
+  },
 
-    "2-2": {
-      question: "Someone feels healthy but may have HBV. What helps?",
-      choices: [
-        ["🧪", "A blood test"],
-        ["🤗", "Avoiding friends"],
-        ["🍬", "Eating candy"]
-      ],
-      answer: 0,
-      fact: "A person can have HBV without symptoms."
-    },
-
-    "3-1": {
-      question: "What does HBV need to make copies?",
-      choices: [
-        ["🧫", "A living host cell"],
-        ["🪨", "A rock"],
-        ["💧", "Only water"]
-      ],
-      answer: 0,
-      fact: "HBV needs a living cell to make more viruses."
-    }
-  };
+  "3-1": {
+    question: "Why does HBV need to enter a liver cell?",
+    choices: [
+      ["⚡", "To collect energy and survive on its own"],
+      ["🧫", "To use cell machinery to make more viruses"],
+      ["🩷", "To help the liver process nutrients"]
+    ],
+    answer: 1,
+    fact: "HBV depends on a host cell's machinery to produce more viruses."
+  }
+};
 
   const key = `${level}-${Math.floor(i / 2)}`;
   const q = spotQuestions[key];
