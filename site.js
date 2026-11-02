@@ -9830,3 +9830,50 @@ if (location.pathname.endsWith("cells.html")) {
     simplifyCellCity();
   }
 })();
+
+/* ==========================================
+   FLOATING CELLS + HBV BACKGROUND
+   ========================================== */
+
+(function () {
+  if (location.pathname.endsWith("invasion.html")) return;
+
+  function addFloatingBioBackground() {
+    if (document.querySelector(".floating-bio-bg")) return;
+
+    const bg = document.createElement("div");
+    bg.className = "floating-bio-bg";
+
+    const items = [
+      { type: "cell", size: 120, left: "4%",  top: "8%",   duration: "12s", delay: "-2s" },
+      { type: "hbv",  size: 74,  left: "16%", top: "68%",  duration: "10s", delay: "-5s" },
+      { type: "cell", size: 96,  left: "28%", top: "18%",  duration: "14s", delay: "-1s" },
+      { type: "hbv",  size: 66,  left: "38%", top: "78%",  duration: "11s", delay: "-6s" },
+      { type: "cell", size: 130, left: "52%", top: "10%",  duration: "15s", delay: "-4s" },
+      { type: "hbv",  size: 82,  left: "62%", top: "58%",  duration: "13s", delay: "-3s" },
+      { type: "cell", size: 105, left: "76%", top: "20%",  duration: "16s", delay: "-7s" },
+      { type: "hbv",  size: 70,  left: "86%", top: "74%",  duration: "12s", delay: "-2s" },
+      { type: "cell", size: 90,  left: "8%",  top: "42%",  duration: "13s", delay: "-8s" },
+      { type: "cell", size: 82,  left: "90%", top: "10%",  duration: "11s", delay: "-4s" }
+    ];
+
+    items.forEach(item => {
+      const el = document.createElement("div");
+      el.className = `bio-float ${item.type}`;
+      el.style.setProperty("--size", item.size + "px");
+      el.style.left = item.left;
+      el.style.top = item.top;
+      el.style.animationDuration = item.duration;
+      el.style.animationDelay = item.delay;
+      bg.appendChild(el);
+    });
+
+    document.body.prepend(bg);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", addFloatingBioBackground);
+  } else {
+    addFloatingBioBackground();
+  }
+})();
