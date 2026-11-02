@@ -684,3 +684,240 @@
     opacity: 1;
   }
 }
+
+/* ==========================================
+   LEVEL 4 - THREE NEW SCIENCE ANIMATIONS
+   ========================================== */
+
+.lq-new-animation {
+  background: #fff5fb;
+  border: 2px solid #edc8f1;
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.lq-animation-heading {
+  color: #75429c;
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.lq-new-svg {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: auto;
+}
+
+.lq-one-takeaway {
+  color: #624179;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 9px 0 0;
+}
+
+/* OBJECTIVE 3: VIRUS ENTERS A CELL */
+
+.lq-entering-virus {
+  animation: lq-enter 7s ease-in-out infinite;
+}
+
+.lq-created-copies {
+  animation: lq-copies 7s ease-in-out infinite;
+}
+
+@keyframes lq-enter {
+  0%, 5% {
+    transform: translate(48px, 91px) scale(1);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(115px, 91px) scale(1);
+    opacity: 1;
+  }
+  45% {
+    transform: translate(207px, 91px) scale(.7);
+    opacity: 1;
+  }
+  65%, 100% {
+    transform: translate(245px, 91px) scale(.4);
+    opacity: 0;
+  }
+}
+
+@keyframes lq-copies {
+  0%, 55% {
+    opacity: 0;
+    transform: scale(.2);
+    transform-origin: 245px 95px;
+  }
+  75%, 90% {
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: 245px 95px;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+    transform-origin: 245px 95px;
+  }
+}
+
+/* OBJECTIVE 5: POSSIBLE INFECTION OUTCOMES */
+
+.lq-clear-viruses {
+  animation: lq-clear 7s ease-in-out infinite;
+}
+
+.lq-clear-shield {
+  animation: lq-shield 7s ease-in-out infinite;
+  transform-origin: 88px 90px;
+}
+
+.lq-long-scars {
+  animation: lq-scars 7s ease-in-out infinite;
+}
+
+.lq-calendar {
+  animation: lq-followup 7s ease-in-out infinite;
+}
+
+@keyframes lq-clear {
+  0%, 20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  45%, 100% {
+    opacity: 0;
+    transform: scale(.2);
+  }
+}
+
+@keyframes lq-shield {
+  0%, 15% {
+    opacity: 0;
+    transform: scale(.5);
+  }
+  35%, 90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes lq-scars {
+  0%, 42% {
+    opacity: 0;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  70%, 95% {
+    opacity: 1;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes lq-followup {
+  0%, 50% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  75%, 95% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* OBJECTIVE 6: LIVER HEALTH */
+
+.lq-healthy-liver {
+  animation: lq-liver-health 8s ease-in-out infinite;
+}
+
+.lq-liver-functions {
+  animation: lq-functions 8s ease-in-out infinite;
+}
+
+.lq-damage-mark {
+  animation: lq-damage 8s ease-in-out infinite;
+  transform-origin: 173px 105px;
+}
+
+@keyframes lq-liver-health {
+  0%, 55%, 100% {
+    opacity: 1;
+  }
+  70%, 88% {
+    opacity: .55;
+  }
+}
+
+@keyframes lq-functions {
+  0%, 12% {
+    opacity: 0;
+  }
+  25%, 58% {
+    opacity: 1;
+  }
+  75%, 90% {
+    opacity: .25;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes lq-damage {
+  0%, 57% {
+    opacity: 0;
+    transform: scale(.5);
+  }
+  72%, 91% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Hide the previous duplicated Level 4 recap.
+   The new Objective 6 animation replaces it. */
+
+#modal-card:has(.science-anim.lqBodyHealth)
+.lq-quick-visual {
+  display: none;
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .lq-new-animation svg g {
+    animation: none !important;
+  }
+
+  .lq-entering-virus {
+    transform: translate(207px, 91px);
+  }
+
+  .lq-clear-shield,
+  .lq-calendar,
+  .lq-damage-mark,
+  .lq-created-copies {
+    opacity: 1;
+  }
+}
