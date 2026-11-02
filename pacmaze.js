@@ -196,7 +196,6 @@ const spotQuestions = {
 
     return;
   }
-}
 
  const title=`<div class="challenge-titleline"><span class="challenge-icon">🧩</span><div><span class="modal-eyebrow">SCIENCE CHECKPOINT ${Math.floor(i/2)+1} / 3</span><h2>${activity.type==='match'?'Match the Science!':'Build the Sequence!'}</h2><p class="subnote">${activity.prompt} You can retry without losing progress.</p></div></div>`;
  const feedback='<div id="science-feedback" class="catch-feedback" aria-live="polite">Choose an item to begin.</div>';
