@@ -1486,3 +1486,11 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep Mission 01 heading on one line on desktop */
+@media (min-width: 900px) {
+  body:has(#cell-parts) .pagehead h1 {
+    white-space: nowrap;
+    max-width: none;
+  }
+}
