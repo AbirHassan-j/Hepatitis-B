@@ -403,3 +403,284 @@
   font-size: 12px;
   color: #69517d;
 }
+
+
+/* =========================================
+   LIVERQUEST ANIMATED SCIENCE RECAPS
+   ========================================= */
+
+.lq-animated-recap {
+  background: #fff5fc;
+  border: 2px solid #e4bef3;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+  overflow: hidden;
+  color: #563379;
+}
+
+.lq-animated-recap h3 {
+  color: #793eae;
+  font-size: 17px;
+  margin: 0 0 5px;
+}
+
+.lq-animated-recap p {
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 5px auto 0;
+  color: #593779;
+  max-width: 350px;
+}
+
+.lq-scene {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  margin: auto;
+  overflow: visible;
+}
+
+.lq-scene * {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* LEVEL 1: HBV enters and makes new viruses */
+
+.lq-incoming-virus {
+  animation: lqVirusEnter 8s ease-in-out infinite;
+}
+
+.lq-cell-messages {
+  animation: lqMessages 8s ease-in-out infinite;
+}
+
+.lq-new-viruses {
+  animation: lqVirusCopies 8s ease-in-out infinite;
+}
+
+@keyframes lqVirusEnter {
+  0%, 5% {
+    transform: translate(30px, 85px) scale(1);
+    opacity: 1;
+  }
+  27% {
+    transform: translate(98px, 85px) scale(1);
+    opacity: 1;
+  }
+  47% {
+    transform: translate(156px, 85px) scale(.65);
+    opacity: 1;
+  }
+  57%, 100% {
+    transform: translate(180px, 85px) scale(.3);
+    opacity: 0;
+  }
+}
+
+@keyframes lqMessages {
+  0%, 46% { opacity: 0; }
+  55%, 75% { opacity: 1; }
+  85%, 100% { opacity: 0; }
+}
+
+@keyframes lqVirusCopies {
+  0%, 68% {
+    opacity: 0;
+    transform: scale(.2);
+  }
+  83% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  94% {
+    opacity: 1;
+    transform: translateX(18px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+}
+
+.lq-animation-steps {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 3px;
+}
+
+.lq-animation-steps span {
+  background: #ecd8fa;
+  color: #63398b;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 7px;
+  border-radius: 9px;
+}
+
+/* LEVEL 2: inflammation and scarring */
+
+.lq-tissue-cells > g > circle:first-child {
+  fill: #f5acd1;
+  stroke: #d47caf;
+  stroke-width: 3;
+  animation: lqInflammation 8s ease-in-out infinite;
+}
+
+.lq-tissue-cells .lq-nucleus {
+  fill: #a76fc7;
+}
+
+.lq-scar-lines {
+  animation: lqScarring 8s ease-in-out infinite;
+}
+
+@keyframes lqInflammation {
+  0%, 30%, 100% {
+    fill: #f5acd1;
+    stroke: #d47caf;
+  }
+  45%, 78% {
+    fill: #eda06e;
+    stroke: #b7694d;
+  }
+}
+
+@keyframes lqScarring {
+  0%, 56% {
+    opacity: 0;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+  }
+  80%, 95% {
+    opacity: .9;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* LEVEL 3: movement in the blood-exposure lane */
+
+.lq-blood-virus {
+  animation: lqBloodMove 6s ease-in-out infinite;
+}
+
+.lq-safe-people {
+  animation: lqSafePulse 6s ease-in-out infinite;
+}
+
+.lq-safe-check {
+  animation: lqCheckAppear 6s ease-in-out infinite;
+}
+
+@keyframes lqBloodMove {
+  0%, 10% {
+    transform: translate(30px, 98px) scale(.7);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  65%, 85% {
+    transform: translate(112px, 98px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(126px, 98px) scale(.7);
+    opacity: 0;
+  }
+}
+
+@keyframes lqSafePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes lqCheckAppear {
+  0%, 30% {
+    opacity: 0;
+    transform: scale(.4);
+  }
+  50%, 90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% { opacity: 0; }
+}
+
+/* LEVEL 4: liver functions then possible damage */
+
+.lq-liver-shape {
+  animation: lqLiverChange 8s ease-in-out infinite;
+}
+
+.lq-liver-job {
+  animation: lqJobShow 8s ease-in-out infinite;
+}
+
+.lq-liver-warning {
+  animation: lqWarningAppear 8s ease-in-out infinite;
+}
+
+@keyframes lqLiverChange {
+  0%, 55%, 100% { opacity: 1; }
+  70%, 90% { opacity: .55; }
+}
+
+@keyframes lqJobShow {
+  0% {
+    opacity: 0;
+    transform: scale(.65);
+  }
+  20%, 55% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  75%, 100% {
+    opacity: .3;
+    transform: scale(.85);
+  }
+}
+
+@keyframes lqWarningAppear {
+  0%, 55% {
+    opacity: 0;
+    transform: scale(.4);
+  }
+  70%, 90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% { opacity: 0; }
+}
+
+/* Accessibility: avoid movement when requested */
+
+@media (prefers-reduced-motion: reduce) {
+  .lq-animated-recap svg * {
+    animation: none !important;
+  }
+
+  .lq-incoming-virus {
+    transform: translate(98px, 85px);
+  }
+
+  .lq-blood-virus {
+    transform: translate(75px, 98px);
+  }
+
+  .lq-cell-messages,
+  .lq-new-viruses,
+  .lq-scar-lines,
+  .lq-safe-check,
+  .lq-liver-warning {
+    opacity: 1;
+  }
+}
