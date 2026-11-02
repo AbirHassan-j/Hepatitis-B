@@ -472,3 +472,93 @@ function input(dir){ const m={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[dir]
 let lastKey=0; window.addEventListener('keydown',e=>{ const k=e.key.toLowerCase(); const map={arrowup:'up',w:'up',arrowdown:'down',s:'down',arrowleft:'left',a:'left',arrowright:'right',d:'right'}; if(map[k]){ e.preventDefault(); if(performance.now()-lastKey>80){ input(map[k]); lastKey=performance.now(); } } else if(e.key==='Escape' && !overlay){ paused=!paused; $('#pause').textContent=paused?'Resume':'Pause'; } }); document.querySelectorAll('[data-dir]').forEach(btn=>btn.onclick=()=>input(btn.dataset.dir)); $('#help').onclick=help; $('#pause').onclick=()=>{ if(overlay)return; paused=!paused; $('#pause').textContent=paused?'Resume':'Pause'; };
 buildLevel(); paused=true; chooseCharacter(); requestAnimationFrame(loop);
 })();
+
+/* EXTRA ACTIVITY: HOW HBV AFFECTS THE BODY */
+
+(function () {
+  function addBodyActivity() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    // Only show this at Level 4: HBV can harm the liver
+    const heading = modal.querySelector("h2");
+    if (!heading ||
+        heading.textContent.trim() !== "HBV can harm the liver") return;
+
+    // Prevent duplicates
+    if (modal.querySelector(".body-effects-activity")) return;
+
+    const activity = document.createElement("section");
+    activity.className = "body-effects-activity";
+
+    activity.innerHTML = `
+      <h3>🩺 How Can HBV Affect Your Body?</h3>
+      <p>Tap each picture to discover possible symptoms!</p>
+
+      <div class="body-effects-options">
+        <button type="button" data-effect="tired">
+          <span>😴</span>
+          Feeling tired
+        </button>
+
+        <button type="button" data-effect="yellow">
+          <span>👀</span>
+          Yellow eyes or skin
+        </button>
+
+        <button type="button" data-effect="sick">
+          <span>🤢</span>
+          Feeling sick
+        </button>
+      </div>
+
+      <div class="body-effects-answer" aria-live="polite">
+        Choose a picture to learn what might happen.
+      </div>
+
+      <p class="body-effects-note">
+        💡 Some people with hepatitis B have no
+        noticeable symptoms at all!
+      </p>
+    `;
+
+    const lesson = modal.querySelector(".lesson");
+    if (lesson) {
+      lesson.insertAdjacentElement("afterend", activity);
+    } else {
+      modal.appendChild(activity);
+    }
+
+    const explanations = {
+      tired: "😴 Hepatitis B can make a person feel unusually tired or weak.",
+      yellow: "👀 This is called jaundice. It can happen when bilirubin builds up in the body.",
+      sick: "🤢 Some people may feel nauseated, lose their appetite, or have pain in the upper-right belly."
+    };
+
+    activity.querySelectorAll("[data-effect]").forEach(button => {
+      button.addEventListener("click", () => {
+        activity.querySelector(".body-effects-answer")
+          .textContent = explanations[button.dataset.effect];
+
+        activity.querySelectorAll("[data-effect]").forEach(b => {
+          b.classList.toggle("selected", b === button);
+        });
+      });
+    });
+  }
+
+  function start() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    const observer = new MutationObserver(addBodyActivity);
+    observer.observe(modal, { childList: true });
+    addBodyActivity();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();
