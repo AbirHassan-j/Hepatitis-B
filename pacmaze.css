@@ -337,3 +337,69 @@
   margin: 12px 0 0;
   color: #644679;
 }
+
+
+/* SHORT VISUAL SCIENCE SUMMARIES */
+
+.lq-quick-visual {
+  margin: 12px 0;
+  padding: 14px;
+  background: #fff4fc;
+  border: 2px solid #e6c8f4;
+  border-radius: 15px;
+  color: #593779;
+  line-height: 1.4;
+}
+
+.lq-quick-visual > strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #7941ab;
+}
+
+.lq-mini-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 9px;
+}
+
+.lq-mini-steps span {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 9px;
+  background: #f0ddff;
+  border-radius: 10px;
+  color: #583379;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lq-mini-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 10px;
+}
+
+.lq-mini-compare > span {
+  background: #f5e6ff;
+  padding: 11px;
+  border-radius: 11px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #583379;
+}
+
+.lq-mini-compare small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.lq-quick-visual > small {
+  display: block;
+  font-size: 12px;
+  color: #69517d;
+}
