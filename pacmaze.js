@@ -668,3 +668,317 @@ buildLevel(); paused=true; chooseCharacter(); requestAnimationFrame(loop);
     init();
   }
 })();
+
+
+/* LIVERQUEST: ANIMATED SCIENCE RECAPS
+   Replaces the four static Objective 6 recap boxes.
+   Does not change gameplay or existing lessons.
+*/
+
+(function () {
+  const scenes = [
+    // LEVEL 1: How HBV uses a liver cell
+    `
+    <h3>🦠 How HBV Makes More Viruses</h3>
+    <svg class="lq-scene lq-virus-scene"
+         viewBox="0 0 360 190"
+         role="img"
+         aria-label="HBV attaches to a liver cell, enters,
+         uses the cell to produce virus parts,
+         and new viruses are released.">
+
+      <!-- Liver cell -->
+      <ellipse cx="215" cy="91" rx="125" ry="72"
+               fill="#ffd6e9" stroke="#cb83c5"
+               stroke-width="5"/>
+
+      <!-- Nucleus -->
+      <circle cx="238" cy="88" r="36"
+              fill="#bd94e7" stroke="#915bbd"
+              stroke-width="3"/>
+      <path d="M220 86 Q238 66 251 84 T251 99"
+            fill="none" stroke="#7850ae"
+            stroke-width="3"/>
+
+      <!-- Incoming HBV -->
+      <g class="lq-incoming-virus">
+        <circle r="15" fill="#9857cb"
+                stroke="#69369f" stroke-width="3"/>
+        <g stroke="#69369f" stroke-width="3">
+          <path d="M0 -24V-15 M0 15V24
+                   M-24 0H-15 M15 0H24
+                   M-17 -17L-11 -11
+                   M17 17L11 11
+                   M17 -17L11 -11
+                   M-17 17L-11 11"/>
+        </g>
+        <circle r="6" fill="#edcaff"/>
+      </g>
+
+      <!-- Cell messages -->
+      <g class="lq-cell-messages">
+        <path d="M170 75L192 75L184 85L205 85"
+              stroke="#9e56cc" stroke-width="5"
+              fill="none" stroke-linecap="round"/>
+        <path d="M265 113L286 120L272 136"
+              stroke="#9e56cc" stroke-width="5"
+              fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- New virus particles -->
+      <g class="lq-new-viruses" fill="#9652c4"
+         stroke="#68339a" stroke-width="2">
+        <circle cx="302" cy="57" r="10"/>
+        <circle cx="320" cy="103" r="10"/>
+        <circle cx="284" cy="135" r="10"/>
+      </g>
+
+      <text x="180" y="177" text-anchor="middle"
+            fill="#68428f" font-size="12"
+            font-weight="bold">LIVER CELL</text>
+    </svg>
+    <div class="lq-animation-steps">
+      <span>1. Attach</span>
+      <span>2. Enter</span>
+      <span>3. Make parts</span>
+      <span>4. Release</span>
+    </div>
+    <p>HBV uses a liver cell to help make new viruses.</p>
+    `,
+
+    // LEVEL 2: Healthy tissue versus affected tissue
+    `
+    <h3>🔬 What Happens to Liver Tissue?</h3>
+    <svg class="lq-scene lq-tissue-scene"
+         viewBox="0 0 360 185"
+         role="img"
+         aria-label="Healthy liver cells become inflamed,
+         and repeated long-term injury can produce
+         scar tissue.">
+
+      <rect x="10" y="10" width="340" height="153"
+            rx="20" fill="#fff1fa"
+            stroke="#e8b8dc" stroke-width="2"/>
+
+      <g class="lq-tissue-cells">
+        <g transform="translate(80 60)">
+          <circle r="29"/>
+          <circle r="9" class="lq-nucleus"/>
+        </g>
+        <g transform="translate(151 60)">
+          <circle r="29"/>
+          <circle r="9" class="lq-nucleus"/>
+        </g>
+        <g transform="translate(222 60)">
+          <circle r="29"/>
+          <circle r="9" class="lq-nucleus"/>
+        </g>
+        <g transform="translate(115 119)">
+          <circle r="29"/>
+          <circle r="9" class="lq-nucleus"/>
+        </g>
+        <g transform="translate(187 119)">
+          <circle r="29"/>
+          <circle r="9" class="lq-nucleus"/>
+        </g>
+        <g transform="translate(259 119)">
+          <circle r="29"/>
+          <circle r="9" class="lq-nucleus"/>
+        </g>
+      </g>
+
+      <!-- Scarring appears last -->
+      <g class="lq-scar-lines" stroke="#b57e52"
+         stroke-width="7" stroke-linecap="round"
+         fill="none">
+        <path d="M42 42 Q100 95 164 145"/>
+        <path d="M185 20 Q230 72 309 145"/>
+        <path d="M33 145 Q150 90 322 70"/>
+      </g>
+
+      <text x="180" y="179" text-anchor="middle"
+            fill="#68428f" font-size="12"
+            font-weight="bold">
+        HEALTHY → INFLAMMATION → POSSIBLE SCARRING
+      </text>
+    </svg>
+    <p>Ongoing inflammation can damage tissue. Over time, repeated injury may cause scarring.</p>
+    `,
+
+    // LEVEL 3: How HBV spreads
+    `
+    <h3>🛡️ How Does HBV Spread?</h3>
+    <svg class="lq-scene lq-safety-scene"
+         viewBox="0 0 360 188"
+         role="img"
+         aria-label="Infected blood entering another
+         person's body can transmit HBV.
+         Hugging and everyday contact do not.">
+
+      <!-- Exposure lane -->
+      <rect x="8" y="10" width="167" height="164"
+            rx="18" fill="#fff0f3"
+            stroke="#edb1bf" stroke-width="2"/>
+
+      <text x="91" y="34" text-anchor="middle"
+            font-size="13" font-weight="bold"
+            fill="#9f476f">BLOOD EXPOSURE</text>
+
+      <path d="M65 58C65 58 43 85 43 102
+               A22 22 0 0 0 87 102
+               C87 85 65 58 65 58Z"
+            fill="#e9708c"/>
+
+      <g class="lq-blood-virus">
+        <circle r="12" fill="#9950c5"/>
+        <circle r="5" fill="#efccff"/>
+      </g>
+
+      <text x="91" y="151" text-anchor="middle"
+            font-size="12" font-weight="bold"
+            fill="#9f476f">POSSIBLE RISK</text>
+
+      <!-- Everyday-contact lane -->
+      <rect x="185" y="10" width="167" height="164"
+            rx="18" fill="#edfbea"
+            stroke="#afd7ad" stroke-width="2"/>
+
+      <text x="269" y="34" text-anchor="middle"
+            font-size="13" font-weight="bold"
+            fill="#387b5a">EVERYDAY CONTACT</text>
+
+      <g class="lq-safe-people">
+        <circle cx="245" cy="71" r="16" fill="#b48dda"/>
+        <circle cx="290" cy="71" r="16" fill="#f2a9ca"/>
+        <path d="M225 116Q244 84 262 113"
+              fill="none" stroke="#b48dda"
+              stroke-width="15"
+              stroke-linecap="round"/>
+        <path d="M275 113Q292 84 310 116"
+              fill="none" stroke="#f2a9ca"
+              stroke-width="15"
+              stroke-linecap="round"/>
+      </g>
+
+      <g class="lq-safe-check">
+        <circle cx="269" cy="116" r="20"
+                fill="#62bf94"/>
+        <path d="M257 115L266 124L282 105"
+              stroke="white" stroke-width="5"
+              fill="none" stroke-linecap="round"/>
+      </g>
+
+      <text x="269" y="151" text-anchor="middle"
+            font-size="12" font-weight="bold"
+            fill="#387b5a">NO HBV SPREAD</text>
+    </svg>
+    <p>HBV can spread through infected blood entering the body—not through hugs or shared desks.</p>
+    `,
+
+    // LEVEL 4: Why liver health matters
+    `
+    <h3>💗 Why Does Your Liver Matter?</h3>
+    <svg class="lq-scene lq-liver-scene"
+         viewBox="0 0 360 195"
+         role="img"
+         aria-label="The liver processes nutrients,
+         stores energy, and helps clear waste.
+         Liver damage can interfere with these jobs.">
+
+      <!-- Liver -->
+      <g class="lq-liver-shape">
+        <path d="M92 65
+                 C120 24 217 32 270 68
+                 C298 88 279 130 251 132
+                 C207 137 192 107 162 111
+                 C137 114 128 148 101 132
+                 C75 117 76 84 92 65Z"
+              fill="#e98ab4" stroke="#b85b94"
+              stroke-width="5"/>
+        <circle cx="167" cy="78" r="5" fill="#784876"/>
+        <circle cx="193" cy="78" r="5" fill="#784876"/>
+        <path d="M169 94Q181 104 194 94"
+              stroke="#784876"
+              stroke-width="3" fill="none"
+              stroke-linecap="round"/>
+      </g>
+
+      <!-- Jobs appear around liver -->
+      <g class="lq-liver-job job-one">
+        <circle cx="55" cy="52" r="26" fill="#d7f3b3"/>
+        <text x="55" y="59" text-anchor="middle"
+              font-size="24">🍎</text>
+      </g>
+
+      <g class="lq-liver-job job-two">
+        <circle cx="306" cy="45" r="26" fill="#fff0b1"/>
+        <text x="306" y="52" text-anchor="middle"
+              font-size="24">⚡</text>
+      </g>
+
+      <g class="lq-liver-job job-three">
+        <circle cx="308" cy="153" r="26" fill="#c5ecf5"/>
+        <text x="308" y="160" text-anchor="middle"
+              font-size="24">🧹</text>
+      </g>
+
+      <!-- Damage indicator -->
+      <g class="lq-liver-warning">
+        <circle cx="182" cy="88" r="32"
+                fill="#f2b14e" opacity=".9"/>
+        <text x="182" y="100" text-anchor="middle"
+              font-size="35" font-weight="bold"
+              fill="white">!</text>
+      </g>
+
+      <text x="180" y="187" text-anchor="middle"
+            font-size="12" font-weight="bold"
+            fill="#68428f">
+        NUTRIENTS • ENERGY • WASTE
+      </text>
+    </svg>
+    <p>Liver damage can make its important jobs harder.</p>
+    `
+  ];
+
+  function updateRecaps() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    const recap = modal.querySelector(".lq-quick-visual");
+
+    if (!recap || recap.dataset.animated === "yes") return;
+
+    const hud = document.getElementById("hud-level");
+    const match = hud?.textContent.match(/LEVEL\s+(\d+)/i);
+    if (!match) return;
+
+    const levelIndex = Number(match[1]) - 1;
+
+    if (levelIndex < 0 || levelIndex >= scenes.length) return;
+
+    recap.dataset.animated = "yes";
+    recap.classList.add("lq-animated-recap");
+    recap.innerHTML = scenes[levelIndex];
+  }
+
+  function initialize() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    const observer = new MutationObserver(updateRecaps);
+
+    observer.observe(modal, {
+      childList: true,
+      subtree: true
+    });
+
+    updateRecaps();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize);
+  } else {
+    initialize();
+  }
+})();
