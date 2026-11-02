@@ -470,6 +470,361 @@ function roundRect(c,x,y,w,h,r,fill,stroke){ c.beginPath(); c.moveTo(x+r,y); c.a
 function loop(now){ if(!window._last) window._last=now; const dt=Math.min(60,now-window._last); window._last=now; if(!paused && !overlay){ roundTime += dt; enemyTick += dt; if(enemyTick > levels[level].enemyDelay){ enemyTick=0; advanceEnemies(); } } draw(now); if(speechUntil && now>speechUntil){ ui.speech.hidden=true; speechUntil=0; } requestAnimationFrame(loop); }
 function input(dir){ const m={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[dir]; if(m) move(m[0],m[1]); }
 let lastKey=0; window.addEventListener('keydown',e=>{ const k=e.key.toLowerCase(); const map={arrowup:'up',w:'up',arrowdown:'down',s:'down',arrowleft:'left',a:'left',arrowright:'right',d:'right'}; if(map[k]){ e.preventDefault(); if(performance.now()-lastKey>80){ input(map[k]); lastKey=performance.now(); } } else if(e.key==='Escape' && !overlay){ paused=!paused; $('#pause').textContent=paused?'Resume':'Pause'; } }); document.querySelectorAll('[data-dir]').forEach(btn=>btn.onclick=()=>input(btn.dataset.dir)); $('#help').onclick=help; $('#pause').onclick=()=>{ if(overlay)return; paused=!paused; $('#pause').textContent=paused?'Resume':'Pause'; };
+
+/* =========================================
+   LIVERQUEST - LEVEL 4 SCIENCE UPGRADE
+   Replaces Objectives 3, 5, and 6 only.
+   ========================================= */
+
+{
+  const finalLevel = levels[3];
+
+  // OBJECTIVE 3: What is a virus?
+  Object.assign(finalLevel.clues[2], {
+    title: "What Is a Virus?",
+    brief: "A virus needs a living cell.",
+    detail: "HBV cannot make copies by itself. It uses a liver cell to make more viruses.",
+    remember: "A virus needs a host cell to reproduce.",
+    art: "lqWhatVirus",
+    say: "HBV needs a liver cell to make more copies."
+  });
+
+  // OBJECTIVE 5: Short-term and long-term infection
+  Object.assign(finalLevel.clues[4], {
+    title: "When HBV Stays",
+    brief: "Some infections clear. Others last.",
+    detail: "Some people clear HBV. Others develop a long-term infection. Testing and medical care help protect their liver.",
+    remember: "Long-term hepatitis B needs medical follow-up.",
+    art: "lqLongTerm",
+    say: "Hepatitis B can affect people differently."
+  });
+
+  // OBJECTIVE 6: The liver and the whole body
+  Object.assign(finalLevel.clues[5], {
+    title: "Why HBV Matters to the Body",
+    brief: "Liver health affects the whole body.",
+    detail: "The liver processes nutrients, stores energy, and helps remove harmful substances. Serious damage can affect these jobs and may cause health problems.",
+    remember: "Protecting your liver helps protect your body.",
+    art: "lqBodyHealth",
+    say: "The liver does important jobs for your body."
+  });
+
+  // Keep existing checkpoint mechanics,
+  // but make questions match the new lessons.
+  scienceActivities[3][1] = {
+    type: "match",
+    prompt: "Connect each idea to its meaning.",
+    pairs: [
+      ["HBV alone", "Cannot make copies by itself"],
+      ["HBV inside a liver cell", "Can use the cell to make more viruses"],
+      ["A friend has hepatitis B", "Treat them with kindness"]
+    ]
+  };
+
+  scienceActivities[3][2] = {
+    type: "order",
+    prompt: "How can long-term liver damage affect health?",
+    steps: [
+      "HBV infection may continue",
+      "Ongoing inflammation can injure liver tissue",
+      "Repeated injury may cause scarring",
+      "Serious liver damage can affect the body"
+    ]
+  };
+
+  // Three new illustrated animations.
+  const originalSceneArt = sceneArt;
+
+  const animations = {
+
+    /* OBJECTIVE 3 - HBV needs a cell */
+    lqWhatVirus: `
+      <div class="lq-new-animation">
+        <div class="lq-animation-heading">
+          HBV needs a cell to make copies
+        </div>
+
+        <svg viewBox="0 0 360 195"
+             class="lq-new-svg"
+             role="img"
+             aria-label="A virus alone cannot make copies. Inside a liver cell, it can use cell machinery to make more viruses.">
+
+          <rect x="5" y="5" width="350" height="183"
+                rx="19" fill="#fff3fc"/>
+
+          <!-- HBV outside -->
+          <g class="lq-virus-outside">
+            <circle cx="48" cy="91" r="17"
+                    fill="#9b5bcb"
+                    stroke="#743daa"
+                    stroke-width="4"/>
+            <circle cx="48" cy="91" r="6"
+                    fill="#e8c5ff"/>
+
+            <g stroke="#9b5bcb"
+               stroke-width="4"
+               stroke-linecap="round">
+              <path d="M48 65v9 M48 108v9
+                       M22 91h9 M65 91h9
+                       M29 72l7 7 M60 103l7 7
+                       M29 110l7 -7 M60 79l7 -7"/>
+            </g>
+          </g>
+
+          <!-- Cell -->
+          <ellipse cx="243" cy="97"
+                   rx="101" ry="73"
+                   fill="#f8c9e1"
+                   stroke="#cf81b4"
+                   stroke-width="6"/>
+
+          <!-- Nucleus -->
+          <circle cx="258" cy="93" r="29"
+                  fill="#b898e2"
+                  stroke="#9166c5"
+                  stroke-width="4"/>
+
+          <!-- Cell machinery -->
+          <g stroke="#b878ba" stroke-width="4"
+             fill="none" stroke-linecap="round">
+            <path d="M181 70q24 -20 39 0t-4 28"/>
+            <path d="M191 127q32 -18 55 8"/>
+          </g>
+
+          <!-- Virus travels into cell -->
+          <g class="lq-entering-virus">
+            <circle r="12" fill="#8e4ebc"
+                    stroke="#ead4ff" stroke-width="3"/>
+            <circle r="4" fill="#fff"/>
+          </g>
+
+          <!-- New virus copies -->
+          <g class="lq-created-copies"
+             fill="#9853ca"
+             stroke="#e5c3fa"
+             stroke-width="3">
+            <circle cx="204" cy="89" r="11"/>
+            <circle cx="218" cy="117" r="11"/>
+            <circle cx="289" cy="132" r="11"/>
+          </g>
+
+          <text x="48" y="153"
+                font-size="12" text-anchor="middle"
+                fill="#79459d" font-weight="bold">
+            ALONE
+          </text>
+
+          <text x="245" y="183"
+                font-size="12" text-anchor="middle"
+                fill="#79459d" font-weight="bold">
+            INSIDE A LIVER CELL
+          </text>
+        </svg>
+
+        <p class="lq-one-takeaway">
+          A virus needs a living cell to make copies.
+        </p>
+      </div>
+    `,
+
+    /* OBJECTIVE 5 - Infection outcomes */
+    lqLongTerm: `
+      <div class="lq-new-animation">
+        <div class="lq-animation-heading">
+          Two possible infection outcomes
+        </div>
+
+        <svg viewBox="0 0 360 195"
+             class="lq-new-svg"
+             role="img"
+             aria-label="Some infections clear. Others continue and can cause liver injury, making medical follow-up important.">
+
+          <rect x="4" y="4" width="170" height="185"
+                rx="17" fill="#ecfaef"
+                stroke="#b3dec1" stroke-width="2"/>
+
+          <rect x="186" y="4" width="170" height="185"
+                rx="17" fill="#fff2f6"
+                stroke="#ebbbcf" stroke-width="2"/>
+
+          <text x="89" y="27"
+                font-size="15" font-weight="bold"
+                text-anchor="middle" fill="#367d57">
+            INFECTION CLEARS
+          </text>
+
+          <text x="271" y="27"
+                font-size="15" font-weight="bold"
+                text-anchor="middle" fill="#a35a76">
+            INFECTION STAYS
+          </text>
+
+          <!-- Clearing infection -->
+          <g class="lq-clear-viruses"
+             fill="#9863c9">
+            <circle cx="55" cy="68" r="10"/>
+            <circle cx="82" cy="89" r="10"/>
+            <circle cx="113" cy="67" r="10"/>
+          </g>
+
+          <g class="lq-clear-shield">
+            <path d="M88 48l36 12v29
+                     q-4 27 -36 42
+                     q-32 -15 -36 -42V60Z"
+                  fill="#6dc89b"
+                  stroke="#409667"
+                  stroke-width="4"/>
+            <path d="M70 86l13 13 27 -29"
+                  stroke="white" stroke-width="6"
+                  fill="none"
+                  stroke-linecap="round"/>
+          </g>
+
+          <!-- Persistent infection -->
+          <g class="lq-persistent-virus">
+            <circle cx="228" cy="70" r="13"
+                    fill="#9855c8"/>
+            <circle cx="228" cy="70" r="5"
+                    fill="#e9c8ff"/>
+          </g>
+
+          <path d="M264 61q34 -9 47 18
+                   q13 29 -11 48
+                   q-37 19 -51 -9
+                   q-10 -25 15 -57Z"
+                fill="#ed97af"
+                stroke="#c86889"
+                stroke-width="4"/>
+
+          <g class="lq-long-scars">
+            <path d="M273 75l18 40
+                     M296 74l-18 44"
+                  stroke="#a46c56"
+                  stroke-width="5"
+                  stroke-linecap="round"/>
+          </g>
+
+          <g class="lq-calendar">
+            <rect x="231" y="137" width="80" height="33"
+                  rx="7" fill="#fff"
+                  stroke="#b58cc6" stroke-width="3"/>
+            <text x="271" y="159"
+                  text-anchor="middle"
+                  font-weight="bold" font-size="12"
+                  fill="#865da8">FOLLOW-UP</text>
+          </g>
+
+          <text x="88" y="163"
+                text-anchor="middle"
+                font-size="13" font-weight="bold"
+                fill="#367d57">RECOVERY</text>
+        </svg>
+
+        <p class="lq-one-takeaway">
+          Some infections clear. Long-term HBV needs medical care.
+        </p>
+      </div>
+    `,
+
+    /* OBJECTIVE 6 - Effects on whole body */
+    lqBodyHealth: `
+      <div class="lq-new-animation">
+        <div class="lq-animation-heading">
+          Why your liver matters
+        </div>
+
+        <svg viewBox="0 0 360 195"
+             class="lq-new-svg"
+             role="img"
+             aria-label="The liver helps process nutrients, manage energy and handle waste. Liver damage can interfere with these important jobs.">
+
+          <rect x="5" y="5" width="350" height="184"
+                rx="19" fill="#fff4fa"/>
+
+          <!-- Liver -->
+          <g class="lq-healthy-liver">
+            <path d="M94 84
+                     C107 46 196 42 258 75
+                     C289 94 266 139 240 143
+                     C206 148 191 119 158 125
+                     C126 133 110 151 91 129
+                     C79 116 82 96 94 84Z"
+                  fill="#ed8fae"
+                  stroke="#bb5f88"
+                  stroke-width="5"/>
+
+            <circle cx="157" cy="87" r="4"
+                    fill="#78426c"/>
+            <circle cx="182" cy="87" r="4"
+                    fill="#78426c"/>
+            <path d="M158 103q12 10 24 0"
+                  stroke="#78426c"
+                  stroke-width="3"
+                  fill="none"/>
+          </g>
+
+          <!-- Three jobs -->
+          <g class="lq-liver-functions">
+            <g>
+              <circle cx="55" cy="47" r="24"
+                      fill="#d7f2ad"/>
+              <text x="55" y="55"
+                    text-anchor="middle"
+                    font-size="25">🍎</text>
+            </g>
+
+            <g>
+              <circle cx="307" cy="46" r="24"
+                      fill="#ffe8a4"/>
+              <text x="307" y="54"
+                    text-anchor="middle"
+                    font-size="25">⚡</text>
+            </g>
+
+            <g>
+              <circle cx="305" cy="146" r="24"
+                      fill="#c5edf7"/>
+              <text x="305" y="154"
+                    text-anchor="middle"
+                    font-size="25">🧹</text>
+            </g>
+          </g>
+
+          <!-- Possible damage -->
+          <g class="lq-damage-mark">
+            <circle cx="173" cy="105" r="29"
+                    fill="#d88b53" opacity=".88"/>
+            <text x="173" y="116"
+                  text-anchor="middle"
+                  font-size="32"
+                  font-weight="bold"
+                  fill="white">!</text>
+          </g>
+
+          <text x="180" y="179"
+                text-anchor="middle"
+                font-weight="bold"
+                font-size="12"
+                fill="#805294">
+            NUTRIENTS • ENERGY • WASTE
+          </text>
+        </svg>
+
+        <p class="lq-one-takeaway">
+          Serious liver damage can affect the whole body.
+        </p>
+      </div>
+    `
+  };
+
+  // Keep every original animation available.
+  // Only use the new animations for three new objectives.
+  sceneArt = function(kind) {
+    if (animations[kind]) return animations[kind];
+    return originalSceneArt(kind);
+  };
+}
+
 buildLevel(); paused=true; chooseCharacter(); requestAnimationFrame(loop);
 })();
 
