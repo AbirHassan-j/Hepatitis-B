@@ -562,3 +562,109 @@ buildLevel(); paused=true; chooseCharacter(); requestAnimationFrame(loop);
     start();
   }
 })();
+
+
+/* LIVERQUEST - SHORTER LESSONS + UNIQUE LEVEL VISUALS */
+
+(function () {
+  const levelVisuals = [
+    `
+      <strong>🧬 Infection Timeline</strong>
+      <div class="lq-mini-steps">
+        <span>🦠 Attach</span>
+        <span>➡️ Enter</span>
+        <span>🧬 Messages</span>
+        <span>🧩 Virus parts</span>
+      </div>
+      <small>HBV uses cell machinery to help make more viruses.</small>
+    `,
+    `
+      <strong>🔬 Tissue Comparison</strong>
+      <div class="lq-mini-compare">
+        <span>🩷 Healthy tissue<br><small>Cells working together</small></span>
+        <span>🟠 Affected tissue<br><small>Inflammation or damage</small></span>
+      </div>
+      <small>Long-lasting injury can lead to scarring.</small>
+    `,
+    `
+      <strong>🛡️ Safety Snapshot</strong>
+      <div class="lq-mini-compare">
+        <span>⚠️ Possible spread<br><small>Infected blood, shared needles</small></span>
+        <span>✅ Everyday contact<br><small>Hugging, sharing desks</small></span>
+      </div>
+      <small>Vaccination and testing are important tools.</small>
+    `,
+    `
+      <strong>❤️ Why the Liver Matters</strong>
+      <div class="lq-mini-steps">
+        <span>🍎 Processes nutrients</span>
+        <span>⚡ Stores energy</span>
+        <span>🧹 Processes waste</span>
+      </div>
+      <small>Serious liver damage can affect these jobs and a person's health.</small>
+    `
+  ];
+
+  function simplifyLesson() {
+    const modal = document.getElementById("modal-card");
+    if (!modal || !modal.querySelector(".lesson")) return;
+
+    const eyebrow = modal.querySelector(".modal-eyebrow");
+    if (!eyebrow || !/^CLUE\s+\d+\s+OF\s+6/i.test(
+      eyebrow.textContent.trim()
+    )) return;
+
+    if (modal.dataset.lqSimplified === "yes") return;
+    modal.dataset.lqSimplified = "yes";
+
+    const lesson = modal.querySelector(".lesson");
+
+    // Remove repeated introduction, but keep detailed explanation.
+    const brief = lesson.querySelector("p.large");
+    if (brief) brief.remove();
+
+    // Remove repeated "Remember" paragraph.
+    lesson.querySelectorAll("p").forEach(p => {
+      if (/^Remember:/i.test(p.textContent.trim())) {
+        p.remove();
+      }
+    });
+
+    // Add a different visual recap at discovery 6 of each level.
+    if (!/^CLUE\s+6\s+OF\s+6/i.test(
+      eyebrow.textContent.trim()
+    )) return;
+
+    const hud = document.getElementById("hud-level");
+    const match = hud?.textContent.match(/LEVEL\s+(\d+)/i);
+    const levelIndex = match ? Number(match[1]) - 1 : -1;
+
+    if (levelIndex < 0 || levelIndex > 3) return;
+
+    const visual = document.createElement("div");
+    visual.className = "lq-quick-visual";
+    visual.innerHTML = levelVisuals[levelIndex];
+
+    const replay = lesson.querySelector("#replay-science");
+    if (replay) {
+      replay.parentElement.insertBefore(visual, replay);
+    } else {
+      lesson.appendChild(visual);
+    }
+  }
+
+  function init() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    const observer = new MutationObserver(simplifyLesson);
+    observer.observe(modal, { childList: true, subtree: true });
+    simplifyLesson();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
