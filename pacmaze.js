@@ -652,14 +652,14 @@ let lastKey=0; window.addEventListener('keydown',e=>{ const k=e.key.toLowerCase(
     say: "Hepatitis B can affect people differently."
   });
 
-{
-  title: "Why Does Hepatitis B Matter?",
-  brief: "HBV can affect your liver, even when you feel healthy.",
-  detail: "Hepatitis B can cause long-term liver inflammation and scarring. Some people may develop cirrhosis or liver cancer. Vaccination helps prevent infection, while testing and medical care help people manage hepatitis B. Not everyone develops serious liver problems.",
-  remember: "Understanding hepatitis B helps us protect ourselves and others.",
-  art: "journey",
-  say: "Learning about hepatitis B helps us protect our liver health!"
-}
+  // OBJECTIVE 6: Why Does Hepatitis B Matter?
+  Object.assign(finalLevel.clues[5], {
+    title: "Why Does Hepatitis B Matter?",
+    brief: "HBV can affect your liver, even when you feel healthy.",
+    detail: "Hepatitis B can cause long-term liver inflammation and scarring. Some people may develop cirrhosis or liver cancer. Vaccination helps prevent infection, while testing and medical care help people manage hepatitis B. Not everyone develops serious liver problems.",
+    remember: "Understanding hepatitis B helps us protect ourselves and others.",
+    art: "lqLongTerm",
+    say: "Learning about hepatitis B helps us protect our liver health!"
   });
 
   // Keep existing checkpoint mechanics,
