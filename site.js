@@ -9877,3 +9877,389 @@ if (location.pathname.endsWith("cells.html")) {
     addFloatingBioBackground();
   }
 })();
+
+/* ==========================================
+   CELL CITY — INTRO + LEARNING FLOW
+   Paste at the VERY BOTTOM of site.js
+   ========================================== */
+
+(function () {
+  function setupCellCityFlow() {
+    const page = location.pathname.split("/").pop();
+
+    if (page !== "cells.html") return;
+    if (document.getElementById("lq-basics-flow")) return;
+
+    const main = document.querySelector("main");
+    const diagram = document.querySelector(".clean-cell-visual");
+    const video = document.getElementById("cell-city-video");
+    const challenge = document.getElementById("match-game")
+      ?.closest("section");
+
+    if (!main || !diagram) return;
+
+    // Find the entire interactive organelle section.
+    const cellSection = diagram.closest("section");
+
+    if (!cellSection) return;
+
+    // STEP 1 — INTRODUCTION
+    const intro = document.createElement("section");
+    intro.id = "lq-basics-flow";
+
+    intro.innerHTML = `
+      <div class="lq-intro-heading">
+        <span>🔬 BEFORE WE ENTER CELL CITY</span>
+        <h2>Meet the Virus, HBV, and Your Liver!</h2>
+        <p>
+          Three things to know before exploring a liver cell.
+        </p>
+      </div>
+
+      <div class="lq-intro-animation">
+
+        <div class="lq-intro-scene scene-one">
+          <div class="lq-intro-graphic">
+            <span class="lq-floating-virus">🦠</span>
+            <span class="lq-intro-arrow">➜</span>
+            <span class="lq-pulsing-cell">🧫</span>
+          </div>
+
+          <h3>1. What Is a Virus?</h3>
+          <p>
+            A virus needs a living cell to make more viruses.
+          </p>
+        </div>
+
+        <div class="lq-intro-scene scene-two">
+          <div class="lq-intro-graphic">
+            <span class="lq-floating-virus">🦠</span>
+            <span class="lq-intro-arrow">➜</span>
+            <span class="lq-pulsing-cell">🫀</span>
+          </div>
+
+          <h3>2. What Is Hepatitis B?</h3>
+          <p>
+            HBV is the hepatitis B virus.
+            It infects liver cells and can cause inflammation.
+          </p>
+        </div>
+
+        <div class="lq-intro-scene scene-three">
+          <div class="lq-intro-graphic lq-liver-jobs">
+            <span>🍎</span>
+            <span class="lq-pulsing-cell">🫀</span>
+            <span>⚡</span>
+            <span>🩸</span>
+          </div>
+
+          <h3>3. Why Is the Liver Important?</h3>
+          <p>
+            Your liver processes nutrients, stores energy,
+            makes bile, and helps remove harmful substances.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="lq-intro-progress">
+        <span></span><span></span><span></span>
+      </div>
+
+      <details class="lq-intro-details">
+        <summary>📖 Learn more about the science</summary>
+
+        <p>
+          <strong>Virus:</strong> A tiny infectious particle
+          that uses living cells to reproduce.
+        </p>
+
+        <p>
+          <strong>HBV:</strong> Hepatitis B virus infects
+          liver cells. The infection can sometimes cause
+          long-term inflammation and liver damage.
+        </p>
+
+        <p>
+          <strong>Liver:</strong> An important organ that
+          processes nutrients, stores energy, makes bile
+          for fat digestion, and helps remove harmful
+          substances from the blood.
+        </p>
+      </details>
+
+      <div class="lq-next-step">
+        <strong>🧫 YOUR NEXT MISSION</strong>
+        <p>Explore the eight parts of a liver cell!</p>
+        <a href="#lq-cell-explorer">Explore the Cell ↓</a>
+      </div>
+    `;
+
+    cellSection.id = "lq-cell-explorer";
+    cellSection.before(intro);
+
+    // STEP 2 — Existing organelle diagram stays untouched.
+
+    // STEP 3 — Move the existing video after the diagram.
+    if (video) {
+      cellSection.after(video);
+
+      const videoTitle = video.querySelector("h2");
+      if (videoTitle) {
+        videoTitle.textContent =
+          "🎬 Watch: Inside a Liver Cell";
+      }
+    }
+
+    // STEP 4 — Put existing challenge after the video.
+    if (challenge && video && challenge !== cellSection) {
+      video.after(challenge);
+    }
+
+    // STEP 5 — Existing mission completion section remains.
+
+    const css = document.createElement("style");
+    css.id = "lq-basics-flow-style";
+
+    css.textContent = `
+      #lq-basics-flow {
+        margin: 24px 0 32px;
+        padding: 25px;
+        background: linear-gradient(135deg, #fff4fc, #f0eaff);
+        border: 3px solid #dfc3f3;
+        border-radius: 26px;
+        text-align: center;
+        color: #59417c;
+      }
+
+      .lq-intro-heading > span {
+        color: #9858c4;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 1px;
+      }
+
+      .lq-intro-heading h2 {
+        color: #7444ac;
+        font-size: clamp(24px, 3vw, 34px);
+        margin: 12px 0;
+      }
+
+      #lq-basics-flow p {
+        color: #645675;
+        }
+
+      .lq-intro-animation {
+        position: relative;
+        height: 290px;
+        background: #fffbff;
+        border: 3px solid #ead6fa;
+        border-radius: 22px;
+        overflow: hidden;
+        margin: 22px 0 12px;
+      }
+
+      .lq-intro-scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 22px;
+        opacity: 0;
+        animation: lqSceneCycle 12s infinite;
+      }
+
+      .scene-one { animation-delay: 0s; }
+      .scene-two { animation-delay: -8s; }
+      .scene-three { animation-delay: -4s; }
+
+      @keyframes lqSceneCycle {
+        0%, 29% {
+          opacity: 1;
+          visibility: visible;
+        }
+        34%, 95% {
+          opacity: 0;
+          visibility: hidden;
+        }
+        100% {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .lq-intro-graphic {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(14px, 4vw, 40px);
+        font-size: clamp(55px, 8vw, 85px);
+        min-height: 120px;
+      }
+
+      .lq-intro-arrow {
+        font-size: 35px;
+        color: #a96ad2;
+        animation: lqArrowMove 1.5s infinite alternate;
+      }
+
+      .lq-floating-virus {
+        display: inline-block;
+        animation: lqVirusFloat 2s infinite ease-in-out;
+      }
+
+      .lq-pulsing-cell {
+        display: inline-block;
+        animation: lqCellPulse 2s infinite ease-in-out;
+      }
+
+      .lq-liver-jobs {
+        gap: 18px;
+        font-size: clamp(36px, 6vw, 65px);
+      }
+
+      .lq-intro-scene h3 {
+        color: #7443ac;
+        font-size: 23px;
+        margin: 10px 0 6px;
+      }
+
+      .lq-intro-scene p {
+        max-width: 550px;
+        font-size: 17px;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1.45;
+      }
+
+      @keyframes lqVirusFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px) rotate(12deg); }
+      }
+
+      @keyframes lqCellPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.13); }
+      }
+
+      @keyframes lqArrowMove {
+        from { transform: translateX(-8px); opacity: .4; }
+        to { transform: translateX(8px); opacity: 1; }
+      }
+
+      .lq-intro-progress {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .lq-intro-progress span {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #d5b4ee;
+      }
+
+      .lq-intro-details {
+        background: white;
+        border: 2px solid #ead7f7;
+        border-radius: 15px;
+        padding: 14px 18px;
+        text-align: left;
+        margin: 16px 0;
+      }
+
+      .lq-intro-details summary {
+        color: #7543af;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .lq-intro-details p {
+        font-size: 15px;
+        margin: 12px 0 0;
+      }
+
+      .lq-next-step {
+        margin-top: 20px;
+        padding: 17px;
+        background: #f5eaff;
+        border-radius: 16px;
+      }
+
+      .lq-next-step strong {
+        color: #8150bb;
+      }
+
+      .lq-next-step p {
+        margin: 8px 0 14px;
+      }
+
+      .lq-next-step a {
+        display: inline-block;
+        padding: 12px 22px;
+        background: #8e5ad8;
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 900;
+      }
+
+      #lq-cell-explorer {
+        scroll-margin-top: 90px;
+      }
+
+      @media (max-width: 600px) {
+        #lq-basics-flow {
+          padding: 16px;
+        }
+
+        .lq-intro-animation {
+          height: 325px;
+        }
+
+        .lq-intro-scene h3 {
+          font-size: 20px;
+        }
+
+        .lq-intro-scene p {
+          font-size: 15px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .lq-intro-scene {
+          animation: none;
+          opacity: 0;
+        }
+
+        .scene-one {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .lq-floating-virus,
+        .lq-pulsing-cell,
+        .lq-intro-arrow {
+          animation: none;
+        }
+      }
+    `;
+
+    document.head.appendChild(css);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      setupCellCityFlow
+    );
+  } else {
+    setupCellCityFlow();
+  }
+})();
+
+/* END CELL CITY LEARNING FLOW */
