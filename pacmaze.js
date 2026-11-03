@@ -59,6 +59,18 @@ function makeScienceChallenge(i,onComplete){
  
 
 const spotQuestions = {
+ 
+  "3-2": {
+    question: "Why is regular medical care important for someone with long-term hepatitis B?",
+    choices: [
+      ["🩺", "Doctors can monitor liver health and recommend treatment when needed"],
+      ["💪", "Medical visits make the virus disappear immediately"],
+      ["🦠", "People with hepatitis B always feel sick"]
+    ],
+    answer: 0,
+    fact: "People with chronic hepatitis B may feel healthy but still need regular checkups. Doctors can monitor their liver and recommend antiviral treatment when needed."
+  },
+
   "0-2": {
     question: "Which cell structure makes proteins that HBV needs?",
     choices: [
