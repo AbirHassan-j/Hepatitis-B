@@ -11670,10 +11670,6 @@ if (location.pathname.endsWith("cells.html")) {
           <p>Learn how to stay safe</p>
         </div>
       </div>
-
-      <a href="cells.html" class="lq-adventure-start">
-        START WITH CELL CITY →
-      </a>
     `;
 
     section.classList.add("lq-adventure-section");
