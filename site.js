@@ -11598,4 +11598,27 @@ if (location.pathname.endsWith("cells.html")) {
   }
 })();
 
-/* END SINGLE ANIMATED HBV INTRO */
+
+/* REMOVE SUPER LIVER SECTION FROM MISSION CONTROL */
+
+(function () {
+  function removeSuperLiver() {
+    const page = location.pathname.split("/").pop();
+
+    if (page !== "" && page !== "index.html") return;
+
+    const section = document.querySelector(".fact-banner");
+
+    if (section && section.textContent.includes("Meet Your Super Liver")) {
+      section.remove();
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", removeSuperLiver);
+  } else {
+    removeSuperLiver();
+  }
+})();
+
+/* END REMOVE SUPER LIVER */
