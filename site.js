@@ -11157,4 +11157,445 @@ if (location.pathname.endsWith("cells.html")) {
   }
 })();
 
-/* END ANIMATED SCIENCE INTRODUCTIONS */
+
+/* ============================================
+   LIVERQUEST — SINGLE ANIMATED HBV INTRO
+   One continuous animation, no slideshow
+   ============================================ */
+
+(function () {
+  function createHBVAnimation() {
+    if (!location.pathname.endsWith("cells.html")) return;
+
+    const intro = document.getElementById("lq-virus-intro");
+    if (!intro) return;
+
+    const stage = intro.querySelector(".lq-hbv-stage");
+    if (!stage || stage.dataset.singleAnimation) return;
+
+    stage.dataset.singleAnimation = "true";
+
+    // Only replace the animation, not the headings or cards.
+    stage.innerHTML = `
+      <div class="hbv-single-scene">
+
+        <div class="hbv-scene-title">
+          <span class="hbv-glow-dot"></span>
+          GET TO KNOW HEPATITIS B
+          <span class="hbv-glow-dot"></span>
+        </div>
+
+        <svg viewBox="0 0 680 330"
+             role="img"
+             aria-label="Animated hepatitis B virus beside a human torso with the liver highlighted">
+
+          <defs>
+            <radialGradient id="hbvPurpleGradient">
+              <stop offset="0%" stop-color="#f1d3ff"/>
+              <stop offset="100%" stop-color="#8750b7"/>
+            </radialGradient>
+
+            <linearGradient id="hbvLiverGradient">
+              <stop offset="0%" stop-color="#e987a3"/>
+              <stop offset="100%" stop-color="#a54667"/>
+            </linearGradient>
+
+            <filter id="hbvSoftGlow">
+              <feGaussianBlur stdDeviation="5"/>
+            </filter>
+          </defs>
+
+          <!-- VIRUS GLOW -->
+          <circle cx="175" cy="155" r="104"
+                  fill="#d4a7f0"
+                  opacity=".18"
+                  filter="url(#hbvSoftGlow)"
+                  class="hbv-virus-halo"/>
+
+          <!-- VIRUS -->
+          <g class="hbv-virus-float">
+
+            <g class="hbv-virus-spin">
+
+              <g stroke="#9453bb"
+                 stroke-width="8"
+                 stroke-linecap="round">
+                <path d="
+                  M175 81 V61
+                  M175 229 V249
+                  M101 155 H81
+                  M249 155 H269
+                  M123 103 L109 89
+                  M227 103 L241 89
+                  M123 207 L109 221
+                  M227 207 L241 221
+                "/>
+              </g>
+
+              <g fill="#d8a3f1">
+                <circle cx="175" cy="59" r="10"/>
+                <circle cx="175" cy="251" r="10"/>
+                <circle cx="79" cy="155" r="10"/>
+                <circle cx="271" cy="155" r="10"/>
+                <circle cx="107" cy="87" r="10"/>
+                <circle cx="243" cy="87" r="10"/>
+                <circle cx="107" cy="223" r="10"/>
+                <circle cx="243" cy="223" r="10"/>
+              </g>
+
+              <circle cx="175" cy="155" r="75"
+                      fill="url(#hbvPurpleGradient)"
+                      stroke="#7943a8"
+                      stroke-width="6"/>
+
+              <!-- Capsid -->
+              <path d="
+                M175 110 L215 132
+                L215 178 L175 200
+                L135 178 L135 132 Z
+              "
+              fill="#f5defd"
+              stroke="#a774cf"
+              stroke-width="5"/>
+
+              <!-- Viral DNA -->
+              <path d="
+                M153 145
+                Q188 117 175 153
+                Q155 180 197 176
+              "
+              fill="none"
+              stroke="#d465a6"
+              stroke-width="7"
+              stroke-linecap="round"
+              class="hbv-dna-glow"/>
+            </g>
+          </g>
+
+          <!-- CENTRAL CONNECTION -->
+          <g class="hbv-connection">
+            <path d="M290 154 H371"
+                  fill="none"
+                  stroke="#c591dd"
+                  stroke-width="4"
+                  stroke-dasharray="8 10"/>
+
+            <circle class="hbv-moving-light"
+                    cx="300" cy="154" r="7"
+                    fill="#ad68d7"/>
+          </g>
+
+          <!-- HUMAN BODY -->
+          <g>
+            <path d="
+              M444 32
+              Q413 42 396 78
+              L379 153
+              Q374 170 393 174
+              L416 157
+              L432 285
+              L573 285
+              L588 157
+              L611 174
+              Q631 170 626 153
+              L609 78
+              Q592 42 561 32
+              L540 48
+              L465 48 Z
+            "
+            fill="#f7dfeb"
+            stroke="#cc9ebd"
+            stroke-width="5"/>
+
+            <!-- Rib outlines -->
+            <g fill="none"
+               stroke="#e5bed3"
+               stroke-width="3">
+              <path d="M430 90 Q501 124 575 90"/>
+              <path d="M422 112 Q501 149 583 112"/>
+              <path d="M419 134 Q501 169 586 134"/>
+            </g>
+
+            <!-- Glowing liver halo -->
+            <ellipse cx="485" cy="162"
+                     rx="91" ry="58"
+                     fill="#f9a2c1"
+                     opacity=".3"
+                     filter="url(#hbvSoftGlow)"
+                     class="hbv-liver-halo"/>
+
+            <!-- Actual liver illustration -->
+            <g class="hbv-liver-highlight">
+              <path d="
+                M419 158
+                C418 132 438 120 468 120
+                C504 119 542 127 566 143
+                C579 154 573 172 555 177
+                C539 182 531 198 510 198
+                C490 197 484 180 464 182
+                C441 186 421 179 419 158 Z
+              "
+              fill="url(#hbvLiverGradient)"
+              stroke="#843757"
+              stroke-width="5"/>
+
+              <path d="M508 129 Q496 159 512 191"
+                    fill="none"
+                    stroke="#8c395b"
+                    stroke-width="4"/>
+
+              <path d="M436 143 Q460 128 486 139"
+                    fill="none"
+                    stroke="#ffcad8"
+                    stroke-width="6"
+                    stroke-linecap="round"/>
+            </g>
+
+            <!-- Animated liver locator -->
+            <ellipse cx="492" cy="160"
+                     rx="92" ry="65"
+                     fill="none"
+                     stroke="#d36fa9"
+                     stroke-width="5"
+                     stroke-dasharray="10 9"
+                     class="hbv-liver-ring"/>
+          </g>
+
+          <!-- LABELS -->
+          <text x="175" y="299"
+                text-anchor="middle"
+                class="hbv-visual-label">
+            HEPATITIS B VIRUS
+          </text>
+
+          <text x="500" y="315"
+                text-anchor="middle"
+                class="hbv-visual-label">
+            TARGET: THE LIVER
+          </text>
+
+          <!-- Decorative particles -->
+          <g fill="#c88be5">
+            <circle class="hbv-twinkle t1"
+                    cx="67" cy="69" r="5"/>
+            <circle class="hbv-twinkle t2"
+                    cx="306" cy="65" r="4"/>
+            <circle class="hbv-twinkle t3"
+                    cx="349" cy="250" r="5"/>
+          </g>
+
+        </svg>
+
+        <div class="hbv-big-takeaway">
+          <strong>ONE TINY VIRUS.</strong>
+          <span>ONE IMPORTANT ORGAN.</span>
+        </div>
+
+      </div>
+    `;
+
+    const style = document.createElement("style");
+    style.id = "hbv-single-animation-style";
+
+    style.textContent = `
+      #lq-virus-intro .lq-hbv-stage {
+        display: block;
+        padding: 0;
+        min-height: 0;
+        overflow: hidden;
+        border: 3px solid #e8cef8;
+        border-radius: 25px;
+        background: #fffaff;
+      }
+
+      .hbv-single-scene {
+        padding: 22px 12px;
+        background:
+          radial-gradient(circle at 20% 30%, #f4e2ff, transparent 45%),
+          radial-gradient(circle at 85% 65%, #ffe0ed, transparent 45%),
+          #fffaff;
+      }
+
+      .hbv-scene-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 11px;
+        font-family: Nunito, Arial, sans-serif;
+        font-size: clamp(12px, 1.7vw, 16px);
+        letter-spacing: 2px;
+        font-weight: 900;
+        color: #8750bb;
+      }
+
+      .hbv-glow-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #ca83e4;
+        box-shadow: 0 0 12px #ca83e4;
+        animation: hbvDotGlow 2s infinite alternate;
+      }
+
+      .hbv-single-scene svg {
+        display: block;
+        width: 100%;
+        max-width: 760px;
+        height: auto;
+        margin: 8px auto;
+        overflow: visible;
+      }
+
+      .hbv-visual-label {
+        font-family: Nunito, Arial, sans-serif;
+        fill: #7d46a8;
+        font-weight: 900;
+        letter-spacing: .6px;
+        font-size: 15px;
+      }
+
+      /* Virus floats gently */
+      .hbv-virus-float {
+        animation: hbvFloat 4s ease-in-out infinite;
+      }
+
+      /* Virus rotates */
+      .hbv-virus-spin {
+        transform-origin: 175px 155px;
+        animation: hbvSpin 18s linear infinite;
+      }
+
+      /* Viral genetic material glows */
+      .hbv-dna-glow {
+        animation: hbvDNAGlow 2.5s infinite alternate;
+      }
+
+      /* Liver lights up */
+      .hbv-liver-highlight {
+        transform-origin: 492px 160px;
+        animation: hbvLiverPulse 3s infinite ease-in-out;
+      }
+
+      .hbv-liver-ring {
+        transform-origin: 492px 160px;
+        animation: hbvRingGlow 3s infinite ease-in-out;
+      }
+
+      /* Small light moves toward the highlighted organ */
+      .hbv-moving-light {
+        animation: hbvTravel 4s ease-in-out infinite;
+      }
+
+      .hbv-twinkle {
+        animation: hbvTwinkle 3s infinite ease-in-out;
+      }
+
+      .hbv-twinkle.t2 { animation-delay: 1s; }
+      .hbv-twinkle.t3 { animation-delay: 2s; }
+
+      .hbv-big-takeaway {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 9px 0 2px;
+        font-family: Nunito, Arial, sans-serif;
+        font-size: clamp(17px, 3vw, 25px);
+        font-weight: 900;
+        letter-spacing: -.5px;
+      }
+
+      .hbv-big-takeaway strong {
+        color: #8748b8;
+      }
+
+      .hbv-big-takeaway span {
+        color: #db64a6;
+      }
+
+      @keyframes hbvFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+      }
+
+      @keyframes hbvSpin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes hbvDNAGlow {
+        from { opacity: .5; }
+        to { opacity: 1; }
+      }
+
+      @keyframes hbvLiverPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.07); }
+      }
+
+      @keyframes hbvRingGlow {
+        0%, 100% {
+          opacity: .3;
+          transform: scale(.95);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.07);
+        }
+      }
+
+      @keyframes hbvTravel {
+        0% { transform: translateX(0); opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% {
+          transform: translateX(65px);
+          opacity: 0;
+        }
+      }
+
+      @keyframes hbvTwinkle {
+        0%, 100% { opacity: .2; }
+        50% { opacity: 1; }
+      }
+
+      @keyframes hbvDotGlow {
+        from { opacity: .4; }
+        to { opacity: 1; }
+      }
+
+      @media (max-width: 600px) {
+        .hbv-single-scene {
+          padding: 17px 5px;
+        }
+
+        .hbv-visual-label {
+          font-size: 13px;
+        }
+
+        .hbv-scene-title {
+          letter-spacing: 1px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #lq-virus-intro .hbv-single-scene * {
+          animation: none !important;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      createHBVAnimation
+    );
+  } else {
+    createHBVAnimation();
+  }
+})();
+
+/* END SINGLE ANIMATED HBV INTRO */
