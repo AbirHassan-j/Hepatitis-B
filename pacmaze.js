@@ -449,45 +449,51 @@ function stage1Scene(kind){
    <g transform="translate(80 226)">${virus(10)}${move('M0 0 L72 0 L72 0 L0 0')}</g>
    <circle cx="169" cy="226" r="22" fill="none" stroke="#ffc846" stroke-width="5" opacity="0">${fade()}</circle>`;
  }
- if(kind==='enter'){
-   art=`${cell}${label(42,120,'Outside')}${label(286,415,'Inside: cytoplasm')}
 
-   <!-- membrane opening / entry gate -->
-   <g class="s1-entry-gate">
-     <ellipse cx="170" cy="226" rx="21" ry="34" fill="#fff7ec" stroke="#f2c971" stroke-width="5"/>
-     <path d="M160 202q-10 24 0 48" fill="none" stroke="#b95b98" stroke-width="8" stroke-linecap="round"/>
-     <path d="M180 202q10 24 0 48" fill="none" stroke="#b95b98" stroke-width="8" stroke-linecap="round"/>
-     <circle cx="170" cy="226" r="26" fill="none" stroke="#ffd45d" stroke-width="4" opacity=".6">
-       <animate attributeName="r" values="18;28;18" dur="1.8s" repeatCount="indefinite"/>
-       <animate attributeName="opacity" values=".2;.75;.2" dur="1.8s" repeatCount="indefinite"/>
-     </circle>
-   </g>
+if(kind==='enter'){
+  art=`${cell}
+    ${label(42,120,'Outside')}
+    ${label(286,415,'Inside: cytoplasm')}
 
-   <!-- directional path -->
-   <path d="M190 229Q240 224 305 232" stroke="#4eb6d0" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#s1arr)"/>
+    <!-- Glowing membrane opening -->
+    <ellipse cx="170" cy="226" rx="22" ry="36"
+      fill="#fff1c6" stroke="#e9b94e" stroke-width="5"/>
 
-   <!-- first virus entering -->
-   <g transform="translate(72 226)">
-     ${virus(10)}
-     ${move('M0 0 L68 0 L112 0 L206 5 L206 5 L0 0')}
-   </g>
+    <circle cx="170" cy="226" r="27"
+      fill="none" stroke="#ffd65c" stroke-width="4">
+      <animate attributeName="opacity"
+        values=".3;1;.3" dur="1.5s"
+        repeatCount="indefinite"/>
+    </circle>
 
-   <!-- second virus following behind -->
-   <g transform="translate(28 226)">
-     ${virus(9)}
-     ${move('M0 0 L58 0 L102 0 L196 5 L196 5 L0 0','0.7s')}
-   </g>
+    <!-- Virus 1: approaches from above -->
+    <g transform="translate(65 180)">
+      ${virus(15)}
+      <animateMotion
+        path="M0 0 C50 0 75 28 105 46 S175 30 245 5"
+        dur="6.8s"
+        repeatCount="indefinite"/>
+    </g>
 
-   <!-- glow inside cell showing it entered -->
-   <circle cx="255" cy="232" r="18" fill="#9edff0" opacity="0">
-     <animate attributeName="opacity" values="0;0;0.75;0" dur="${dur}" repeatCount="indefinite"/>
-     <animate attributeName="r" values="10;10;24;32" dur="${dur}" repeatCount="indefinite"/>
-   </circle>
+    <!-- Virus 2: approaches from below -->
+    <g transform="translate(65 280)">
+      ${virus(15)}
+      <animateMotion
+        path="M0 0 C55 0 75 -30 105 -54 S180 -25 250 10"
+        dur="6.8s"
+        begin="1.2s"
+        repeatCount="indefinite"/>
+    </g>
 
-   <text x="228" y="455" text-anchor="middle" font-size="18" font-weight="900" fill="#5e4a88">
-     2 · The virus enters through the membrane opening
-   </text>`;
+    <!-- Entry direction -->
+    <path d="M205 226 Q250 226 315 230"
+      fill="none" stroke="#4eb6d0"
+      stroke-width="5"
+      stroke-dasharray="12 9"
+      marker-end="url(#s1arr)"/>
+  `;
 }
+
  if(kind==='toNucleus'){
    art=`${cell}${label(205,414,'Inside the cell')}${label(555,115,'Nucleus')}
    <path d="M265 226Q350 240 432 217T498 213" stroke="#f8c95e" stroke-width="6" stroke-dasharray="12 10" fill="none"/>
