@@ -418,7 +418,7 @@ function showEnding(){ showModal(`<span class="modal-eyebrow">MISSION COMPLETE</
 /* Six purpose-built Stage 1 scenes. SVG's native timeline avoids competing CSS transforms. */
 function stage1Scene(kind){
  const name={arrive:'1 · A virus approaches a liver cell',attach:'1 · The virus docks on a membrane receptor',enter:'2 · The virus enters the cytoplasm',toNucleus:'3 · HBV brings its messages toward the nucleus',dnaCopy:'4 · Messages tell the cell to make virus parts',assembly:'5 · Cell components assemble and release new HBV'}[kind];
- const dur='8s';
+ const dur='6.8s';
  const defs=`<defs>
  <radialGradient id="s1cyto" cx="40%" cy="30%" r="72%"><stop stop-color="#fff4fb"/><stop offset=".7" stop-color="#f9c6df"/><stop offset="1" stop-color="#eda3c9"/></radialGradient>
  <radialGradient id="s1nuc" cx="32%" cy="28%" r="75%"><stop stop-color="#e8d6ff"/><stop offset="1" stop-color="#9870cf"/></radialGradient>
@@ -450,11 +450,44 @@ function stage1Scene(kind){
    <circle cx="169" cy="226" r="22" fill="none" stroke="#ffc846" stroke-width="5" opacity="0">${fade()}</circle>`;
  }
  if(kind==='enter'){
-   art=`${cell}${label(37,120,'Outside')}${label(298,415,'Inside: cytoplasm')}
-   <g class="s1-receptor"><circle cx="168" cy="226" r="12" fill="#ffe18e" stroke="#bd8e36" stroke-width="4"/></g>
-   <path d="M190 229Q235 225 290 232" stroke="#4eb6d0" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#s1arr)"/>
-   <g transform="translate(75 226)">${virus(10)}${move('M0 0 L78 0 L120 0 L215 5 L215 5 L0 0')}</g>`;
- }
+   art=`${cell}${label(42,120,'Outside')}${label(286,415,'Inside: cytoplasm')}
+
+   <!-- membrane opening / entry gate -->
+   <g class="s1-entry-gate">
+     <ellipse cx="170" cy="226" rx="21" ry="34" fill="#fff7ec" stroke="#f2c971" stroke-width="5"/>
+     <path d="M160 202q-10 24 0 48" fill="none" stroke="#b95b98" stroke-width="8" stroke-linecap="round"/>
+     <path d="M180 202q10 24 0 48" fill="none" stroke="#b95b98" stroke-width="8" stroke-linecap="round"/>
+     <circle cx="170" cy="226" r="26" fill="none" stroke="#ffd45d" stroke-width="4" opacity=".6">
+       <animate attributeName="r" values="18;28;18" dur="1.8s" repeatCount="indefinite"/>
+       <animate attributeName="opacity" values=".2;.75;.2" dur="1.8s" repeatCount="indefinite"/>
+     </circle>
+   </g>
+
+   <!-- directional path -->
+   <path d="M190 229Q240 224 305 232" stroke="#4eb6d0" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#s1arr)"/>
+
+   <!-- first virus entering -->
+   <g transform="translate(72 226)">
+     ${virus(10)}
+     ${move('M0 0 L68 0 L112 0 L206 5 L206 5 L0 0')}
+   </g>
+
+   <!-- second virus following behind -->
+   <g transform="translate(28 226)">
+     ${virus(9)}
+     ${move('M0 0 L58 0 L102 0 L196 5 L196 5 L0 0','0.7s')}
+   </g>
+
+   <!-- glow inside cell showing it entered -->
+   <circle cx="255" cy="232" r="18" fill="#9edff0" opacity="0">
+     <animate attributeName="opacity" values="0;0;0.75;0" dur="${dur}" repeatCount="indefinite"/>
+     <animate attributeName="r" values="10;10;24;32" dur="${dur}" repeatCount="indefinite"/>
+   </circle>
+
+   <text x="228" y="455" text-anchor="middle" font-size="18" font-weight="900" fill="#5e4a88">
+     2 · The virus enters through the membrane opening
+   </text>`;
+}
  if(kind==='toNucleus'){
    art=`${cell}${label(205,414,'Inside the cell')}${label(555,115,'Nucleus')}
    <path d="M265 226Q350 240 432 217T498 213" stroke="#f8c95e" stroke-width="6" stroke-dasharray="12 10" fill="none"/>
