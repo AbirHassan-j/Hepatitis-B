@@ -1005,3 +1005,102 @@
     padding: 9px 4px;
   }
 }
+
+/* === CLUE POPUP VISUAL UPGRADE === */
+.modal-card:has(.science-anim){
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(255, 196, 225, 0.28) 0 90px, transparent 91px),
+    radial-gradient(circle at 88% 14%, rgba(209, 239, 255, 0.34) 0 110px, transparent 111px),
+    radial-gradient(circle at 13% 84%, rgba(236, 210, 255, 0.30) 0 95px, transparent 96px),
+    radial-gradient(circle at 90% 84%, rgba(255, 231, 243, 0.34) 0 80px, transparent 81px),
+    linear-gradient(180deg,#fffefe 0%,#fff7fc 100%);
+}
+
+.modal-card:has(.science-anim)::before,
+.modal-card:has(.science-anim)::after{
+  content:"";
+  position:absolute;
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:.35;
+  z-index:0;
+  animation: clueFloat 8s ease-in-out infinite;
+}
+
+.modal-card:has(.science-anim)::before{
+  left:-28px;
+  top:95px;
+  background:
+    radial-gradient(circle at 35% 35%, #ffd8ea 0 38%, #efb1d4 39% 68%, transparent 69%),
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #d9b1ef 73% 76%, transparent 77%);
+}
+
+.modal-card:has(.science-anim)::after{
+  right:-24px;
+  bottom:48px;
+  background:
+    radial-gradient(circle at 50% 50%, #c38ce8 0 25%, transparent 26%),
+    repeating-conic-gradient(from 0deg, #dcb0f6 0deg 12deg, transparent 12deg 30deg);
+  width:120px;
+  height:120px;
+  animation-delay:1.2s;
+}
+
+.modal-card:has(.science-anim) > *{
+  position:relative;
+  z-index:1;
+}
+
+.science-anim{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255,255,255,.9) 0 55px, transparent 56px),
+    radial-gradient(circle at 82% 18%, rgba(217,242,255,.8) 0 70px, transparent 71px),
+    radial-gradient(circle at 18% 80%, rgba(255,220,237,.7) 0 65px, transparent 66px),
+    linear-gradient(145deg,#fff7fd,#f4edff);
+}
+
+.science-anim::before,
+.science-anim::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:.32;
+}
+
+.science-anim::before{
+  width:110px;
+  height:110px;
+  left:-18px;
+  top:18px;
+  background:
+    radial-gradient(circle at 40% 40%, #ffd3e8 0 34%, #efb0d2 35% 66%, transparent 67%);
+  animation: clueBubble 7s ease-in-out infinite;
+}
+
+.science-anim::after{
+  width:88px;
+  height:88px;
+  right:14px;
+  bottom:20px;
+  background:
+    radial-gradient(circle at 50% 50%, #c58be9 0 24%, transparent 25%),
+    repeating-conic-gradient(from 0deg, #ddb4f7 0deg 14deg, transparent 14deg 32deg);
+  animation: clueBubble 6s ease-in-out infinite reverse;
+}
+
+@keyframes clueBubble{
+  0%,100%{transform:translateY(0px) scale(1);}
+  50%{transform:translateY(-10px) scale(1.04);}
+}
+
+@keyframes clueFloat{
+  0%,100%{transform:translateY(0px);}
+  50%{transform:translateY(-12px);}
+}
