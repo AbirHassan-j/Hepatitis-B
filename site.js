@@ -11622,3 +11622,179 @@ if (location.pathname.endsWith("cells.html")) {
 })();
 
 /* END REMOVE SUPER LIVER */
+
+/* MISSION CONTROL — REPLACE CHOOSE YOUR MISSION */
+
+(function () {
+  function updateMissionControl() {
+    const page = location.pathname.split("/").pop();
+
+    if (page !== "" && page !== "index.html") return;
+
+    const missionGrid = document.querySelector(".mission-grid");
+    if (!missionGrid) return;
+
+    const section = missionGrid.closest("section");
+    if (!section) return;
+
+    section.innerHTML = `
+      <div class="lq-adventure-heading">
+        <span>✦ YOUR LIVERQUEST ADVENTURE ✦</span>
+        <h2>Your Adventure Starts Here!</h2>
+        <p>
+          Explore the microscopic world, discover how
+          hepatitis B affects the liver, and become
+          a LiverQuest hero!
+        </p>
+      </div>
+
+      <div class="lq-adventure-steps">
+        <div class="lq-adventure-step">
+          <span class="lq-adventure-number">01</span>
+          <div class="lq-adventure-icon">🧫</div>
+          <h3>Explore</h3>
+          <p>Discover liver cells</p>
+        </div>
+
+        <div class="lq-adventure-step">
+          <span class="lq-adventure-number">02</span>
+          <div class="lq-adventure-icon">🦠</div>
+          <h3>Investigate</h3>
+          <p>Follow HBV's journey</p>
+        </div>
+
+        <div class="lq-adventure-step">
+          <span class="lq-adventure-number">03</span>
+          <div class="lq-adventure-icon">🛡️</div>
+          <h3>Protect</h3>
+          <p>Learn how to stay safe</p>
+        </div>
+      </div>
+
+      <a href="cells.html" class="lq-adventure-start">
+        START WITH CELL CITY →
+      </a>
+    `;
+
+    section.classList.add("lq-adventure-section");
+
+    const style = document.createElement("style");
+    style.id = "lq-adventure-style";
+
+    style.textContent = `
+      .lq-adventure-section {
+        padding: 35px 25px;
+        background: linear-gradient(135deg,#fff3fb,#f0e8ff);
+        border: 3px solid #e7cef6;
+        border-radius: 26px;
+        text-align: center;
+        margin-top: 35px;
+      }
+
+      .lq-adventure-heading span {
+        font-size: 13px;
+        letter-spacing: 2px;
+        font-weight: 900;
+        color: #9a61c1;
+      }
+
+      .lq-adventure-heading h2 {
+        font-size: clamp(30px,4.3vw,48px);
+        font-weight: 900;
+        color: #7445ad;
+        margin: 12px 0;
+      }
+
+      .lq-adventure-heading p {
+        font-size: 18px;
+        font-weight: 700;
+        color: #765e88;
+        max-width: 680px;
+        margin: 0 auto 25px;
+      }
+
+      .lq-adventure-steps {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 16px;
+        margin-bottom: 25px;
+      }
+
+      .lq-adventure-step {
+        background: white;
+        border: 2px solid #e8d4f5;
+        border-radius: 20px;
+        padding: 22px 15px;
+        position: relative;
+        transition: transform .2s;
+      }
+
+      .lq-adventure-step:hover {
+        transform: translateY(-5px);
+      }
+
+      .lq-adventure-number {
+        position: absolute;
+        top: 12px;
+        left: 15px;
+        color: #aa7bc5;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .lq-adventure-icon {
+        font-size: 49px;
+        margin: 10px 0 12px;
+      }
+
+      .lq-adventure-step h3 {
+        color: #7847b3;
+        font-size: 23px;
+        margin: 0 0 7px;
+      }
+
+      .lq-adventure-step p {
+        color: #806a8c;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .lq-adventure-start {
+        display: inline-block;
+        padding: 16px 28px;
+        background: linear-gradient(110deg,#8550d1,#ad64df);
+        color: white;
+        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 900;
+        text-decoration: none;
+        box-shadow: 0 5px 0 #6034a1;
+      }
+
+      .lq-adventure-start:hover {
+        transform: translateY(-2px);
+      }
+
+      @media(max-width:650px) {
+        .lq-adventure-steps {
+          grid-template-columns: 1fr;
+        }
+
+        .lq-adventure-section {
+          padding: 22px 15px;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", updateMissionControl);
+  } else {
+    updateMissionControl();
+  }
+})();
+
+/* END MISSION CONTROL UPGRADE */
