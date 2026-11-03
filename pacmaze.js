@@ -315,7 +315,7 @@ function buildLevel(){const lv=levels[level]; mapGrid=lv.map.map(r=>r.split(''))
     else if(/[1-6]/.test(ch)){clues[Number(ch)-1]={x,y}; mapGrid[y][x]=' ';}
     else if(/[A-D]/.test(ch)){enemies.push({x,y,home:{x,y}}); mapGrid[y][x]=' ';}
   }
-  enemies=enemies.slice(0,level===0?1:2);
+  enemies=enemies.slice(0,2);
   // Guarantee all required stations AND the exit are connected to the starting tile.
   // Reopen the smallest number of walls necessary when an old maze has islands.
   function reachableCells(){
