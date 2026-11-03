@@ -10292,4 +10292,869 @@ if (location.pathname.endsWith("cells.html")) {
   }
 })();
 
-/* END CELL CITY NEW LEARNING ORDER */
+
+/* =============================================
+   LIVERQUEST — ANIMATED SCIENCE INTRODUCTIONS
+   Upgrades Liver and HBV sections ONLY
+   ============================================= */
+
+(function () {
+  function upgradeIntroductions() {
+    if (!location.pathname.endsWith("cells.html")) return;
+
+    const liver = document.getElementById("lq-liver-intro");
+    const virus = document.getElementById("lq-virus-intro");
+
+    if (!liver || !virus) return;
+    if (document.getElementById("lq-science-intro-css")) return;
+
+    /* ========== LIVER INTRO ========== */
+
+    liver.innerHTML = `
+      <span class="lq-new-eyebrow">
+        ✦ DISCOVER YOUR BODY ✦
+      </span>
+
+      <h2 class="lq-new-heading">
+        Meet Your <em>Amazing Liver!</em>
+      </h2>
+
+      <p class="lq-new-subtitle">
+        Your liver is one of your body's busiest organs.
+        Watch how it helps keep you healthy!
+      </p>
+
+      <div class="lq-science-stage lq-liver-stage">
+
+        <div class="lq-stage-tag">
+          INSIDE YOUR BODY
+        </div>
+
+        <svg class="lq-liver-svg"
+             viewBox="0 0 620 345"
+             role="img"
+             aria-label="Animated illustration of a liver with blood vessels and bile pathway">
+
+          <defs>
+            <linearGradient id="lqLiverGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ee91a6"/>
+              <stop offset="55%" stop-color="#be5875"/>
+              <stop offset="100%" stop-color="#8b3559"/>
+            </linearGradient>
+
+            <linearGradient id="lqBileGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#bef08f"/>
+              <stop offset="100%" stop-color="#6fc99e"/>
+            </linearGradient>
+
+            <filter id="lqSoftGlow">
+              <feGaussianBlur stdDeviation="4"/>
+            </filter>
+          </defs>
+
+          <!-- Soft glow behind actual liver illustration -->
+          <ellipse cx="315" cy="175" rx="222" ry="130"
+                   fill="#f9b8da" opacity=".35"
+                   filter="url(#lqSoftGlow)"/>
+
+          <!-- Main liver silhouette -->
+          <g class="lq-liver-body">
+            <path
+              d="M104 164
+                 C102 109 139 73 210 64
+                 C277 56 364 64 438 86
+                 C481 99 511 123 520 156
+                 C523 184 503 204 471 211
+                 C454 217 440 228 429 244
+                 C406 278 366 288 332 266
+                 C304 249 288 237 260 240
+                 C221 246 194 266 153 245
+                 C118 228 103 202 104 164 Z"
+              fill="url(#lqLiverGrad)"
+              stroke="#87395b"
+              stroke-width="7"
+              stroke-linejoin="round"/>
+
+            <!-- Liver lobe division -->
+            <path d="M337 82
+                     C320 124 317 160 335 201
+                     C347 225 354 249 350 270"
+                  fill="none"
+                  stroke="#87395b"
+                  stroke-width="5"
+                  opacity=".48"/>
+
+            <!-- Highlight and texture -->
+            <path d="M142 137 Q170 92 240 90"
+                  fill="none"
+                  stroke="#ffd2db"
+                  stroke-width="13"
+                  opacity=".55"
+                  stroke-linecap="round"/>
+
+            <path d="M375 113 Q449 109 473 148"
+                  fill="none"
+                  stroke="#f8b0c3"
+                  stroke-width="8"
+                  opacity=".5"
+                  stroke-linecap="round"/>
+          </g>
+
+          <!-- Blood vessels -->
+          <g fill="none" stroke-linecap="round">
+            <path d="M310 302 Q320 265 320 228
+                     Q298 193 257 179"
+                  stroke="#b34972"
+                  stroke-width="12"/>
+
+            <path d="M320 228 Q367 199 416 180"
+                  stroke="#a53d72"
+                  stroke-width="9"/>
+
+            <path d="M310 302 Q320 265 320 228
+                     Q298 193 257 179"
+                  stroke="#ffb3ca"
+                  stroke-width="4"
+                  class="lq-blood-flow"/>
+
+            <path d="M320 228 Q367 199 416 180"
+                  stroke="#ffb3ca"
+                  stroke-width="3"
+                  class="lq-blood-flow"/>
+          </g>
+
+          <!-- Gallbladder and bile pathway -->
+          <g class="lq-bile-system">
+            <path d="M367 236
+                     Q386 252 381 283
+                     Q377 306 361 306
+                     Q344 306 344 283
+                     Q346 253 367 236 Z"
+                  fill="url(#lqBileGrad)"
+                  stroke="#579b75"
+                  stroke-width="5"/>
+
+            <path d="M365 244 Q361 210 382 187"
+                  stroke="#79c99b"
+                  stroke-width="7"
+                  fill="none"
+                  stroke-linecap="round"/>
+
+            <circle class="lq-bile-drop" cx="376" cy="193"
+                    r="6" fill="#d4ff86"/>
+          </g>
+
+          <!-- Animated sparkles -->
+          <g fill="#fff0b8">
+            <path class="lq-liver-spark s1"
+                  d="M173 115 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5Z"/>
+            <path class="lq-liver-spark s2"
+                  d="M447 143 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5Z"/>
+            <path class="lq-liver-spark s3"
+                  d="M245 207 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4Z"/>
+          </g>
+        </svg>
+
+        <div class="lq-stage-note">
+          Your liver works every day to help your body!
+        </div>
+      </div>
+
+      <div class="lq-liver-functions">
+        <div class="lq-function-card">
+          <span class="lq-function-number">01</span>
+          <span class="lq-function-symbol">🍎</span>
+          <h3>Processes <em>Nutrients</em></h3>
+          <p>Helps your body use nutrients from food.</p>
+        </div>
+
+        <div class="lq-function-card">
+          <span class="lq-function-number">02</span>
+          <span class="lq-function-symbol">⚡</span>
+          <h3>Stores <em>Energy</em></h3>
+          <p>Stores energy for when your body needs it.</p>
+        </div>
+
+        <div class="lq-function-card">
+          <span class="lq-function-number">03</span>
+          <span class="lq-function-symbol">💧</span>
+          <h3>Produces <em>Bile</em></h3>
+          <p>Makes bile to help digest fats.</p>
+        </div>
+
+        <div class="lq-function-card">
+          <span class="lq-function-number">04</span>
+          <span class="lq-function-symbol">🩸</span>
+          <h3>Processes <em>Blood</em></h3>
+          <p>Helps remove harmful substances.</p>
+        </div>
+      </div>
+
+      <a class="lq-new-next" href="#cell-city-video">
+        NEXT: WATCH THE VIDEO
+        <span>↓</span>
+      </a>
+    `;
+
+    /* ========== VIRUS INTRO ========== */
+
+    virus.innerHTML = `
+      <span class="lq-new-eyebrow">
+        ✦ YOUR NEXT MYSTERY ✦
+      </span>
+
+      <h2 class="lq-new-heading">
+        Meet the <em>Virus & Hepatitis B!</em>
+      </h2>
+
+      <p class="lq-new-subtitle">
+        A tiny virus can cause a big problem.
+        Watch what happens when HBV reaches a liver cell.
+      </p>
+
+      <div class="lq-science-stage lq-hbv-stage">
+
+        <div class="lq-stage-tag">
+          VIRUS INVASION PREVIEW
+        </div>
+
+        <svg class="lq-virus-svg"
+             viewBox="0 0 700 330"
+             role="img"
+             aria-label="Animated hepatitis B virus approaching a liver cell and new virus particles appearing">
+
+          <defs>
+            <radialGradient id="lqVirusGradient">
+              <stop offset="0%" stop-color="#e8c1fc"/>
+              <stop offset="100%" stop-color="#8954c1"/>
+            </radialGradient>
+
+            <radialGradient id="lqCellGradient">
+              <stop offset="0%" stop-color="#ffe9f3"/>
+              <stop offset="100%" stop-color="#f1a1c9"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Large liver cell -->
+          <g class="lq-animated-cell">
+            <ellipse cx="490" cy="160" rx="158" ry="123"
+                     fill="url(#lqCellGradient)"
+                     stroke="#d865a2"
+                     stroke-width="12"/>
+
+            <ellipse cx="490" cy="160" rx="143" ry="108"
+                     fill="none" stroke="#ffe8f5"
+                     stroke-width="4"
+                     stroke-dasharray="8 9"/>
+
+            <!-- Nucleus -->
+            <circle cx="525" cy="161" r="53"
+                    fill="#b58be2"
+                    stroke="#7449b7"
+                    stroke-width="7"
+                    class="lq-nucleus-beat"/>
+
+            <path d="M506 134 Q545 160 503 188
+                     M541 135 Q501 160 545 190"
+                  stroke="#e9d5ff"
+                  stroke-width="5"
+                  fill="none"/>
+
+            <!-- Mitochondria -->
+            <g fill="#ffc57d" stroke="#c17a4e"
+               stroke-width="4">
+              <ellipse cx="417" cy="120" rx="31" ry="16"
+                       transform="rotate(-25 417 120)"/>
+              <ellipse cx="436" cy="222" rx="31" ry="16"
+                       transform="rotate(20 436 222)"/>
+            </g>
+
+            <!-- New virus particles appear later -->
+            <g class="lq-produced-virus lq-produced-one">
+              <circle cx="415" cy="175" r="13"
+                      fill="#ad75db" stroke="#7449ab" stroke-width="3"/>
+              <path d="M415 156 V151 M415 194 V199
+                       M396 175 H391 M434 175 H439"
+                    stroke="#7449ab" stroke-width="4"/>
+            </g>
+
+            <g class="lq-produced-virus lq-produced-two">
+              <circle cx="557" cy="220" r="12"
+                      fill="#ad75db" stroke="#7449ab" stroke-width="3"/>
+              <path d="M557 203 V198 M557 237 V242
+                       M540 220 H535 M574 220 H579"
+                    stroke="#7449ab" stroke-width="4"/>
+            </g>
+
+            <g class="lq-produced-virus lq-produced-three">
+              <circle cx="575" cy="108" r="11"
+                      fill="#ad75db" stroke="#7449ab" stroke-width="3"/>
+              <path d="M575 92 V87 M575 124 V129
+                       M559 108 H554 M591 108 H596"
+                    stroke="#7449ab" stroke-width="4"/>
+            </g>
+          </g>
+
+          <!-- Approaching HBV particle -->
+          <g class="lq-virus-traveller">
+            <g class="lq-spinning-virus">
+              <circle cx="138" cy="158" r="48"
+                      fill="url(#lqVirusGradient)"
+                      stroke="#7844aa" stroke-width="5"/>
+
+              <g stroke="#9b59c5" stroke-width="7"
+                 stroke-linecap="round">
+                <path d="M138 110 V96 M138 206 V220
+                         M90 158 H76 M186 158 H200
+                         M104 124 L94 114
+                         M172 124 L182 114
+                         M104 192 L94 202
+                         M172 192 L182 202"/>
+              </g>
+
+              <g fill="#dfb0f4">
+                <circle cx="138" cy="94" r="7"/>
+                <circle cx="138" cy="222" r="7"/>
+                <circle cx="74" cy="158" r="7"/>
+                <circle cx="202" cy="158" r="7"/>
+                <circle cx="93" cy="113" r="7"/>
+                <circle cx="183" cy="113" r="7"/>
+                <circle cx="93" cy="203" r="7"/>
+                <circle cx="183" cy="203" r="7"/>
+              </g>
+
+              <!-- Viral genetic material -->
+              <path d="M121 142
+                       Q153 133 135 158
+                       Q117 182 156 177"
+                    stroke="#f6e3ff"
+                    stroke-width="6"
+                    fill="none"
+                    stroke-linecap="round"/>
+            </g>
+          </g>
+
+          <!-- Path towards cell -->
+          <path d="M214 160 H325"
+                fill="none"
+                stroke="#b689da"
+                stroke-width="5"
+                stroke-dasharray="8 10"
+                class="lq-virus-path"/>
+
+          <text x="138" y="284" text-anchor="middle"
+                class="lq-svg-caption">HEPATITIS B VIRUS</text>
+          <text x="490" y="315" text-anchor="middle"
+                class="lq-svg-caption">LIVER CELL</text>
+        </svg>
+
+        <div class="lq-hbv-steps">
+          <span>01 · APPROACH</span>
+          <span>02 · INFECT</span>
+          <span>03 · REPRODUCE</span>
+        </div>
+      </div>
+
+      <div class="lq-virus-facts">
+        <article>
+          <div class="lq-fact-number">01 / THE BASICS</div>
+          <h3>What Is a <em>Virus?</em></h3>
+          <p>
+            A tiny infectious particle that
+            <strong>needs a living cell</strong>
+            to make copies of itself.
+          </p>
+        </article>
+
+        <article>
+          <div class="lq-fact-number">02 / THE THREAT</div>
+          <h3>What Is <em>HBV?</em></h3>
+          <p>
+            Hepatitis B virus infects
+            <strong>liver cells</strong>
+            and can cause liver inflammation.
+          </p>
+        </article>
+      </div>
+
+      <div class="lq-final-transition">
+        <span>🎮</span>
+        <strong>YOUR NEXT MISSION: VIRUS INVASION</strong>
+        <p>
+          Discover how HBV enters a liver cell
+          and uses its machinery to reproduce!
+        </p>
+      </div>
+    `;
+
+    /* ========== NEW DESIGN + ANIMATIONS ========== */
+
+    const styles = document.createElement("style");
+    styles.id = "lq-science-intro-css";
+
+    styles.textContent = `
+      /* Main panels */
+      #lq-liver-intro,
+      #lq-virus-intro {
+        background: linear-gradient(145deg, #fff6fc, #f3eaff);
+        border: 3px solid #e5c7f6;
+        border-radius: 28px;
+        padding: clamp(18px, 3vw, 35px);
+        margin: 30px 0;
+        color: #614582;
+        text-align: center;
+        font-family: Nunito, Arial, sans-serif;
+      }
+
+      .lq-new-eyebrow {
+        display: inline-block;
+        background: #e9d5fa;
+        color: #7942b4;
+        border: 2px solid #d5b3ec;
+        border-radius: 100px;
+        padding: 10px 17px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        font-size: 13px;
+      }
+
+      /* Larger designed typography */
+      .lq-new-heading {
+        font-family: Nunito, Arial, sans-serif;
+        font-weight: 900;
+        font-size: clamp(32px, 5vw, 52px);
+        line-height: 1.12;
+        letter-spacing: -1.7px;
+        color: #6440a2;
+        margin: 20px auto 12px;
+        max-width: 900px;
+      }
+
+      .lq-new-heading em,
+      .lq-liver-functions h3 em,
+      .lq-virus-facts h3 em {
+        color: #dc5fa9;
+        font-style: normal;
+      }
+
+      #lq-liver-intro .lq-new-subtitle,
+      #lq-virus-intro .lq-new-subtitle {
+        color: #6c5984;
+        font-size: clamp(17px, 2vw, 21px);
+        font-weight: 800;
+        line-height: 1.5;
+        max-width: 710px;
+        margin: 12px auto 25px;
+      }
+
+      /* Shared animation stages */
+      .lq-science-stage {
+        position: relative;
+        background:
+          radial-gradient(circle at 20% 15%, #f7e3ff, transparent 42%),
+          radial-gradient(circle at 83% 85%, #ffe0ef, transparent 42%),
+          #fffaff;
+        border: 3px solid #e9d3f8;
+        border-radius: 25px;
+        overflow: hidden;
+        padding: 18px;
+      }
+
+      .lq-stage-tag {
+        display: inline-block;
+        border-radius: 100px;
+        background: #fff;
+        border: 2px solid #e8d3fa;
+        color: #8052b0;
+        padding: 8px 15px;
+        font-size: 12px;
+        letter-spacing: 1.2px;
+        font-weight: 900;
+      }
+
+      .lq-liver-svg {
+        width: 100%;
+        max-width: 640px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        overflow: visible;
+      }
+
+      /* Liver animations */
+      .lq-liver-body {
+        transform-origin: 310px 170px;
+        animation: lqLiverPulse 3.8s ease-in-out infinite;
+      }
+
+      .lq-blood-flow {
+        stroke-dasharray: 8 15;
+        animation: lqBloodFlow 1.4s linear infinite;
+      }
+
+      .lq-bile-drop {
+        animation: lqBileTravel 3s ease-in-out infinite;
+      }
+
+      .lq-liver-spark {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: lqSparkle 2.7s ease-in-out infinite;
+      }
+
+      .lq-liver-spark.s2 { animation-delay: .8s; }
+      .lq-liver-spark.s3 { animation-delay: 1.6s; }
+
+      .lq-stage-note {
+        color: #854ba6;
+        font-size: 18px;
+        font-weight: 900;
+        margin-bottom: 8px;
+      }
+
+      @keyframes lqLiverPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.035); }
+      }
+
+      @keyframes lqBloodFlow {
+        to { stroke-dashoffset: -46; }
+      }
+
+      @keyframes lqBileTravel {
+        0%, 100% {
+          transform: translateY(0);
+          opacity: .2;
+        }
+        50% {
+          transform: translateY(45px);
+          opacity: 1;
+        }
+      }
+
+      @keyframes lqSparkle {
+        0%, 100% { opacity: .15; transform: scale(.6); }
+        50% { opacity: 1; transform: scale(1.3); }
+      }
+
+      /* Liver function cards */
+      .lq-liver-functions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin: 22px 0;
+      }
+
+      .lq-function-card {
+        position: relative;
+        background: white;
+        border: 2px solid #e8d3f7;
+        border-radius: 21px;
+        padding: 22px 17px;
+        overflow: hidden;
+        animation: lqCardReveal .8s both;
+      }
+
+      .lq-function-card:nth-child(2) {
+        animation-delay: .15s;
+      }
+
+      .lq-function-card:nth-child(3) {
+        animation-delay: .3s;
+      }
+
+      .lq-function-card:nth-child(4) {
+        animation-delay: .45s;
+      }
+
+      .lq-function-number {
+        position: absolute;
+        top: 11px;
+        left: 15px;
+        font-weight: 900;
+        color: #c9a6e3;
+        font-size: 14px;
+      }
+
+      .lq-function-symbol {
+        display: block;
+        font-size: 43px;
+        margin-bottom: 10px;
+        animation: lqIconBob 3s ease-in-out infinite;
+      }
+
+      .lq-function-card h3 {
+        font-family: Nunito, Arial, sans-serif;
+        font-size: clamp(20px, 2.4vw, 27px);
+        font-weight: 900;
+        color: #6940a3;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+
+      #lq-liver-intro .lq-function-card p {
+        font-size: 16px;
+        color: #685879;
+        font-weight: 700;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      @keyframes lqCardReveal {
+        from { opacity: 0; transform: translateY(22px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes lqIconBob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-7px); }
+      }
+
+      /* Virus scene */
+      .lq-virus-svg {
+        width: 100%;
+        max-width: 750px;
+        display: block;
+        margin: 0 auto;
+        overflow: visible;
+      }
+
+      .lq-svg-caption {
+        fill: #7945a9;
+        font-family: Nunito, Arial, sans-serif;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 1px;
+      }
+
+      .lq-virus-traveller {
+        animation: lqVirusApproach 9s ease-in-out infinite;
+      }
+
+      .lq-spinning-virus {
+        transform-origin: 138px 158px;
+        animation: lqVirusRotate 9s linear infinite;
+      }
+
+      .lq-animated-cell {
+        transform-origin: 490px 160px;
+        animation: lqHBVCellPulse 9s infinite;
+      }
+
+      .lq-nucleus-beat {
+        transform-origin: 525px 161px;
+        animation: lqNucleusGlow 3s ease-in-out infinite;
+      }
+
+      .lq-produced-virus {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: lqVirusProduced 9s infinite;
+      }
+
+      .lq-produced-two { animation-delay: .35s; }
+      .lq-produced-three { animation-delay: .7s; }
+
+      .lq-virus-path {
+        animation: lqBloodFlow 1s linear infinite;
+      }
+
+      @keyframes lqVirusApproach {
+        0%, 12% { transform: translateX(0); opacity: 1; }
+        42%, 60% { transform: translateX(230px); opacity: 1; }
+        70%, 87% { transform: translateX(250px); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+      }
+
+      @keyframes lqVirusRotate {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes lqHBVCellPulse {
+        0%, 35%, 100% { transform: scale(1); }
+        50%, 70% { transform: scale(1.035); }
+      }
+
+      @keyframes lqNucleusGlow {
+        50% { filter: brightness(1.25); }
+      }
+
+      @keyframes lqVirusProduced {
+        0%, 47% {
+          opacity: 0;
+          transform: scale(.15);
+        }
+        65%, 82% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(.15);
+        }
+      }
+
+      /* Virus stage progression labels */
+      .lq-hbv-steps {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0 auto 12px;
+      }
+
+      .lq-hbv-steps span {
+        background: #f0dffb;
+        color: #7643ac;
+        border-radius: 30px;
+        padding: 10px 15px;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: .5px;
+      }
+
+      /* Virus information cards */
+      .lq-virus-facts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin: 22px 0;
+      }
+
+      .lq-virus-facts article {
+        background: #fff;
+        border: 3px solid #e9d1f8;
+        border-radius: 23px;
+        padding: 25px 20px;
+        text-align: left;
+        animation: lqCardReveal .8s both;
+      }
+
+      .lq-virus-facts article:nth-child(2) {
+        animation-delay: .25s;
+      }
+
+      .lq-fact-number {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        font-weight: 900;
+        color: #b06ac9;
+        margin-bottom: 12px;
+      }
+
+      .lq-virus-facts h3 {
+        color: #6940aa;
+        font-family: Nunito, Arial, sans-serif;
+        font-size: clamp(24px, 2.8vw, 31px);
+        font-weight: 900;
+        line-height: 1.15;
+        margin: 10px 0 13px;
+      }
+
+      #lq-virus-intro .lq-virus-facts p {
+        font-size: clamp(16px, 1.6vw, 18px);
+        font-weight: 700;
+        color: #695878;
+        line-height: 1.55;
+        margin: 0;
+      }
+
+      #lq-virus-intro .lq-virus-facts strong {
+        color: #9e4ab5;
+        font-weight: 900;
+      }
+
+      .lq-final-transition {
+        padding: 23px;
+        border-radius: 20px;
+        background: linear-gradient(110deg, #e7d1fb, #ffe1ef);
+      }
+
+      .lq-final-transition > span {
+        display: block;
+        font-size: 36px;
+        margin-bottom: 8px;
+      }
+
+      .lq-final-transition strong {
+        display: block;
+        color: #7443a9;
+        font-size: 19px;
+        font-weight: 900;
+      }
+
+      #lq-virus-intro .lq-final-transition p {
+        color: #6c5681;
+        font-size: 16px;
+        font-weight: 800;
+        margin: 10px 0 0;
+      }
+
+      .lq-new-next {
+        display: inline-flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 8px;
+        background: #8652cf;
+        color: white;
+        padding: 15px 24px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: .5px;
+      }
+
+      .lq-new-next span {
+        font-size: 22px;
+        animation: lqIconBob 2s infinite;
+      }
+
+      /* Smaller screens */
+      @media (max-width: 650px) {
+        .lq-liver-functions,
+        .lq-virus-facts {
+          grid-template-columns: 1fr;
+        }
+
+        .lq-new-heading {
+          letter-spacing: -.7px;
+        }
+
+        .lq-science-stage {
+          padding: 10px 4px;
+        }
+
+        .lq-svg-caption {
+          font-size: 12px;
+        }
+
+        .lq-hbv-steps span {
+          font-size: 10px;
+          padding: 8px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #lq-liver-intro *,
+        #lq-virus-intro * {
+          animation: none !important;
+        }
+
+        .lq-produced-virus {
+          opacity: 1;
+        }
+      }
+    `;
+
+    document.head.appendChild(styles);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", upgradeIntroductions);
+  } else {
+    upgradeIntroductions();
+  }
+})();
+
+/* END ANIMATED SCIENCE INTRODUCTIONS */
