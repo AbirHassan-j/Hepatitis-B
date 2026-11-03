@@ -967,6 +967,52 @@ let lastKey=0; window.addEventListener('keydown',e=>{ const k=e.key.toLowerCase(
 }
 
 buildLevel(); paused=true; chooseCharacter(); requestAnimationFrame(loop);
+
+/* TEST MODE — CLICKABLE LEVELS */
+
+const testLevelBar = document.getElementById("levels");
+
+testLevelBar.addEventListener("click", function(event) {
+  const pill = event.target.closest("span");
+  if (!pill) return;
+
+  const match = pill.textContent.match(/LEVEL\s+(\d+)/i);
+  if (!match) return;
+
+  const selectedLevel = Number(match[1]) - 1;
+
+  if (selectedLevel < 0 || selectedLevel >= levels.length) return;
+
+  // Jump directly to selected level
+  level = selectedLevel;
+
+  // Reset the maze and clues for that level
+  buildLevel();
+
+  // Close any open popup and continue playing
+  closeModal();
+
+  say("TEST MODE: Level " + (level + 1) + " loaded!", 2500);
+});
+
+// Make level tabs look clickable
+const testStyle = document.createElement("style");
+testStyle.textContent = `
+  .level-pills span {
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .level-pills span:hover {
+    transform: translateY(-3px);
+    background: #d7b7ff;
+    color: #603cac;
+  }
+`;
+document.head.appendChild(testStyle);
+
+/* END TEST MODE */
+
 })();
 
 /* EXTRA ACTIVITY: HOW HBV AFFECTS THE BODY */
