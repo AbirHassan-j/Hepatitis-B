@@ -1634,7 +1634,7 @@ body > *:not(.floating-bio-bg) {
 
 body:has(.hero-grid) .pagehead h1 {
   white-space: nowrap;
-  font-size: clamp(19px, 4.2vw, 58px);
+  font-size: clamp(28px, 5.5vw, 80px);
   letter-spacing: -1.5px;
   max-width: 100%;
 }
