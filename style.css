@@ -1629,3 +1629,12 @@ body > *:not(.floating-bio-bg) {
     opacity: 0.18;
   }
 }
+
+/* MISSION CONTROL — KEEP MAIN TITLE ON ONE LINE */
+
+body:has(.hero-grid) .pagehead h1 {
+  white-space: nowrap;
+  font-size: clamp(19px, 4.2vw, 58px);
+  letter-spacing: -1.5px;
+  max-width: 100%;
+}
