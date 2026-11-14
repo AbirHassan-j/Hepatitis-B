@@ -346,12 +346,23 @@ function closeModal(){if('speechSynthesis' in window)speechSynthesis.cancel();ui
    Browser-installed voices vary; we prefer gentle English female-sounding voice names. */
 let lqNarrationOn=true;
 let lqPreferredVoice=null;
-function lqFindVoice(){
- if(!('speechSynthesis' in window))return null;
- const all=speechSynthesis.getVoices().filter(v=>/^en([-_]|$)/i.test(v.lang));
- const names=/jenny|aria|samantha|ava|serena|susan|victoria|karen|zira|moira|salli|joanna|female/i;
- return all.find(v=>names.test(v.name)&&/natural|neural|premium|enhanced/i.test(v.name))
-     ||all.find(v=>names.test(v.name))||all.find(v=>/natural|neural/i.test(v.name))||all[0]||null;
+function lqFindVoice() {
+  if (!('speechSynthesis' in window)) return null;
+
+  const voices = speechSynthesis.getVoices()
+    .filter(v => /^en([-_]|$)/i.test(v.lang));
+
+  const maleNames =
+    /david|guy|ryan|george|daniel|mark|james|thomas|male/i;
+
+  return voices.find(v =>
+    maleNames.test(v.name) &&
+    /natural|neural|premium|enhanced/i.test(v.name)
+  )
+  || voices.find(v => maleNames.test(v.name))
+  || voices.find(v => /natural|neural/i.test(v.name))
+  || voices[0]
+  || null;
 }
 function lqSpeak(message){
  if(!lqNarrationOn||!('speechSynthesis' in window))return;
