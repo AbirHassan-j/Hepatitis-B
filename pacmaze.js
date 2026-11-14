@@ -2583,7 +2583,7 @@ document.head.appendChild(testStyle);
             attributeName="opacity"
             values="0;1;1;1;0"
             keyTimes="0;0.07;0.85;0.97;1"
-            dur="12s"
+            dur="6s"
             repeatCount="indefinite"/>
         </g>
 
@@ -2607,7 +2607,7 @@ document.head.appendChild(testStyle);
             attributeName="opacity"
             values="0;0;1;1;1;0"
             keyTimes="0;0.27;0.35;0.85;0.97;1"
-            dur="12s"
+            dur="6s"
             repeatCount="indefinite"/>
         </g>
 
@@ -2664,7 +2664,7 @@ document.head.appendChild(testStyle);
             attributeName="opacity"
             values="0;0;1;1;0"
             keyTimes="0;0.60;0.68;0.97;1"
-            dur="12s"
+            dur="6s"
             repeatCount="indefinite"/>
 
         </g>
