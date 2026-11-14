@@ -3784,3 +3784,359 @@ document.head.appendChild(testStyle);
     initialize();
   }
 })();
+
+/* =====================================================
+   LIVERQUEST — VIBRANT LARGE MISSION BRIEFING
+   VISUAL DESIGN ONLY — no game logic changes
+   ===================================================== */
+
+(() => {
+  if (document.getElementById("lq-vibrant-briefing-css")) {
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.id = "lq-vibrant-briefing-css";
+
+  style.textContent = `
+
+    /* DARK GAME BACKGROUND */
+
+    #lq-briefing-overlay {
+      background: rgba(19, 10, 48, .92) !important;
+      backdrop-filter: blur(14px) !important;
+      padding: 12px !important;
+      box-sizing: border-box !important;
+    }
+
+    /* MUCH BIGGER MAIN POPUP */
+
+    #lq-briefing-card {
+      width: min(1320px, 96vw) !important;
+      height: min(920px, 94vh) !important;
+      max-height: 94vh !important;
+      box-sizing: border-box !important;
+
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+
+      padding: 20px !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+
+      border-radius: 32px !important;
+      border: 5px solid #c99bff !important;
+
+      background: linear-gradient(
+        145deg,
+        #fff3fc 0%,
+        #f6eaff 44%,
+        #e5fbff 100%
+      ) !important;
+
+      box-shadow:
+        0 0 0 6px rgba(190,129,255,.12),
+        0 30px 95px rgba(0,0,0,.55),
+        0 0 55px rgba(166,86,255,.27) !important;
+    }
+
+    /* VIBRANT PURPLE HEADER */
+
+    #lq-briefing-card .lq-adventure-header {
+      flex-shrink: 0;
+      padding: 22px 24px !important;
+      border-radius: 24px 24px 12px 12px !important;
+
+      background: linear-gradient(
+        115deg,
+        #352076 0%,
+        #6831bb 45%,
+        #aa4fd4 100%
+      ) !important;
+
+      border: 2px solid rgba(255,255,255,.2);
+
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.2),
+        0 8px 24px rgba(89,36,150,.18);
+    }
+
+    #lq-briefing-card .lq-adventure-kicker {
+      font-size: 15px !important;
+      letter-spacing: 2.4px !important;
+      color: #ffdf85 !important;
+    }
+
+    #lq-briefing-card .lq-adventure-header h1 {
+      font-size: clamp(
+        32px, 4.5vw, 55px
+      ) !important;
+
+      line-height: 1.08 !important;
+      margin: 10px 0 !important;
+      font-weight: 950 !important;
+
+      color: #ffffff !important;
+      text-shadow: 0 3px 10px rgba(0,0,0,.18);
+    }
+
+    #lq-briefing-card .lq-adventure-header p {
+      font-size: clamp(
+        16px, 1.55vw, 21px
+      ) !important;
+
+      line-height: 1.45 !important;
+      max-width: 900px !important;
+      color: #fff2ff !important;
+    }
+
+    /* FIVE-LEVEL MISSION BADGE */
+
+    #lq-briefing-card .lq-final-level-indicator {
+      margin-top: 14px !important;
+      padding: 9px 18px !important;
+      font-size: 13px !important;
+
+      background: rgba(255,255,255,.18) !important;
+      border: 2px solid rgba(255,255,255,.32) !important;
+      color: white !important;
+    }
+
+    #lq-briefing-card
+    .lq-level-mini-dots i {
+      width: 10px !important;
+      height: 10px !important;
+    }
+
+    /* LARGER LIVER CITY ILLUSTRATION */
+
+    #lq-briefing-card .lq-city-scene {
+      flex: 1 1 auto;
+      min-height: 0;
+
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 23px !important;
+      border: 3px solid #d3a8f7 !important;
+
+      background: linear-gradient(
+        120deg,
+        #fff0fb,
+        #efe5ff,
+        #dbfff4
+      ) !important;
+
+      box-shadow:
+        0 5px 20px rgba(114,64,168,.12);
+    }
+
+    #lq-briefing-card .lq-city-scene svg {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      object-fit: contain;
+    }
+
+    /* BIGGER SHIELD DEMONSTRATION */
+
+    #lq-briefing-card .lq-shield-demo {
+      flex-shrink: 0;
+
+      padding: 17px 22px !important;
+      gap: 18px !important;
+
+      border-radius: 20px !important;
+      border: 3px solid #70d8bf !important;
+
+      background: linear-gradient(
+        100deg,
+        #d8fff0,
+        #baf2e5,
+        #e3fff5
+      ) !important;
+
+      box-shadow:
+        0 5px 16px rgba(53,175,146,.13);
+    }
+
+    #lq-briefing-card .lq-shield-demo-icon {
+      width: 65px !important;
+      height: 65px !important;
+      font-size: 36px !important;
+      border-radius: 18px !important;
+      background: #a5efd9 !important;
+    }
+
+    #lq-briefing-card .lq-shield-demo-title {
+      font-size: clamp(
+        15px, 1.5vw, 20px
+      ) !important;
+
+      margin-bottom: 10px !important;
+      color: #116b5d !important;
+    }
+
+    #lq-briefing-card .lq-shield-meter {
+      height: 20px !important;
+      border: 2px solid #6ebfab !important;
+      padding: 3px !important;
+    }
+
+    #lq-briefing-card .lq-shield-demo-count {
+      font-size: 32px !important;
+    }
+
+    /* LARGER GAME INSTRUCTION CARDS */
+
+    #lq-briefing-card .lq-adventure-rules {
+      flex-shrink: 0;
+      gap: 14px !important;
+      margin: 2px 0 !important;
+    }
+
+    #lq-briefing-card .lq-adventure-rule {
+      padding: 17px 13px !important;
+
+      border-radius: 18px !important;
+      border: 2px solid #d5b5f4 !important;
+
+      background: linear-gradient(
+        145deg,
+        #ffffff,
+        #eee1ff
+      ) !important;
+
+      color: #57328b !important;
+
+      font-size: clamp(
+        14px, 1.3vw, 18px
+      ) !important;
+
+      line-height: 1.4 !important;
+      box-shadow: 0 4px 12px #8056ad13;
+    }
+
+    #lq-briefing-card .lq-adventure-rule span {
+      font-size: 32px !important;
+      margin-bottom: 7px !important;
+    }
+
+    /* BIG START BUTTON */
+
+    #lq-briefing-card #lq-start-adventure {
+      flex-shrink: 0;
+
+      padding: 21px 25px !important;
+      min-height: 72px !important;
+
+      border-radius: 21px !important;
+      border: 2px solid rgba(255,255,255,.3) !important;
+
+      font-size: clamp(
+        18px, 2vw, 25px
+      ) !important;
+
+      font-weight: 950 !important;
+      letter-spacing: .8px;
+
+      background: linear-gradient(
+        115deg,
+        #6933b7,
+        #9948d6,
+        #c15de6
+      ) !important;
+
+      color: #ffffff !important;
+
+      box-shadow:
+        0 9px 22px rgba(109,51,182,.32) !important;
+
+      transition:
+        transform .2s ease,
+        filter .2s ease !important;
+    }
+
+    #lq-briefing-card #lq-start-adventure:hover {
+      transform: translateY(-3px) !important;
+      filter: brightness(1.12) !important;
+    }
+
+    /* SMALLER SCREENS */
+
+    @media (max-width: 700px) {
+      #lq-briefing-card {
+        width: 98vw !important;
+        height: 96vh !important;
+        max-height: 96vh !important;
+        padding: 10px !important;
+        gap: 9px !important;
+        border-radius: 20px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-header {
+        padding: 15px 11px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-kicker {
+        font-size: 11px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-header h1 {
+        font-size: 28px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-header p {
+        font-size: 14px !important;
+      }
+
+      #lq-briefing-card .lq-city-scene {
+        flex: 0 0 auto;
+        min-height: 140px;
+      }
+
+      #lq-briefing-card .lq-city-scene svg {
+        height: auto !important;
+        max-height: none !important;
+      }
+
+      #lq-briefing-card .lq-shield-demo {
+        padding: 10px !important;
+        gap: 8px !important;
+      }
+
+      #lq-briefing-card .lq-shield-demo-icon {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 24px !important;
+      }
+
+      #lq-briefing-card .lq-shield-demo-title {
+        font-size: 12px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-rules {
+        gap: 5px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-rule {
+        font-size: 11px !important;
+        padding: 9px 5px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-rule span {
+        font-size: 22px !important;
+      }
+
+      #lq-briefing-card #lq-start-adventure {
+        font-size: 16px !important;
+        min-height: 55px !important;
+        padding: 13px !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
