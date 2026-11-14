@@ -2071,3 +2071,234 @@ document.head.appendChild(testStyle);
 
 /* First Level link in the game stage selector */
 (function(){const s=document.createElement("style");s.textContent=".level-pills a.lq-prep-level{display:inline-flex;align-items:center;padding:9px 13px;border-radius:100px;background:#d7f8ed;border:2px solid #77d5af;color:#24745f;font-size:13px;font-weight:900;text-decoration:none}";document.head.appendChild(s)})();
+
+
+/* ===========================================================
+   LIVERQUEST — TWO NEW VISUAL DISCOVERIES
+   Paste this entire block at the VERY BOTTOM of pacmaze.js.
+   Works with LiverQuest_New_Discoveries_Animated version.
+   No words are drawn inside either animation.
+   =========================================================== */
+{
+  // This patch runs OUTSIDE the game's private code.
+  // It updates each popup after the game opens it, including after Replay.
+  const newLessons = {
+    '3': {
+      title: 'How HBV Spreads Between Liver Cells',
+      takeaway: 'New HBV particles can leave one cell and infect other liver cells.',
+      detail: 'An infected liver cell can release new hepatitis B viruses. These viruses may travel to nearby liver cells, attach to their outer surfaces, and enter them. This is one way an infection can spread through liver tissue.',
+      art: 'hbvManyCellsNew'
+    },
+    '5': {
+      title: 'How Treatment Can Slow HBV',
+      takeaway: 'Treatment can slow HBV, even though it is not an instant cure.',
+      detail: 'Some people with long-term hepatitis B take medicine called antiviral medicine. It helps slow the making of new viruses, which can protect the liver. It does not instantly remove HBV, and not everyone needs this medicine. A healthcare professional decides when treatment may help.',
+      art: 'hbvTreatmentNew'
+    }
+  };
+
+  // Reusable, detailed liver cell. Positions are controlled by x, y and size.
+  const cell = (x, y, size, changed = false) => `
+    <g transform="translate(${x} ${y}) scale(${size})">
+      <ellipse rx="93" ry="77" fill="${changed ? '#f4c2c9' : '#f8d5e6'}"
+        stroke="${changed ? '#ce7794' : '#c47eae'}" stroke-width="8"/>
+      <ellipse rx="85" ry="69" fill="none" stroke="#fff9ff" stroke-width="3" opacity=".9"/>
+      <circle cx="19" cy="-1" r="30" fill="#ad91d6" stroke="#7c62ae" stroke-width="5"/>
+      <circle cx="24" cy="0" r="11" fill="#7c5eaa"/>
+      <path d="M-65 -16q20 -22 34 0t28 1M-65 4q18 18 36 1"
+        stroke="#a989cd" fill="none" stroke-width="6" stroke-linecap="round"/>
+      <path d="M-38 34q24 18 56 7m-54 7q20 18 49 7"
+        stroke="#dba06f" fill="none" stroke-width="6" stroke-linecap="round"/>
+      <g fill="#855fb2"><circle cx="-38" cy="-32" r="4"/>
+        <circle cx="-22" cy="-39" r="3"/><circle cx="-48" cy="28" r="3"/>
+        <circle cx="54" cy="39" r="4"/><circle cx="66" cy="18" r="3"/></g>
+      <ellipse cx="-48" cy="52" rx="22" ry="12" fill="#f2bc81"
+        stroke="#bf8b57" stroke-width="3"/>
+      <path d="M-61 52q9 -12 16 0t17 0" stroke="#bc8756"
+        stroke-width="3" fill="none"/>
+    </g>`;
+
+  // A virus symbol, reused for many moving particles.
+  const virusSymbol = `
+    <g id="lq-virus-shape">
+      <circle r="10" fill="#895ac8" stroke="#51358f" stroke-width="2.5"/>
+      ${Array.from({ length: 9 }, (_, i) => {
+        const a = i * Math.PI * 2 / 9;
+        return `<path d="M${(Math.cos(a)*10).toFixed(1)} ${(Math.sin(a)*10).toFixed(1)}
+                L${(Math.cos(a)*17).toFixed(1)} ${(Math.sin(a)*17).toFixed(1)}"
+                stroke="#c79aed" stroke-width="3" stroke-linecap="round"/>`;
+      }).join('')}
+      <circle r="3" fill="#e8d8ff"/>
+    </g>`;
+
+  // Each virus visibly emerges from the infected cell and crosses into a target.
+  const movingVirus = (path, delay, duration = '9s') => `
+    <g opacity="0">
+      <use href="#lq-virus-shape"/>
+      <animateMotion path="${path}" dur="${duration}"
+        begin="${delay}" repeatCount="indefinite" calcMode="spline"
+        keyTimes="0;1" keySplines=".42 0 .58 1"/>
+      <animate attributeName="opacity" values="0;1;1;1;0"
+        keyTimes="0;.08;.78;.90;1" dur="${duration}"
+        begin="${delay}" repeatCount="indefinite"/>
+    </g>`;
+
+  // LEVEL 3: one cell releases viruses, which reach THREE other cells.
+  function manyCellsAnimation() {
+    const paths = [
+      'M259 225 C365 220 425 112 523 111',
+      'M259 225 C385 235 525 220 675 223',
+      'M259 225 C359 240 438 345 527 350',
+      'M259 225 C395 190 460 134 536 117',
+      'M259 225 C410 220 539 235 675 223',
+      'M259 225 C384 278 448 328 527 350'
+    ];
+    return `<svg class="lesson-svg" data-lq-new-scene="hbvManyCellsNew" viewBox="0 0 900 450"
+      role="img" aria-label="An infected liver cell releases viruses, which travel toward and begin entering three nearby liver cells">
+      <defs>
+        <radialGradient id="lq-many-bg"><stop stop-color="#fff8fd"/>
+          <stop offset="1" stop-color="#eaf0ff"/></radialGradient>
+        ${virusSymbol}
+      </defs>
+      <rect width="900" height="450" rx="24" fill="url(#lq-many-bg)"/>
+      <g opacity=".38" fill="none" stroke="#d4aedc" stroke-width="3">
+        <path d="M286 197Q420 95 495 106"/>
+        <path d="M282 222Q495 211 646 220"/>
+        <path d="M280 248Q406 352 496 352"/>
+      </g>
+      ${cell(170,225,1.12,true)}
+      ${cell(570,111,.73)}
+      ${cell(744,223,.73)}
+      ${cell(570,351,.73)}
+      <!-- New infections begin at different times. The cells remain visible. -->
+      ${[[570,111,'2s'],[744,223,'4s'],[570,351,'6s']].map(([x,y,begin])=>`
+        <ellipse cx="${x}" cy="${y}" rx="69" ry="57" fill="#eb8eac"
+          opacity="0">
+          <animate attributeName="opacity" values="0;0;.36;.22;0"
+            keyTimes="0;.3;.55;.85;1" begin="${begin}"
+            dur="9s" repeatCount="indefinite"/>
+        </ellipse>
+      `).join('')}
+      <!-- These HBV particles actually travel between cells. -->
+      ${paths.map((path,i)=>movingVirus(path,`${(i*1.1).toFixed(1)}s`)).join('')}
+      <!-- Tiny particles inside the first cell suggest ongoing production. -->
+      <g fill="#a57cce">
+        ${[[-30,-18],[28,34],[-48,22],[58,-8]].map(([dx,dy],i)=>`
+          <circle cx="${170+dx}" cy="${225+dy}" r="4" opacity=".3">
+            <animate attributeName="opacity" values=".15;.9;.15"
+              dur="${2.5+i*.4}s" repeatCount="indefinite"/>
+          </circle>`).join('')}
+      </g>
+    </svg>`;
+  }
+
+  // LEVEL 5: contrast virus production BEFORE/AFTER effective treatment.
+  function treatmentAnimation() {
+    const outgoing = (x,y,delay,duration='6s') => movingVirus(
+      `M${x} ${y} Q${x+65} ${y-35} ${x+145} ${y-4}`, delay, duration);
+    return `<svg class="lesson-svg" data-lq-new-scene="hbvTreatmentNew" viewBox="0 0 900 450"
+      role="img" aria-label="Two infected cells: one releases many viruses, while treatment helps a similar cell produce fewer viruses">
+      <defs>
+        <linearGradient id="lq-treatment-bg" x2="1" y2="1">
+          <stop stop-color="#fff6fc"/><stop offset="1" stop-color="#e8f9f7"/>
+        </linearGradient>
+        ${virusSymbol}
+      </defs>
+      <rect width="900" height="450" rx="24" fill="url(#lq-treatment-bg)"/>
+      <rect x="24" y="35" width="410" height="374" rx="27"
+        fill="#fff8fd" stroke="#e9c3dc" stroke-width="4"/>
+      <rect x="466" y="35" width="410" height="374" rx="27"
+        fill="#f4fff9" stroke="#b9e6d4" stroke-width="4"/>
+      ${cell(184,220,1.05,true)}
+      ${cell(620,220,1.05,true)}
+      <!-- Visual indication that medicine is helping the second cell. -->
+      <g transform="translate(615 70)">
+        <rect x="-42" y="-17" width="84" height="34" rx="17"
+          fill="#fff" stroke="#70bca2" stroke-width="5"/>
+        <path d="M0 -16V16" stroke="#70bca2" stroke-width="4"/>
+        <path d="M-38 0H-2" stroke="#e9afca" stroke-width="22"/>
+        <circle cx="0" cy="0" r="46" fill="none" stroke="#9ce7c8"
+          stroke-width="4" opacity="0">
+          <animate attributeName="opacity" values="0;.65;0"
+            dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="r" values="25;53;67"
+            dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+      <g opacity=".6" stroke="#f0c4df" stroke-width="3" fill="none">
+        <path d="M260 180Q315 150 415 170"/>
+        <path d="M260 230Q340 225 420 228"/>
+        <path d="M260 280Q350 310 415 287"/>
+      </g>
+      <!-- More new viruses from the left-hand cell. -->
+      ${outgoing(257,178,'0s')}
+      ${outgoing(258,216,'1.1s')}
+      ${outgoing(258,254,'2.2s')}
+      ${outgoing(256,288,'3.3s')}
+      ${outgoing(255,194,'4.4s')}
+      <!-- A much smaller number leave the cell with effective treatment. -->
+      ${movingVirus('M692 221 Q746 213 826 221','1.6s','9s')}
+      <!-- The right-hand cell keeps its structure; this is not an instant cure. -->
+      <ellipse cx="620" cy="220" rx="103" ry="87" fill="none"
+        stroke="#84d9b4" stroke-width="5" opacity="0">
+        <animate attributeName="opacity" values="0;.4;0"
+          dur="4.5s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>`;
+  }
+
+  function updateDiscoveryPopup() {
+    const modal = document.getElementById('modal-card');
+    if (!modal) return;
+    const eyebrow = modal.querySelector('.modal-eyebrow')?.textContent || '';
+    const match = eyebrow.match(/LEVEL\s+(3|5)\s*[·\-]\s*DISCOVERY\s+1\b/i);
+    if (!match) return;
+    const lesson = newLessons[match[1]];
+    const visual = modal.querySelector('#animated-science');
+    if (!visual) return;
+    const title = modal.querySelector('h2');
+    const takeaway = modal.querySelector('.lq-lesson-caption .large');
+    const detail = modal.querySelector('.lq-clue-more p');
+    if (title && title.textContent !== lesson.title) title.textContent = lesson.title;
+    if (takeaway && takeaway.textContent !== lesson.takeaway) takeaway.textContent = lesson.takeaway;
+    if (detail && detail.textContent !== lesson.detail) detail.textContent = lesson.detail;
+    if (!visual.querySelector(`[data-lq-new-scene="${lesson.art}"]`)) {
+      visual.innerHTML = lesson.art === 'hbvManyCellsNew'
+        ? manyCellsAnimation() : treatmentAnimation();
+    }
+  }
+
+  function updateSidebar() {
+    const hud = document.getElementById('hud-level');
+    const list = document.getElementById('objective-list');
+    const level = Number((hud?.textContent || '').match(/LEVEL\s+(\d+)/i)?.[1]);
+    if (!list || !newLessons[level]) return;
+    const first = list.querySelector('.obj:first-child');
+    const name = first?.querySelector('strong');
+    if (name && name.textContent !== newLessons[level].title)
+      name.textContent = newLessons[level].title;
+  }
+
+  function start() {
+    const modal = document.getElementById('modal-card');
+    const list = document.getElementById('objective-list');
+    const hud = document.getElementById('hud-level');
+    if (!modal || !list || !hud) return;
+    new MutationObserver(updateDiscoveryPopup).observe(modal, {
+      subtree: true, childList: true, characterData: true
+    });
+    new MutationObserver(updateSidebar).observe(list, {
+      subtree: true, childList: true, characterData: true
+    });
+    new MutationObserver(updateSidebar).observe(hud, {
+      subtree: true, childList: true, characterData: true
+    });
+    updateDiscoveryPopup();
+    updateSidebar();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+}
