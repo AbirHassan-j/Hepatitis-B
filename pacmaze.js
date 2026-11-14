@@ -2726,3 +2726,405 @@ document.head.appendChild(testStyle);
   }
 
 })();
+
+
+/* =====================================================
+   LIVERQUEST — VISUAL MISSION BRIEFING
+   No changes to the actual game.
+   ===================================================== */
+
+(() => {
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #lq-briefing-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: rgba(29, 15, 61, 0.79);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    #lq-briefing-card {
+      width: min(760px, 96vw);
+      max-height: 94vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+      background: linear-gradient(
+        145deg, #ffffff, #f7efff, #e8f8ff
+      );
+      border: 4px solid #e0c3fa;
+      border-radius: 30px;
+      box-shadow: 0 25px 90px rgba(0,0,0,.35);
+      text-align: center;
+      padding: 25px;
+      animation: lqBriefEnter .55s ease-out;
+    }
+
+    @keyframes lqBriefEnter {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(.94);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .lq-brief-eyebrow {
+      font: 900 12px system-ui;
+      color: #8853bd;
+      letter-spacing: 2px;
+    }
+
+    #lq-briefing-card h1 {
+      font: 900 clamp(26px, 5vw, 43px) system-ui;
+      color: #6636a4;
+      margin: 8px 0;
+    }
+
+    .lq-brief-description {
+      color: #6f5b84;
+      font: 600 15px/1.5 system-ui;
+      margin: 5px auto 18px;
+      max-width: 490px;
+    }
+
+    .lq-brief-visuals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 12px 0 20px;
+    }
+
+    .lq-brief-panel {
+      border: 2px solid #e4d2f1;
+      background: rgba(255,255,255,.85);
+      border-radius: 20px;
+      padding: 12px 8px;
+      overflow: hidden;
+    }
+
+    .lq-brief-panel svg {
+      display: block;
+      width: 100%;
+      height: 120px;
+    }
+
+    .lq-brief-panel strong {
+      display: block;
+      color: #69419c;
+      font: 900 13px system-ui;
+      margin-top: 6px;
+    }
+
+    .lq-brief-virus {
+      animation: lqBriefVirus 3s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    @keyframes lqBriefVirus {
+      50% { transform: translateX(12px) rotate(12deg); }
+    }
+
+    .lq-brief-cell {
+      animation: lqBriefCell 3.5s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    @keyframes lqBriefCell {
+      50% { transform: scale(1.06); }
+    }
+
+    .lq-brief-shield {
+      animation: lqBriefShield 2.8s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    @keyframes lqBriefShield {
+      50% { transform: scale(1.09); }
+    }
+
+    .lq-brief-rules {
+      background: #fff;
+      border: 2px solid #e6d8f2;
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 18px;
+      color: #6c4d8e;
+      font: 700 14px/1.5 system-ui;
+    }
+
+    #lq-start-adventure {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 17px 20px;
+      background: linear-gradient(
+        120deg, #8651c7, #b467e3
+      );
+      color: white;
+      font: 900 17px system-ui;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(107,58,167,.27);
+      transition: transform .2s, filter .2s;
+    }
+
+    #lq-start-adventure:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    @media(max-width: 560px) {
+      #lq-briefing-card {
+        padding: 16px;
+        border-radius: 22px;
+      }
+
+      .lq-brief-visuals {
+        gap: 6px;
+      }
+
+      .lq-brief-panel {
+        padding: 8px 3px;
+      }
+
+      .lq-brief-panel svg {
+        height: 85px;
+      }
+
+      .lq-brief-panel strong {
+        font-size: 11px;
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      #lq-briefing-card,
+      .lq-brief-virus,
+      .lq-brief-cell,
+      .lq-brief-shield {
+        animation: none !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  function showBriefing() {
+
+    if (document.getElementById("lq-briefing-overlay")) {
+      return;
+    }
+
+    const overlay = document.createElement("div");
+    overlay.id = "lq-briefing-overlay";
+
+    overlay.innerHTML = `
+      <section id="lq-briefing-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="lq-brief-title">
+
+        <div class="lq-brief-eyebrow">
+          🧬 LIVERQUEST · MISSION CONTROL
+        </div>
+
+        <h1 id="lq-brief-title">
+          SAVE LIVER CITY!
+        </h1>
+
+        <p class="lq-brief-description">
+          A tiny virus has entered Liver City.
+          Explore the science and help protect the liver!
+        </p>
+
+        <div class="lq-brief-visuals">
+
+          <!-- IMAGE 1: LIVER CELL -->
+          <div class="lq-brief-panel">
+
+            <svg viewBox="0 0 180 130" aria-hidden="true">
+
+              <g class="lq-brief-cell">
+                <ellipse cx="90" cy="65"
+                  rx="74" ry="52"
+                  fill="#f9c5df"
+                  stroke="#c575ac"
+                  stroke-width="6"/>
+
+                <ellipse cx="90" cy="65"
+                  rx="65" ry="44"
+                  fill="none"
+                  stroke="#fff1fa"
+                  stroke-width="3"/>
+
+                <circle cx="100" cy="64" r="23"
+                  fill="#a785d3"
+                  stroke="#7556ac"
+                  stroke-width="4"/>
+
+                <circle cx="105" cy="65" r="9"
+                  fill="#7653aa"/>
+
+                <ellipse cx="55" cy="48"
+                  rx="17" ry="9"
+                  fill="#f5b87b"
+                  stroke="#bc8953"
+                  stroke-width="3"/>
+
+                <path d="M46 48q8 -9 15 0t8 0"
+                  stroke="#ab704a"
+                  stroke-width="2"
+                  fill="none"/>
+
+                <path d="M55 88q15 -16 29 0"
+                  stroke="#aa8bcf"
+                  stroke-width="6"
+                  fill="none"/>
+
+                <g fill="#7955af">
+                  <circle cx="55" cy="74" r="4"/>
+                  <circle cx="66" cy="83" r="3"/>
+                  <circle cx="120" cy="94" r="3"/>
+                </g>
+              </g>
+
+            </svg>
+
+            <strong>EXPLORE CELLS</strong>
+
+          </div>
+
+          <!-- IMAGE 2: HEPATITIS B VIRUS -->
+          <div class="lq-brief-panel">
+
+            <svg viewBox="0 0 180 130" aria-hidden="true">
+
+              <g class="lq-brief-virus">
+
+                <circle cx="85" cy="65" r="38"
+                  fill="#a36ad1"
+                  stroke="#6e45a6"
+                  stroke-width="6"/>
+
+                ${Array.from({length:12}, (_,i) => {
+                  const a = i * Math.PI / 6;
+                  const x1 = 85 + Math.cos(a)*39;
+                  const y1 = 65 + Math.sin(a)*39;
+                  const x2 = 85 + Math.cos(a)*51;
+                  const y2 = 65 + Math.sin(a)*51;
+
+                  return `
+                    <path d="M${x1} ${y1}L${x2} ${y2}"
+                      stroke="#c48de9"
+                      stroke-width="6"
+                      stroke-linecap="round"/>
+                  `;
+                }).join("")}
+
+                <circle cx="73" cy="59" r="6"
+                  fill="#e4c7ff"/>
+
+                <circle cx="98" cy="59" r="6"
+                  fill="#e4c7ff"/>
+
+                <path d="M76 79q10 9 20 0"
+                  stroke="#e4c7ff"
+                  stroke-width="4"
+                  fill="none"
+                  stroke-linecap="round"/>
+
+              </g>
+
+            </svg>
+
+            <strong>DISCOVER HBV</strong>
+
+          </div>
+
+          <!-- IMAGE 3: PROTECT LIVER CITY -->
+          <div class="lq-brief-panel">
+
+            <svg viewBox="0 0 180 130" aria-hidden="true">
+
+              <g class="lq-brief-shield">
+
+                <path
+                  d="M90 12L148 36V73
+                     Q140 111 90 123
+                     Q40 111 32 73V36Z"
+                  fill="#87dccb"
+                  stroke="#399e8f"
+                  stroke-width="6"/>
+
+                <path
+                  d="M62 66l19 20 39 -43"
+                  stroke="white"
+                  stroke-width="11"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  fill="none"/>
+
+              </g>
+
+            </svg>
+
+            <strong>PROTECT THE LIVER</strong>
+
+          </div>
+
+        </div>
+
+        <div class="lq-brief-rules">
+          🎮 Follow the numbered discoveries
+          <br>
+          ✨ Collect 20 energy dots to earn a shield
+          <br>
+          🛡️ Avoid HBV and complete all five levels
+        </div>
+
+        <button type="button" id="lq-start-adventure">
+          START THE ADVENTURE →
+        </button>
+
+      </section>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const startButton =
+      document.getElementById("lq-start-adventure");
+
+    startButton.focus();
+
+    startButton.onclick = () => {
+      overlay.remove();
+    };
+  }
+
+  function initializeBriefing() {
+    if (!document.getElementById("maze-app")) return;
+    showBriefing();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeBriefing
+    );
+  } else {
+    initializeBriefing();
+  }
+
+})();
