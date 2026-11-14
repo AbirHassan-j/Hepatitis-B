@@ -3654,3 +3654,133 @@ document.head.appendChild(testStyle);
     initialize();
   }
 })();
+
+/* =====================================================
+   LIVERQUEST — PAUSE GAME DURING MISSION BRIEFING
+   Enemies and timer stop until Start the Adventure.
+   No changes to levels, questions, or gameplay.
+   ===================================================== */
+
+(() => {
+  if (window.__lqBriefingPauseInstalled) return;
+  window.__lqBriefingPauseInstalled = true;
+
+  let briefingPausedGame = false;
+
+  function briefingIsOpen() {
+    return !!document.getElementById(
+      "lq-briefing-overlay"
+    );
+  }
+
+  function getPauseButton() {
+    return document.getElementById("pause");
+  }
+
+  function isPaused() {
+    const button = getPauseButton();
+
+    return button &&
+      button.textContent.trim().toLowerCase()
+        .includes("resume");
+  }
+
+  // Stop the actual game using its existing pause control.
+  function freezeGame() {
+    if (!briefingIsOpen()) return;
+
+    const button = getPauseButton();
+    if (!button) return;
+
+    if (!isPaused()) {
+      button.click();
+      briefingPausedGame = true;
+    }
+  }
+
+  // Resume only after the briefing has closed.
+  function resumeGame() {
+    if (briefingIsOpen()) return;
+    if (!briefingPausedGame) return;
+
+    const button = getPauseButton();
+
+    if (button && isPaused()) {
+      button.click();
+    }
+
+    briefingPausedGame = false;
+  }
+
+  // Block movement keys and Escape while reading.
+  document.addEventListener("keydown", (event) => {
+    if (!briefingIsOpen()) return;
+
+    const blockedKeys = [
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "w", "a", "s", "d",
+      "W", "A", "S", "D",
+      "Escape"
+    ];
+
+    if (blockedKeys.includes(event.key)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+
+  // Prevent the underlying pause control being used
+  // while the briefing is open.
+  document.addEventListener("click", (event) => {
+    if (!briefingIsOpen()) return;
+
+    const button = event.target.closest("#pause");
+
+    if (button) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+
+  // Start the Adventure closes the popup.
+  // Immediately afterward, resume the game.
+  document.addEventListener("click", (event) => {
+    const start = event.target.closest(
+      "#lq-start-adventure"
+    );
+
+    if (!start) return;
+
+    queueMicrotask(() => {
+      resumeGame();
+    });
+  }, true);
+
+  function initialize() {
+    freezeGame();
+
+    // Handles the briefing even if it appears
+    // slightly after the game finishes loading.
+    const observer = new MutationObserver(() => {
+      if (briefingIsOpen()) {
+        freezeGame();
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize
+    );
+  } else {
+    initialize();
+  }
+})();
