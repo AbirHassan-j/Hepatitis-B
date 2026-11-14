@@ -4626,104 +4626,108 @@ document.head.appendChild(testStyle);
   document.head.appendChild(style);
 })();
 
-/* =====================================================
-   LIVERQUEST — MISSION BRIEFING: HOW TO PLAY
-   Paste at the VERY BOTTOM of pacmaze.js
-   ===================================================== */
 
+/* LIVERQUEST — PINK HOW TO PLAY GUIDE */
 (function () {
   "use strict";
 
-  // Add the new styling only once.
-  if (!document.getElementById("lq-howto-style")) {
-    const style = document.createElement("style");
-    style.id = "lq-howto-style";
-
-    style.textContent = `
-      #lq-briefing-card .lq-adventure-rules {
-        padding: 8px !important;
-        border-radius: 14px !important;
-        background: #101c35 !important;
-        border: 1px solid #37577f !important;
-        gap: 6px !important;
-      }
-
-      #lq-briefing-card .lq-howto-title,
-      #lq-briefing-card .lq-howto-controls {
-        grid-column: 1 / -1;
-        text-align: center;
-      }
-
-      #lq-briefing-card .lq-howto-title {
-        color: #8be1ff;
-        font: 900 13px system-ui;
-        letter-spacing: 1px;
-      }
-
-      #lq-briefing-card .lq-adventure-rule {
-        background: #1c3153 !important;
-        border: 1px solid #41628e !important;
-        color: #f2f8ff !important;
-        border-radius: 10px !important;
-        padding: 7px 5px !important;
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        text-align: center;
-        min-width: 0;
-      }
-
-      #lq-briefing-card .lq-adventure-rule span {
-        font-size: 22px !important;
-        margin: 0 !important;
-      }
-
-      #lq-briefing-card .lq-adventure-rule strong {
-        color: #92e8ff;
-        font: 900 12px system-ui;
-      }
-
-      #lq-briefing-card .lq-adventure-rule small {
-        color: #d1e2f6;
-        font: 500 11px/1.3 system-ui;
-      }
-
-      #lq-briefing-card .lq-howto-controls {
-        color: #c7eaff;
-        font: 700 11px/1.4 system-ui;
-      }
-
-      #lq-briefing-card .lq-howto-controls span {
-        color: #b4c8e3;
-      }
-    `;
-
-    document.head.appendChild(style);
-  }
-
-  function updateHowToPlay() {
-    const briefing = document.getElementById(
-      "lq-briefing-overlay"
-    );
-
-    if (!briefing) return;
-
-    const rules = briefing.querySelector(
-      ".lq-adventure-rules"
-    );
-
-    if (!rules || rules.dataset.howtoUpdated === "yes") {
-      return;
+  const style = document.createElement("style");
+  style.textContent = `
+    #lq-briefing-card .lq-adventure-rules {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px !important;
+      margin: 4px 0 !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
     }
 
-    rules.dataset.howtoUpdated = "yes";
-    rules.setAttribute(
-      "aria-label",
-      "How to play LiverQuest"
+    #lq-briefing-card .lq-howto-title {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #8743af;
+      font: 900 14px system-ui;
+      letter-spacing: 1px;
+    }
+
+    #lq-briefing-card .lq-adventure-rule {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 9px 7px !important;
+      border-radius: 15px !important;
+      background: linear-gradient(
+        145deg, #fff7fc, #f6e4ff
+      ) !important;
+      border: 2px solid #e5bfef !important;
+      color: #713c91 !important;
+      box-shadow: 0 4px 12px #c97bbb22;
+      animation: lqHowtoAppear .5s ease both;
+    }
+
+    #lq-briefing-card .lq-adventure-rule::before {
+      content: "";
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      right: -7px;
+      top: -9px;
+      border-radius: 50%;
+      background: #efa9e770;
+      border: 2px solid #ffffff80;
+      animation: lqHowtoCell 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    #lq-briefing-card .lq-adventure-rule span {
+      display: block;
+      font-size: 23px !important;
+      margin-bottom: 3px !important;
+    }
+
+    #lq-briefing-card .lq-adventure-rule strong {
+      display: block;
+      color: #8a43a8;
+      font: 900 12px system-ui;
+      margin-bottom: 3px;
+    }
+
+    #lq-briefing-card .lq-adventure-rule small {
+      display: block;
+      color: #745483;
+      font: 500 11px/1.3 system-ui;
+    }
+
+    #lq-briefing-card .lq-howto-controls {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #8952a0;
+      font: 700 11px system-ui;
+      padding: 3px;
+    }
+
+    @keyframes lqHowtoCell {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    @keyframes lqHowtoAppear {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  function updateBriefing() {
+    const rules = document.querySelector(
+      "#lq-briefing-overlay .lq-adventure-rules"
     );
 
-    // Replace only the old three instruction cards.
+    if (!rules || rules.dataset.pinkHowto === "yes") return;
+
+    rules.dataset.pinkHowto = "yes";
+
     rules.innerHTML = `
       <div class="lq-howto-title">
         🎮 HOW TO PLAY
@@ -4732,50 +4736,31 @@ document.head.appendChild(testStyle);
       <div class="lq-adventure-rule">
         <span>🧭</span>
         <strong>1. EXPLORE</strong>
-        <small>
-          Move through the maze and find discoveries.
-        </small>
+        <small>Find numbered discoveries in the maze.</small>
       </div>
 
       <div class="lq-adventure-rule">
         <span>🛡️</span>
         <strong>2. COLLECT</strong>
-        <small>
-          Collect 20 energy dots to charge your shield.
-        </small>
+        <small>Collect 20 dots to charge your shield.</small>
       </div>
 
       <div class="lq-adventure-rule">
         <span>✅</span>
         <strong>3. COMPLETE</strong>
-        <small>
-          Finish science challenges to unlock
-          the next level.
-        </small>
+        <small>Finish science challenges to progress.</small>
       </div>
 
       <div class="lq-howto-controls">
         ⌨️ Move with Arrow Keys or WASD
-        <span>
-          · Learn science. Power up.
-          Complete your mission!
-        </span>
       </div>
     `;
   }
 
-  // Handle an already-open briefing.
-  updateHowToPlay();
+  updateBriefing();
 
-  // Handle briefings opened later.
-  // Observe only direct body changes to avoid
-  // the MutationObserver freezing issue.
-  const observer = new MutationObserver(
-    updateHowToPlay
+  new MutationObserver(updateBriefing).observe(
+    document.body,
+    { childList: true, subtree: false }
   );
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: false
-  });
 })();
