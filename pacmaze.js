@@ -4564,3 +4564,183 @@ document.head.appendChild(testStyle);
     initialize();
   }
 })();
+
+/* =====================================================
+   LIVERQUEST — ONE-SCREEN BRIEFING
+   No scrolling. Large diagrams. Balanced text.
+   ===================================================== */
+
+(() => {
+  const style = document.createElement("style");
+  style.id = "lq-one-screen-layout";
+
+  style.textContent = `
+
+    /* Entire popup stays inside the screen */
+
+    #lq-briefing-overlay {
+      padding: 8px !important;
+      overflow: hidden !important;
+    }
+
+    #lq-briefing-card {
+      width: min(1450px, 98vw) !important;
+      height: min(900px, 97dvh) !important;
+      max-height: 97dvh !important;
+
+      display: flex !important;
+      flex-direction: column !important;
+      gap: clamp(4px, .7vh, 9px) !important;
+
+      padding: clamp(8px, 1vh, 14px) !important;
+
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Compact header */
+
+    #lq-briefing-card .lq-adventure-header {
+      flex: 0 0 auto !important;
+      padding: clamp(8px, 1.2vh, 14px) 14px !important;
+    }
+
+    #lq-briefing-card .lq-adventure-kicker {
+      font-size: clamp(9px, 1.3vh, 12px) !important;
+    }
+
+    #lq-briefing-card .lq-adventure-header h1 {
+      font-size: clamp(22px, 3.5vh, 36px) !important;
+      margin: 3px 0 !important;
+    }
+
+    #lq-briefing-card .lq-adventure-header p {
+      font-size: clamp(11px, 1.6vh, 15px) !important;
+      line-height: 1.25 !important;
+      margin: 3px auto !important;
+    }
+
+    #lq-briefing-card .lq-final-level-indicator {
+      margin-top: 5px !important;
+      padding: 4px 9px !important;
+      font-size: 10px !important;
+    }
+
+    /* Largest available area goes to diagrams */
+
+    #lq-briefing-card .lq-city-scene {
+      flex: 1 1 0 !important;
+      min-height: 0 !important;
+      height: auto !important;
+      max-height: none !important;
+
+      display: grid !important;
+      place-items: center !important;
+
+      overflow: hidden !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #lq-briefing-card .lq-city-scene svg {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+
+      /* Preserve original diagram proportions */
+      object-fit: contain !important;
+    }
+
+    /* Compact shield demonstration */
+
+    #lq-briefing-card .lq-shield-demo {
+      flex: 0 0 auto !important;
+      margin: 0 !important;
+      padding: clamp(6px, .9vh, 10px) 12px !important;
+      gap: 10px !important;
+    }
+
+    #lq-briefing-card .lq-shield-demo-icon {
+      width: 38px !important;
+      height: 38px !important;
+      font-size: 23px !important;
+    }
+
+    #lq-briefing-card .lq-shield-demo-title {
+      font-size: clamp(11px, 1.6vh, 14px) !important;
+      margin-bottom: 4px !important;
+    }
+
+    #lq-briefing-card .lq-shield-meter {
+      height: 13px !important;
+    }
+
+    #lq-briefing-card .lq-shield-demo-count {
+      font-size: 22px !important;
+    }
+
+    /* Short game instructions */
+
+    #lq-briefing-card .lq-adventure-rules {
+      flex: 0 0 auto !important;
+      gap: 7px !important;
+      margin: 0 !important;
+    }
+
+    #lq-briefing-card .lq-adventure-rule {
+      padding: clamp(5px, .9vh, 9px) 5px !important;
+      font-size: clamp(10px, 1.5vh, 13px) !important;
+      line-height: 1.2 !important;
+    }
+
+    #lq-briefing-card .lq-adventure-rule span {
+      font-size: clamp(17px, 2.5vh, 23px) !important;
+      margin-bottom: 2px !important;
+    }
+
+    /* Start button remains prominent */
+
+    #lq-briefing-card #lq-start-adventure {
+      flex: 0 0 auto !important;
+      min-height: 0 !important;
+      padding: clamp(9px, 1.4vh, 15px) !important;
+      font-size: clamp(14px, 2vh, 18px) !important;
+    }
+
+    /* On shorter screens, save more vertical space */
+
+    @media (max-height: 750px) {
+      #lq-briefing-card {
+        padding: 7px !important;
+        gap: 5px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-header {
+        padding: 7px 10px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-header h1 {
+        font-size: 25px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-header p {
+        font-size: 11px !important;
+      }
+
+      #lq-briefing-card .lq-shield-demo {
+        padding: 5px 9px !important;
+      }
+
+      #lq-briefing-card .lq-adventure-rule {
+        padding: 5px 3px !important;
+      }
+
+      #lq-briefing-card #lq-start-adventure {
+        padding: 9px !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
