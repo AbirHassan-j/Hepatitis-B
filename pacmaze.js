@@ -2456,3 +2456,273 @@ document.head.appendChild(testStyle);
     initializeFrameFix();
   }
 })();
+
+/* =====================================================
+   LEVEL 1 OBJECTIVE 4 — COMPLETE ANIMATION FIX
+   Correct order, spacing, arrows, and organ size.
+   ===================================================== */
+
+(() => {
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    .lq-explorer .lq-organization-fixed {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 370px;
+      margin: 0 auto;
+      overflow: visible;
+    }
+
+    .lq-organization-fixed .lq-fixed-arrow {
+      stroke-dasharray: 10 10;
+      animation: lqArrowMove 2s linear infinite;
+    }
+
+    @keyframes lqArrowMove {
+      to {
+        stroke-dashoffset: -40;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lq-organization-fixed .lq-fixed-arrow {
+        animation: none;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  function makeCell(x, y, scale = 1) {
+    return `
+      <g transform="translate(${x} ${y}) scale(${scale})">
+        <ellipse rx="36" ry="30"
+          fill="#f8c1d8"
+          stroke="#c47da7"
+          stroke-width="4"/>
+
+        <ellipse rx="31" ry="25"
+          fill="none"
+          stroke="#fff5fb"
+          stroke-width="2"/>
+
+        <circle cx="6" cy="-2" r="11"
+          fill="#aa88d3"
+          stroke="#8065b5"
+          stroke-width="2"/>
+
+        <ellipse cx="-19" cy="11" rx="9" ry="5"
+          fill="#f6c18a"
+          stroke="#cd9568"
+          stroke-width="1.5"/>
+
+        <path d="M-24 -11q10 -8 19 0"
+          fill="none"
+          stroke="#ae8dce"
+          stroke-width="3"/>
+
+        <circle cx="22" cy="12" r="3"
+          fill="#8655b5"/>
+      </g>
+    `;
+  }
+
+  function makeDiagram() {
+
+    // Tissue cells are contained inside the middle panel.
+    const tissue = Array.from({ length: 9 }, (_, i) => {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+
+      return makeCell(
+        319 + col * 51,
+        142 + row * 52,
+        0.65
+      );
+    }).join("");
+
+    return `
+      <svg
+        class="lq-cell-drawing lq-organization-fixed"
+        viewBox="0 0 740 390"
+        role="img"
+        aria-label="One liver cell appears first, then tissue made of cells, then the complete liver organ"
+      >
+
+        <defs>
+          <linearGradient id="lqFixedLiverPaint"
+            x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#df929f"/>
+            <stop offset="1" stop-color="#9d5067"/>
+          </linearGradient>
+        </defs>
+
+        <!-- THREE SEPARATE PANELS -->
+
+        <rect x="15" y="45" width="210" height="285"
+          rx="24" fill="#fff6fb"
+          stroke="#ead3ee" stroke-width="3"/>
+
+        <rect x="265" y="45" width="210" height="285"
+          rx="24" fill="#f9f5ff"
+          stroke="#dfd3f2" stroke-width="3"/>
+
+        <rect x="515" y="45" width="210" height="285"
+          rx="24" fill="#f3fbff"
+          stroke="#d2e7ef" stroke-width="3"/>
+
+        <!-- FIRST: SINGLE CELL -->
+
+        <g opacity="0">
+          ${makeCell(120,190,1.65)}
+
+          <animate
+            attributeName="opacity"
+            values="0;1;1;1;0"
+            keyTimes="0;0.07;0.85;0.97;1"
+            dur="12s"
+            repeatCount="indefinite"/>
+        </g>
+
+        <!-- ARROW 1 - SEPARATE FROM PANELS -->
+
+        <path
+          class="lq-fixed-arrow"
+          d="M230 190 H257 M248 181 L257 190 L248 199"
+          fill="none"
+          stroke="#a48bc9"
+          stroke-width="5"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <!-- SECOND: GROUP OF CELLS / TISSUE -->
+
+        <g opacity="0">
+          ${tissue}
+
+          <animate
+            attributeName="opacity"
+            values="0;0;1;1;1;0"
+            keyTimes="0;0.27;0.35;0.85;0.97;1"
+            dur="12s"
+            repeatCount="indefinite"/>
+        </g>
+
+        <!-- ARROW 2 - SAME SIZE AS ARROW 1 -->
+
+        <path
+          class="lq-fixed-arrow"
+          d="M480 190 H507 M498 181 L507 190 L498 199"
+          fill="none"
+          stroke="#a48bc9"
+          stroke-width="5"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <!-- THIRD: WHOLE LIVER ORGAN -->
+
+        <g opacity="0">
+
+          <!-- Center liver in last panel -->
+          <g transform="translate(620 190) scale(0.70)">
+
+            <path
+              d="
+                M-110 -35
+                C-70 -105 20 -100 95 -70
+                C165 -45 160 30 105 75
+                C70 100 20 85 -10 75
+                C-70 100 -120 65 -135 20
+                C-145 -10 -135 -25 -110 -35
+                Z
+              "
+              fill="url(#lqFixedLiverPaint)"
+              stroke="#87485b"
+              stroke-width="9"/>
+
+            <path
+              d="M-100 -20 Q-10 -65 100 -25"
+              fill="none"
+              stroke="#edb0b8"
+              stroke-width="7"
+              opacity="0.7"/>
+
+            <path
+              d="M-20 70 Q5 20 36 -10"
+              fill="none"
+              stroke="#86558e"
+              stroke-width="6"
+              opacity="0.65"/>
+
+          </g>
+
+          <!-- Liver appears only AFTER tissue -->
+          <animate
+            attributeName="opacity"
+            values="0;0;1;1;0"
+            keyTimes="0;0.60;0.68;0.97;1"
+            dur="12s"
+            repeatCount="indefinite"/>
+
+        </g>
+
+      </svg>
+    `;
+  }
+
+  function fixObjective4() {
+
+    const popup = document.querySelector(".lq-explorer");
+    if (!popup) return;
+
+    const header =
+      popup.querySelector(".lq-explorer-top");
+
+    if (!header) return;
+
+    if (!/OBJECTIVE\s+4\s*\/\s*5/i.test(
+      header.textContent
+    )) return;
+
+    const visual = popup.querySelector(
+      ".lq-cell-visual"
+    );
+
+    if (!visual) return;
+
+    // Do not rebuild repeatedly.
+    if (visual.querySelector(".lq-organization-fixed")) {
+      return;
+    }
+
+    visual.innerHTML = makeDiagram();
+  }
+
+  function initialize() {
+
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    const observer = new MutationObserver(fixObjective4);
+
+    observer.observe(modal, {
+      childList: true,
+      subtree: false
+    });
+
+    fixObjective4();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize
+    );
+  } else {
+    initialize();
+  }
+
+})();
