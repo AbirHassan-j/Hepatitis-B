@@ -2302,3 +2302,157 @@ document.head.appendChild(testStyle);
     start();
   }
 }
+
+/* =====================================================
+   LIVERQUEST — LEVEL 1 OBJECTIVES 4 & 5 FRAME FIX
+   Keeps the illustrations fully inside their frames.
+   Does not change the interactive activities.
+   ===================================================== */
+
+(() => {
+  const style = document.createElement("style");
+
+  style.textContent = `
+    /* Keep the Level 1 diagrams inside the popup */
+    .lq-explorer .lq-cell-visual {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      border-radius: 20px;
+    }
+
+    .lq-explorer .lq-cell-visual svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 360px;
+      margin: 0 auto;
+    }
+
+    /* FIX OBJECTIVE 4:
+       Prevent the liver from moving outside the SVG.
+       The group keeps its original centered position. */
+    .lq-organization-motion .lq-org-scale.liver {
+      animation: lqFixedLiverFade 9s ease-in-out infinite !important;
+      transform-box: view-box !important;
+      transform-origin: 0 0 !important;
+      filter: none !important;
+    }
+
+    /* Reveal the organ without changing its position */
+    @keyframes lqFixedLiverFade {
+      0%, 55% {
+        opacity: 0;
+      }
+
+      65%, 90% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Keep the cells and tissue animation */
+    .lq-organization-motion .lq-org-scale.one,
+    .lq-organization-motion .lq-org-scale.many {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    /* OBJECTIVE 5: Keep the virus illustration contained */
+    .lq-explorer .lq-cell-visual svg:not(.lq-organization-motion) {
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lq-organization-motion .lq-org-scale.liver {
+        animation: none !important;
+        opacity: 1 !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  function fixLevelOneFrames() {
+    const popup = document.querySelector(".lq-explorer");
+
+    if (!popup) return;
+
+    const header = popup.querySelector(".lq-explorer-top");
+    const headerText = header?.textContent || "";
+
+    // LEVEL 1 — OBJECTIVE 4
+    if (/OBJECTIVE\s+4\s*\/\s*5/i.test(headerText)) {
+      const svg = popup.querySelector(
+        ".lq-organization-motion"
+      );
+
+      if (svg) {
+        // Extra room around all three illustrations.
+        svg.setAttribute(
+          "viewBox",
+          "-20 -15 780 460"
+        );
+
+        // Keep the liver at the right-hand panel.
+        const liver = svg.querySelector(
+          ".lq-org-scale.liver"
+        );
+
+        if (liver) {
+          liver.setAttribute(
+            "transform",
+            "translate(622 188) scale(0.82)"
+          );
+        }
+      }
+    }
+
+    // LEVEL 1 — OBJECTIVE 5
+    if (/OBJECTIVE\s+5\s*\/\s*5/i.test(headerText)) {
+      const svg = popup.querySelector(
+        ".lq-cell-visual svg"
+      );
+
+      if (svg) {
+        // Add breathing room on every side.
+        svg.setAttribute(
+          "viewBox",
+          "-30 -25 800 480"
+        );
+      }
+    }
+  }
+
+  // Apply fixes whenever an objective popup opens.
+  function initializeFrameFix() {
+    const modal = document.getElementById("modal-card");
+
+    if (!modal) return;
+
+    const observer = new MutationObserver(() => {
+      fixLevelOneFrames();
+    });
+
+    observer.observe(modal, {
+      childList: true,
+      subtree: false
+    });
+
+    fixLevelOneFrames();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeFrameFix
+    );
+  } else {
+    initializeFrameFix();
+  }
+})();
