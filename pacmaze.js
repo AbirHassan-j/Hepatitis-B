@@ -3373,3 +3373,284 @@ document.head.appendChild(testStyle);
     initialize();
   }
 })();
+
+/* =====================================================
+   LIVERQUEST — FINAL BRIEFING POLISH
+   1. Always-visible HBV movement
+   2. Five-level mission indicator
+   3. Twenty-dot shield charging demonstration
+   No gameplay changes
+   ===================================================== */
+
+(() => {
+  if (window.__lqBriefingFinalPolish) return;
+  window.__lqBriefingFinalPolish = true;
+
+  const style = document.createElement("style");
+
+  let rules = `
+    /* ----------------------------------------------
+       FIX 1: HBV stays visible inside its panel.
+       It travels LEFT, toward the liver cells,
+       then returns to its starting position.
+       ---------------------------------------------- */
+
+    #lq-briefing-card .lq-adventure-hbv {
+      offset-path: none !important;
+      offset-distance: 0% !important;
+      opacity: 1 !important;
+      animation: lqFinalVirusMovement
+        5.5s ease-in-out infinite !important;
+    }
+
+    @keyframes lqFinalVirusMovement {
+      0%, 12% {
+        transform: translate(0px, 0px);
+        opacity: 1;
+      }
+
+      55%, 75% {
+        transform: translate(-62px, 13px);
+        opacity: 1;
+      }
+
+      95%, 100% {
+        transform: translate(0px, 0px);
+        opacity: 1;
+      }
+    }
+
+    /* ----------------------------------------------
+       FIX 2: Small five-level mission indicator.
+       ---------------------------------------------- */
+
+    .lq-final-level-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 10px;
+      padding: 6px 13px;
+      border-radius: 20px;
+      border: 1px solid #ffffff55;
+      background: #ffffff1b;
+      color: #f4e7ff;
+      font: 900 10px/1.3 system-ui;
+      letter-spacing: 1px;
+    }
+
+    .lq-final-level-indicator .lq-level-mini-dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .lq-final-level-indicator .lq-level-mini-dots i {
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #d4b7f6;
+    }
+
+    .lq-final-level-indicator .lq-level-mini-dots i:first-child {
+      background: #ffe28b;
+    }
+
+    /* ----------------------------------------------
+       FIX 3: Twenty individual dots fill the meter.
+       These visually demonstrate earning a shield.
+       They do not affect actual game progress.
+       ---------------------------------------------- */
+
+    #lq-briefing-card .lq-shield-meter {
+      display: grid !important;
+      grid-template-columns: repeat(20, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 3px;
+      height: 14px !important;
+      padding: 2px;
+      box-sizing: border-box;
+      background: #d4e7e1;
+      border: 1px solid #9dccc0;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    #lq-briefing-card .lq-shield-meter-fill {
+      display: none !important;
+    }
+
+    #lq-briefing-card .lq-final-energy-dot {
+      display: block;
+      height: 100%;
+      min-width: 0;
+      border-radius: 5px;
+      background: #b4d8ce;
+    }
+
+    #lq-briefing-card .lq-shield-demo-count {
+      transform-origin: center;
+      animation: lqFinalShieldActivation
+        5.5s ease-in-out infinite;
+    }
+
+    @keyframes lqFinalShieldActivation {
+      0%, 73% {
+        transform: scale(1);
+        filter: grayscale(.6);
+      }
+
+      79%, 88% {
+        transform: scale(1.3);
+        filter:
+          grayscale(0)
+          drop-shadow(0 0 7px #55dcc5);
+      }
+
+      100% {
+        transform: scale(1);
+        filter: grayscale(.6);
+      }
+    }
+
+    @media (max-width: 600px) {
+      #lq-briefing-card .lq-shield-meter {
+        gap: 1px;
+        height: 12px !important;
+      }
+
+      .lq-final-level-indicator {
+        font-size: 9px;
+        padding: 5px 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #lq-briefing-card .lq-adventure-hbv,
+      #lq-briefing-card .lq-shield-demo-count,
+      #lq-briefing-card .lq-final-energy-dot {
+        animation: none !important;
+      }
+
+      #lq-briefing-card .lq-final-energy-dot {
+        background: #f6c955 !important;
+      }
+    }
+  `;
+
+  // Each dot lights up in sequence during one 5.5s cycle.
+  for (let i = 0; i < 20; i++) {
+    const start = 12 + i * 3.2;
+    const on = start + 0.2;
+
+    rules += `
+      @keyframes lqFinalDot${i} {
+        0%, ${start}% {
+          background: #b4d8ce;
+        }
+
+        ${on}%, 90% {
+          background: #f6c955;
+        }
+
+        98%, 100% {
+          background: #b4d8ce;
+        }
+      }
+
+      #lq-briefing-card
+      .lq-final-energy-dot:nth-child(${i + 1}) {
+        animation: lqFinalDot${i}
+          5.5s linear infinite;
+      }
+    `;
+  }
+
+  style.textContent = rules;
+  document.head.appendChild(style);
+
+  function finishBriefing() {
+    const briefing = document.getElementById(
+      "lq-briefing-card"
+    );
+
+    if (!briefing) return;
+    if (briefing.dataset.finalPolish === "true") return;
+
+    briefing.dataset.finalPolish = "true";
+
+    /* Add a small indicator to the existing header. */
+    const header = briefing.querySelector(
+      ".lq-adventure-header"
+    );
+
+    if (header) {
+      const indicator = document.createElement("div");
+      indicator.className = "lq-final-level-indicator";
+
+      indicator.innerHTML = `
+        <span>5 LEVELS · 1 MISSION</span>
+        <span class="lq-level-mini-dots"
+          aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i>
+        </span>
+      `;
+
+      header.appendChild(indicator);
+    }
+
+    /* Replace the decorative bar with 20 visible dots. */
+    const meter = briefing.querySelector(
+      ".lq-shield-meter"
+    );
+
+    if (meter) {
+      meter.innerHTML = "";
+
+      meter.setAttribute(
+        "role", "img"
+      );
+
+      meter.setAttribute(
+        "aria-label",
+        "Animation showing 20 energy dots filling a shield meter"
+      );
+
+      for (let i = 0; i < 20; i++) {
+        const dot = document.createElement("span");
+        dot.className = "lq-final-energy-dot";
+        dot.setAttribute("aria-hidden", "true");
+        meter.appendChild(dot);
+      }
+    }
+  }
+
+  function initialize() {
+    finishBriefing();
+
+    // Also handles a briefing created slightly later.
+    const observer = new MutationObserver(() => {
+      if (document.getElementById("lq-briefing-card")) {
+        finishBriefing();
+        observer.disconnect();
+      }
+    });
+
+    if (
+      !document.getElementById("lq-briefing-card")
+    ) {
+      observer.observe(document.body, {
+        childList: true
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize
+    );
+  } else {
+    initialize();
+  }
+})();
