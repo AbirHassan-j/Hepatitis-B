@@ -4140,3 +4140,427 @@ document.head.appendChild(testStyle);
 
   document.head.appendChild(style);
 })();
+
+/* =====================================================
+   LIVERQUEST — LARGE DETAILED SCIENCE DIAGRAMS
+   Replaces ONLY the briefing's main illustrations.
+   Keeps the game and all other briefing features.
+   ===================================================== */
+
+(() => {
+  if (window.__lqBetterBriefingDiagrams) return;
+  window.__lqBetterBriefingDiagrams = true;
+
+  const style = document.createElement("style");
+  style.textContent = `
+    /* Remove the forced tall box that shrank the SVG */
+
+    #lq-briefing-card .lq-city-scene {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      flex: 0 0 auto !important;
+      display: block !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+    }
+
+    #lq-briefing-card .lq-city-scene svg {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      max-height: none !important;
+      object-fit: fill !important;
+    }
+
+    /* Purposeful virus approach */
+    #lq-briefing-card .lq-adventure-hbv {
+      animation: lqBetterVirusApproach
+        5s ease-in-out infinite !important;
+      opacity: 1 !important;
+      offset-path: none !important;
+    }
+
+    @keyframes lqBetterVirusApproach {
+      0%, 12% {
+        transform: translateX(0);
+      }
+      55%, 78% {
+        transform: translateX(-65px);
+      }
+      95%, 100% {
+        transform: translateX(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #lq-briefing-card .lq-adventure-hbv {
+        animation: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  function createDiagrams() {
+
+    // Detailed liver cell used in the tissue illustration.
+    function cell(x, y, scale = 1) {
+      return `
+        <g transform="translate(${x} ${y}) scale(${scale})">
+          <ellipse rx="66" ry="53"
+            fill="url(#lqNewCell)"
+            stroke="#b46ca3"
+            stroke-width="4"/>
+
+          <ellipse rx="59" ry="46"
+            fill="none"
+            stroke="#ffe9f5"
+            stroke-width="2.5"/>
+
+          <!-- Nucleus and nucleolus -->
+          <circle cx="11" cy="-1" r="22"
+            fill="#a588d4"
+            stroke="#795aae"
+            stroke-width="3.5"/>
+
+          <circle cx="16" cy="-3" r="8"
+            fill="#714ea5"/>
+
+          <!-- Mitochondria -->
+          <g fill="#f5b981"
+            stroke="#ca8b54"
+            stroke-width="2">
+            <ellipse cx="-35" cy="-18"
+              rx="15" ry="8"
+              transform="rotate(-20 -35 -18)"/>
+            <ellipse cx="36" cy="25"
+              rx="13" ry="7"
+              transform="rotate(22 36 25)"/>
+          </g>
+
+          <!-- Endoplasmic reticulum -->
+          <g fill="none"
+            stroke="#cc8cbe"
+            stroke-width="3"
+            stroke-linecap="round">
+            <path d="M-42 8q11 -10 22 0t19 0"/>
+            <path d="M-39 18q12 -9 21 0t19 0"/>
+          </g>
+
+          <!-- Ribosomes -->
+          <g fill="#8655b6">
+            <circle cx="-47" cy="-3" r="3"/>
+            <circle cx="-23" cy="29" r="3"/>
+            <circle cx="44" cy="-15" r="3"/>
+            <circle cx="28" cy="-32" r="2.5"/>
+          </g>
+        </g>
+      `;
+    }
+
+    // More detailed HBV illustration.
+    function virus(x, y, r = 47) {
+      let spikes = "";
+
+      for (let i = 0; i < 16; i++) {
+        const a = i * Math.PI / 8;
+        const x1 = Math.cos(a) * (r + 1);
+        const y1 = Math.sin(a) * (r + 1);
+        const x2 = Math.cos(a) * (r + 15);
+        const y2 = Math.sin(a) * (r + 15);
+
+        spikes += `
+          <line x1="${x1}" y1="${y1}"
+            x2="${x2}" y2="${y2}"
+            stroke="#ba84e6"
+            stroke-width="6"
+            stroke-linecap="round"/>
+
+          <circle cx="${x2}" cy="${y2}" r="4"
+            fill="#d5b0f5"/>
+        `;
+      }
+
+      return `
+        <g transform="translate(${x} ${y})">
+          <g class="lq-adventure-hbv">
+            ${spikes}
+
+            <circle r="${r}"
+              fill="url(#lqNewVirus)"
+              stroke="#7145a9"
+              stroke-width="6"/>
+
+            <circle r="${r * .61}"
+              fill="#d7b9f3"
+              stroke="#8658bb"
+              stroke-width="3.5"/>
+
+            <!-- Stylized viral genetic material -->
+            <path
+              d="M-19 -11
+                 C2 -25 21 -13 13 2
+                 C5 16 -13 4 -14 20"
+              fill="none"
+              stroke="#774ba9"
+              stroke-width="5"
+              stroke-linecap="round"/>
+
+            <circle cx="13" cy="18" r="4"
+              fill="#9c6acb"/>
+          </g>
+        </g>
+      `;
+    }
+
+    return `
+      <svg viewBox="0 0 1080 390"
+        role="img"
+        aria-label="Three large scientific illustrations: the liver organ, magnified liver cells with organelles, and a hepatitis B virus approaching a liver cell"
+        xmlns="http://www.w3.org/2000/svg">
+
+        <defs>
+          <linearGradient id="lqNewLiver"
+            x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ec9cac"/>
+            <stop offset=".5" stop-color="#d4778f"/>
+            <stop offset="1" stop-color="#a95270"/>
+          </linearGradient>
+
+          <radialGradient id="lqNewCell">
+            <stop offset="0" stop-color="#ffe6f2"/>
+            <stop offset="1" stop-color="#f2b4d5"/>
+          </radialGradient>
+
+          <radialGradient id="lqNewVirus">
+            <stop offset="0" stop-color="#d7b3f5"/>
+            <stop offset="1" stop-color="#9459ca"/>
+          </radialGradient>
+        </defs>
+
+        <!-- BACKGROUND -->
+        <rect width="1080" height="390"
+          rx="20" fill="#f6efff"/>
+
+        <!-- THREE LARGE CONNECTED ZONES -->
+        <rect x="13" y="13" width="337" height="363"
+          rx="22" fill="#fff2f7"
+          stroke="#e6b6ce" stroke-width="3"/>
+
+        <rect x="371" y="13" width="337" height="363"
+          rx="22" fill="#f7edff"
+          stroke="#d4b8f0" stroke-width="3"/>
+
+        <rect x="729" y="13" width="337" height="363"
+          rx="22" fill="#edfaff"
+          stroke="#acddec" stroke-width="3"/>
+
+        <!-- ZONE LABELS -->
+        <g font-family="system-ui, sans-serif"
+          font-weight="900"
+          font-size="21"
+          text-anchor="middle">
+
+          <text x="181" y="49" fill="#a14a70">
+            THE LIVER
+          </text>
+
+          <text x="539" y="49" fill="#7c4cae">
+            LIVER CELLS
+          </text>
+
+          <text x="897" y="49" fill="#7950a9">
+            HEPATITIS B
+          </text>
+        </g>
+
+        <!-- FIRST ZONE: LARGE LIVER -->
+        <g transform="translate(177 195)">
+
+          <path
+            d="M-135 -46
+               C-118 -113 -40 -130 25 -117
+               C93 -129 151 -86 154 -24
+               C160 37 114 88 64 78
+               C22 111 -61 113 -111 66
+               C-151 33 -156 -12 -135 -46Z"
+            fill="url(#lqNewLiver)"
+            stroke="#91445e"
+            stroke-width="8"/>
+
+          <!-- Organ surface highlight -->
+          <path
+            d="M-119 -52
+               Q-15 -104 124 -43"
+            fill="none"
+            stroke="#ffd2da"
+            stroke-width="9"
+            opacity=".75"
+            stroke-linecap="round"/>
+
+          <!-- Anatomical division -->
+          <path
+            d="M29 86
+               Q32 25 73 -35"
+            fill="none"
+            stroke="#96516c"
+            stroke-width="6"/>
+
+          <!-- Smaller surface details -->
+          <path d="M-104 34Q-54 57 -10 48"
+            stroke="#ad6079"
+            stroke-width="3"
+            fill="none"
+            opacity=".65"/>
+
+          <path d="M79 -58Q112 -38 120 -4"
+            stroke="#ad6079"
+            stroke-width="3"
+            fill="none"
+            opacity=".65"/>
+        </g>
+
+        <text x="181" y="350"
+          text-anchor="middle"
+          font-family="system-ui"
+          font-size="17"
+          font-weight="700"
+          fill="#95506d">
+          An organ made of cells
+        </text>
+
+        <!-- SECOND ZONE: LARGE MAGNIFIED CELLS -->
+        <g>
+          ${cell(485, 142, .95)}
+          ${cell(590, 142, .95)}
+          ${cell(537, 243, 1.02)}
+        </g>
+
+        <!-- Small magnification symbol -->
+        <g transform="translate(663 280)">
+          <circle cx="0" cy="0" r="15"
+            fill="none" stroke="#a27acb"
+            stroke-width="4"/>
+          <path d="M11 11l13 13"
+            stroke="#a27acb"
+            stroke-width="5"
+            stroke-linecap="round"/>
+        </g>
+
+        <text x="539" y="350"
+          text-anchor="middle"
+          font-family="system-ui"
+          font-size="17"
+          font-weight="700"
+          fill="#744d9b">
+          A closer look inside
+        </text>
+
+        <!-- THIRD ZONE: HBV AND TARGET CELL -->
+
+        <!-- Target cell: visible membrane and nucleus -->
+        <g transform="translate(805 207)">
+          <ellipse rx="58" ry="73"
+            fill="#f7c7df"
+            stroke="#b777a9"
+            stroke-width="5"/>
+
+          <ellipse rx="49" ry="63"
+            fill="none"
+            stroke="#ffeafa"
+            stroke-width="3"/>
+
+          <circle cx="-8" cy="8" r="24"
+            fill="#a68bd5"
+            stroke="#7758ad"
+            stroke-width="3"/>
+
+          <circle cx="-3" cy="6" r="8"
+            fill="#7650a9"/>
+
+          <ellipse cx="15" cy="-29"
+            rx="12" ry="7"
+            fill="#edb77d"/>
+
+          <path d="M-27 38q11 -9 23 0"
+            stroke="#cb8bbb"
+            stroke-width="4"
+            fill="none"/>
+        </g>
+
+        <!-- HBV approaches the target cell -->
+        ${virus(968, 175, 46)}
+
+        <!-- Direction arrow -->
+        <path d="M898 264H854"
+          fill="none"
+          stroke="#9770c3"
+          stroke-width="4"
+          stroke-dasharray="7 6"
+          stroke-linecap="round"/>
+
+        <path d="M867 254l-13 10 13 10"
+          fill="none"
+          stroke="#9770c3"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <text x="897" y="350"
+          text-anchor="middle"
+          font-family="system-ui"
+          font-size="17"
+          font-weight="700"
+          fill="#72529e">
+          HBV targets liver cells
+        </text>
+
+      </svg>
+    `;
+  }
+
+  function upgradeDiagrams() {
+    const scene = document.querySelector(
+      "#lq-briefing-card .lq-city-scene"
+    );
+
+    if (!scene) return;
+    if (scene.dataset.betterDiagrams === "true") return;
+
+    scene.innerHTML = createDiagrams();
+    scene.dataset.betterDiagrams = "true";
+  }
+
+  function initialize() {
+    upgradeDiagrams();
+
+    // Handles the briefing being created after page load.
+    const observer = new MutationObserver(() => {
+      upgradeDiagrams();
+
+      const scene = document.querySelector(
+        "#lq-briefing-card .lq-city-scene"
+      );
+
+      if (scene?.dataset.betterDiagrams === "true") {
+        observer.disconnect();
+      }
+    });
+
+    if (!document.querySelector(
+      "#lq-briefing-card .lq-city-scene"
+    )) {
+      observer.observe(document.body, {
+        childList: true
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded", initialize
+    );
+  } else {
+    initialize();
+  }
+})();
