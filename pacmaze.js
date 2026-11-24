@@ -4825,3 +4825,109 @@ document.head.appendChild(testStyle);
     { childList: true, subtree: false }
   );
 })();
+
+/* ===================================================
+   LEVEL 1 — OBJECTIVE 4
+   FOUR SHUFFLED ORGANIZATION BUTTONS
+   =================================================== */
+
+(function () {
+  "use strict";
+
+  const originalExplorer = lqCellExplorer;
+
+  lqCellExplorer = function (...args) {
+    originalExplorer(...args);
+
+    // Apply ONLY to Level 1, Objective 4.
+    if (lqCellStep !== 3) return;
+
+    const buttons = Array.from(
+      document.querySelectorAll("[data-c-order]")
+    );
+
+    if (buttons.length !== 3) return;
+
+    const container = buttons[0].parentElement;
+    const feedback = document.getElementById(
+      "lq-cell-feedback"
+    );
+    const next = document.getElementById(
+      "lq-next-explorer"
+    );
+
+    // Add the missing Organ System option.
+    const organSystem = document.createElement("button");
+    organSystem.type = "button";
+    organSystem.className = "lq-explore-action";
+    organSystem.dataset.cOrder = "Organ System";
+    organSystem.textContent = "Organ System";
+
+    buttons.push(organSystem);
+
+    // Shuffle the four buttons.
+    const shuffled = [...buttons];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] =
+        [shuffled[j], shuffled[i]];
+    }
+
+    // Never display the already-correct sequence.
+    const correct = [
+      "Cell",
+      "Tissue",
+      "Organ",
+      "Organ System"
+    ];
+
+    if (shuffled.every(
+      (button, i) => button.dataset.cOrder === correct[i]
+    )) {
+      [shuffled[0], shuffled[2]] =
+        [shuffled[2], shuffled[0]];
+    }
+
+    container.replaceChildren(...shuffled);
+
+    let progress = 0;
+
+    shuffled.forEach(button => {
+      button.onclick = function () {
+        const answer = button.dataset.cOrder;
+
+        if (answer !== correct[progress]) {
+          feedback.textContent =
+            "Not quite! Think about which " +
+            "structure comes next.";
+          return;
+        }
+
+        button.disabled = true;
+        button.classList.add("lq-done");
+
+        progress++;
+
+        feedback.textContent = correct
+          .slice(0, progress)
+          .join(" → ");
+
+        if (progress === correct.length) {
+          feedback.textContent =
+            "✅ Correct! Cells form tissues, " +
+            "tissues form organs, and organs " +
+            "work together in organ systems.";
+
+          next.disabled = false;
+
+          lqSpeak(
+            "Exactly! Cells form tissues, " +
+            "tissues form organs, and organs " +
+            "work together in organ systems."
+          );
+        }
+      };
+    });
+  };
+})();
