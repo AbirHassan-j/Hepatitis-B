@@ -4764,3 +4764,209 @@ document.head.appendChild(testStyle);
     { childList: true, subtree: false }
   );
 })();
+
+/* =====================================================
+   LIVERQUEST — LEVEL 1, OBJECTIVE 4
+   ADD ORGAN SYSTEM TO EXISTING ANIMATION
+   ===================================================== */
+
+(function () {
+  "use strict";
+
+  // Update only Objective 4 narration.
+  lqCellObjectives[3].narration =
+    "Cells work together to form tissues. " +
+    "Tissues build organs, like your liver. " +
+    "Organs work together in organ systems. " +
+    "Your liver is part of the digestive system.";
+
+  const NS = "http://www.w3.org/2000/svg";
+
+  function updateOrganization() {
+    const popup = document.querySelector(".lq-explorer");
+    if (!popup) return;
+
+    const header = popup.querySelector(".lq-explorer-top");
+    if (!header ||
+        !/OBJECTIVE\s+4\s*\/\s*5/i.test(header.textContent)) {
+      return;
+    }
+
+    const svg = popup.querySelector(
+      ".lq-cell-visual svg.lq-organization-fixed"
+    );
+
+    if (!svg || svg.dataset.organSystemAdded === "yes") {
+      return;
+    }
+
+    svg.dataset.organSystemAdded = "yes";
+
+    // Expand the canvas to the right.
+    // Existing cell, tissue, and organ drawings stay intact.
+    svg.setAttribute("viewBox", "0 0 1000 390");
+
+    const extra = document.createElementNS(NS, "g");
+    extra.setAttribute("class", "lq-organ-system-extension");
+
+    extra.innerHTML = `
+      <!-- Arrow from ORGAN to ORGAN SYSTEM -->
+
+      <path
+        d="M730 190 H757 M748 181 L757 190 L748 199"
+        fill="none"
+        stroke="#a48bc9"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-dasharray="10 10"
+      >
+        <animate
+          attributeName="stroke-dashoffset"
+          from="0"
+          to="-40"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </path>
+
+      <!-- Fourth panel: Organ System -->
+
+      <rect
+        x="765" y="45"
+        width="210" height="285"
+        rx="24"
+        fill="#fff3fb"
+        stroke="#e5c4eb"
+        stroke-width="3"
+      />
+
+      <!-- Digestive organ system illustration -->
+
+      <g opacity="0">
+
+        <!-- Esophagus -->
+
+        <path
+          d="M858 108
+             Q854 135 868 157
+             L870 187"
+          stroke="#d88baf"
+          stroke-width="13"
+          fill="none"
+          stroke-linecap="round"/>
+
+        <!-- Stomach -->
+
+        <path
+          d="M870 171
+             C894 160 925 181 920 209
+             C917 233 890 242 874 220
+             C865 209 868 191 870 171Z"
+          fill="#f3b2cb"
+          stroke="#b96b9f"
+          stroke-width="4"/>
+
+        <!-- Liver -->
+
+        <g transform="translate(835 170) scale(.37)">
+          <path
+            d="M-110 -35
+               C-70 -105 20 -100 95 -70
+               C165 -45 160 30 105 75
+               C70 100 20 85 -10 75
+               C-70 100 -120 65 -135 20
+               C-145 -10 -135 -25 -110 -35Z"
+            fill="#bd7186"
+            stroke="#87485b"
+            stroke-width="9"/>
+        </g>
+
+        <!-- Intestines -->
+
+        <rect
+          x="830" y="224"
+          width="99" height="68"
+          rx="22"
+          fill="#f8d5e6"
+          stroke="#d194b8"
+          stroke-width="4"/>
+
+        <path
+          d="M845 240
+             H911
+             Q922 240 922 250
+             Q922 260 910 260
+             H849
+             Q839 260 839 270
+             Q839 280 850 280
+             H912"
+          fill="none"
+          stroke="#c47ba8"
+          stroke-width="9"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <!-- Reveal after the liver organ appears -->
+
+        <animate
+          attributeName="opacity"
+          values="0;0;1;1;0"
+          keyTimes="0;0.76;0.83;0.97;1"
+          dur="6s"
+          repeatCount="indefinite"/>
+
+      </g>
+    `;
+
+    svg.appendChild(extra);
+
+    // Add labels without changing the original drawings.
+    const labels = [
+      ["CELL", 120],
+      ["TISSUE", 370],
+      ["ORGAN", 620],
+      ["ORGAN SYSTEM", 870]
+    ];
+
+    labels.forEach(([name, x]) => {
+      const text = document.createElementNS(NS, "text");
+
+      text.setAttribute("x", x);
+      text.setAttribute("y", "356");
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("font-size", "17");
+      text.setAttribute("font-weight", "900");
+      text.setAttribute("fill", "#8743a8");
+
+      // Override the rule hiding other SVG labels.
+      text.style.setProperty(
+        "display", "block", "important"
+      );
+
+      text.textContent = name;
+      svg.appendChild(text);
+    });
+  }
+
+  function initialize() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    const observer = new MutationObserver(updateOrganization);
+
+    // Watch only direct modal changes, avoiding
+    // the earlier freezing issue.
+    observer.observe(modal, {
+      childList: true,
+      subtree: false
+    });
+
+    updateOrganization();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize);
+  } else {
+    initialize();
+  }
+})();
