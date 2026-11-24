@@ -4970,3 +4970,180 @@ document.head.appendChild(testStyle);
     initialize();
   }
 })();
+
+/* LEVEL 1 — OBJECTIVE 4: ADD ORGAN SYSTEM */
+(function () {
+  "use strict";
+
+  const NS = "http://www.w3.org/2000/svg";
+
+  // Change only Objective 4's narration.
+  lqCellObjectives[3].narration =
+    "Cells work together to form tissues. " +
+    "Tissues work together to form organs, like your liver. " +
+    "Different organs work together in organ systems. " +
+    "Your liver is part of the digestive system.";
+
+  function addOrganSystem() {
+    const popup = document.querySelector(
+      "#modal-card .lq-explorer"
+    );
+
+    if (!popup) return;
+
+    const heading = popup.querySelector(".lq-explorer-top");
+
+    if (!heading ||
+        !/OBJECTIVE\s+4\s*\/\s*5/i.test(
+          heading.textContent
+        )) return;
+
+    const svg = popup.querySelector(
+      "svg.lq-organization-fixed"
+    );
+
+    // Wait until the original animation exists.
+    if (!svg) return;
+
+    // Prevent duplicate additions and observer loops.
+    if (svg.querySelector("#lq-added-organ-system")) return;
+
+    // Preserve the existing three animations.
+    // Extend the canvas to fit the fourth panel.
+    svg.setAttribute("viewBox", "0 0 1000 390");
+
+    svg.setAttribute(
+      "aria-label",
+      "Cells form tissues, tissues form organs, " +
+      "and organs work together in organ systems."
+    );
+
+    const panel = document.createElementNS(NS, "g");
+    panel.id = "lq-added-organ-system";
+
+    panel.innerHTML = `
+      <!-- Connecting arrow -->
+      <path
+        d="M730 190 H757 M748 181 L757 190 L748 199"
+        fill="none"
+        stroke="#a48bc9"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-dasharray="10 10">
+        <animate
+          attributeName="stroke-dashoffset"
+          from="0" to="-40"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </path>
+
+      <!-- Pink panel -->
+      <rect
+        x="765" y="45"
+        width="210" height="285"
+        rx="24"
+        fill="#fff2fa"
+        stroke="#e5c0e7"
+        stroke-width="3"/>
+
+      <!-- Digestive system animation -->
+      <g opacity="0">
+
+        <!-- Esophagus -->
+        <path
+          d="M864 100 Q854 139 874 171"
+          fill="none"
+          stroke="#d68cab"
+          stroke-width="12"
+          stroke-linecap="round"/>
+
+        <!-- Stomach -->
+        <path
+          d="M874 164
+             C910 154 931 180 923 211
+             C915 237 887 239 872 216
+             Q862 192 874 164Z"
+          fill="#f4bed3"
+          stroke="#bd7eab"
+          stroke-width="4"/>
+
+        <!-- Liver -->
+        <g transform="translate(836 177) scale(.38)">
+          <path
+            d="M-110 -35
+               C-70 -105 20 -100 95 -70
+               C165 -45 160 30 105 75
+               C70 100 20 85 -10 75
+               C-70 100 -120 65 -135 20
+               C-145 -10 -135 -25 -110 -35Z"
+            fill="#bf7187"
+            stroke="#87485b"
+            stroke-width="9"/>
+        </g>
+
+        <!-- Intestines -->
+        <rect
+          x="833" y="223"
+          width="94" height="64"
+          rx="18"
+          fill="#f8dae8"
+          stroke="#d49ab9"
+          stroke-width="4"/>
+
+        <path
+          d="M845 238 H911
+             Q920 238 920 249
+             Q920 260 909 260
+             H850 Q840 260 840 271
+             Q840 281 852 281 H911"
+          fill="none"
+          stroke="#bf7ca9"
+          stroke-width="8"
+          stroke-linecap="round"/>
+
+        <!-- Appear after the organ animation -->
+        <animate
+          attributeName="opacity"
+          values="0;0;1;1;0"
+          keyTimes="0;0.76;0.83;0.97;1"
+          dur="6s"
+          repeatCount="indefinite"/>
+      </g>
+
+      <text
+        x="870" y="315"
+        text-anchor="middle"
+        font-size="18"
+        font-weight="900"
+        fill="#8743a8"
+        style="display:block !important">
+        ORGAN SYSTEM
+      </text>
+    `;
+
+    svg.appendChild(panel);
+  }
+
+  function start() {
+    const modal = document.getElementById("modal-card");
+    if (!modal) return;
+
+    // Watch the actual illustration being inserted.
+    // The duplicate check prevents continuous changes.
+    const observer = new MutationObserver(addOrganSystem);
+
+    observer.observe(modal, {
+      childList: true,
+      subtree: true
+    });
+
+    addOrganSystem();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();
