@@ -4842,3 +4842,116 @@ document.head.appendChild(testStyle);
     { childList: true, subtree: false }
   );
 })();
+
+/* LIVERQUEST — DIGESTIVE SYSTEM VISUAL POLISH ONLY */
+(function () {
+  "use strict";
+
+  if (document.getElementById("lq-digestive-polish")) return;
+
+  const style = document.createElement("style");
+  style.id = "lq-digestive-polish";
+
+  style.textContent = `
+    /* Only Level 1's digestive-system popup */
+
+    .lq-explorer:has([data-c-digestive]) .lq-cell-visual {
+      position: relative;
+      overflow: hidden;
+      padding: 14px;
+      border: 3px solid #e8b7e2;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, #ffe3f2, transparent 45%),
+        radial-gradient(circle at 85% 80%, #edd6ff, transparent 45%),
+        #fff7fc;
+      box-shadow: 0 10px 25px rgba(170, 91, 169, .15);
+    }
+
+    /* Floating cell bubbles */
+
+    .lq-explorer:has([data-c-digestive])
+    .lq-cell-visual::before,
+    .lq-explorer:has([data-c-digestive])
+    .lq-cell-visual::after {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(205, 125, 195, .3);
+      background: rgba(249, 188, 226, .28);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: lqDigestiveFloat 4s ease-in-out infinite;
+    }
+
+    .lq-explorer:has([data-c-digestive])
+    .lq-cell-visual::before {
+      width: 38px;
+      height: 38px;
+      top: 12%;
+      left: 5%;
+    }
+
+    .lq-explorer:has([data-c-digestive])
+    .lq-cell-visual::after {
+      width: 22px;
+      height: 22px;
+      right: 6%;
+      bottom: 12%;
+      animation-delay: -2s;
+    }
+
+    /* More depth for the existing organ drawings */
+
+    .lq-explorer:has([data-c-digestive])
+    .lq-cell-drawing {
+      filter: drop-shadow(0 7px 9px rgba(135, 69, 136, .18));
+    }
+
+    /* Highlight the bile pathway */
+
+    .lq-explorer:has([data-c-digestive])
+    svg path[stroke="#9cc56d"] {
+      filter: drop-shadow(0 0 6px #c8eb87);
+    }
+
+    /* More appealing activity cards */
+
+    .lq-explorer [data-c-digestive] {
+      flex: 1 1 180px;
+      min-height: 62px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #fff9fd, #f5e6ff);
+      border: 2px solid #ddb3e8;
+      color: #784797;
+      box-shadow: 0 5px 12px rgba(157, 99, 172, .12);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .lq-explorer [data-c-digestive]:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 9px 18px rgba(157, 99, 172, .2);
+    }
+
+    .lq-explorer [data-c-digestive].lq-done {
+      background: #e1f7e9;
+      border-color: #93d8af;
+      color: #397750;
+    }
+
+    @keyframes lqDigestiveFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lq-explorer:has([data-c-digestive])
+      .lq-cell-visual::before,
+      .lq-explorer:has([data-c-digestive])
+      .lq-cell-visual::after {
+        animation: none;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
