@@ -364,15 +364,49 @@ function lqFindVoice() {
   || voices[0]
   || null;
 }
-function lqSpeak(message){
- if(!lqNarrationOn||!('speechSynthesis' in window))return;
- speechSynthesis.cancel();
- const utterance=new SpeechSynthesisUtterance(message.replace(/\bHBV\b/g,'H B V'));
- utterance.lang='en-CA';utterance.rate=.96;utterance.pitch=1.0;utterance.volume=1.0;
- lqPreferredVoice=lqFindVoice()||lqPreferredVoice;
- if(lqPreferredVoice)utterance.voice=lqPreferredVoice;
- speechSynthesis.speak(utterance);
+
+function lqSpeak(message) {
+  if (!lqNarrationOn || !('speechSynthesis' in window)) return;
+
+  speechSynthesis.cancel();
+
+  const text = String(message)
+    .replace(/\bHBV\b/g, 'H B V')
+    .trim();
+
+  if (!text) return;
+
+  lqPreferredVoice = lqFindVoice() || lqPreferredVoice;
+
+  // Split into sentences for subtle expression changes.
+  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+
+  sentences.forEach((sentence, index) => {
+    const utterance = new SpeechSynthesisUtterance(
+      sentence.trim()
+    );
+
+    utterance.lang = 'en-CA';
+    utterance.rate = 0.96; // Same original speed
+    utterance.volume = 1.0;
+
+    // Slight changes in intonation
+    if (sentence.trim().endsWith('?')) {
+      utterance.pitch = 1.06;
+    } else if (sentence.trim().endsWith('!')) {
+      utterance.pitch = 1.04;
+    } else {
+      utterance.pitch = index % 2 === 0 ? 1.0 : 1.02;
+    }
+
+    if (lqPreferredVoice) {
+      utterance.voice = lqPreferredVoice;
+    }
+
+    speechSynthesis.speak(utterance);
+  });
 }
+
 function lqMute(){lqNarrationOn=!lqNarrationOn;if(!lqNarrationOn&&'speechSynthesis' in window)speechSynthesis.cancel();const b=document.querySelector('#lq-voice-toggle');if(b)b.textContent=lqNarrationOn?'🔊 Narration on':'🔇 Narration off';}
 
 function say(text,ms=2400){ui.speech.textContent=text; ui.speech.hidden=false; speechUntil=performance.now()+ms;}
